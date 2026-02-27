@@ -95,7 +95,7 @@ export default function BlogSection() {
 						<FadeUp key={article.title} delay={i * 80}>
 							<article className='blog-card h-full'>
 								<div
-									className={`bg-gradient-to-br ${article.gradient} flex items-center justify-center overflow-hidden`}
+									className={`bg-linear-to-br ${article.gradient} flex items-center justify-center overflow-hidden`}
 									style={{ height: '192px' }}
 								>
 									<i

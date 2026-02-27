@@ -104,7 +104,7 @@ export default function ContactSection() {
 						<div className='space-y-6 mb-8'>
 							{contactInfo.map(({ icon: Icon, label, value, href }) => (
 								<div key={label} className='flex gap-4 items-start'>
-									<div className='w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0 mt-1'>
+									<div className='w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center shrink-0 mt-1'>
 										<Icon className='text-purple-600 w-5 h-5' />
 									</div>
 									<div>
@@ -196,7 +196,7 @@ export default function ContactSection() {
 							/>
 							<button
 								type='submit'
-								className='w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-purple-400/50 transition-all flex items-center justify-center gap-2 group'
+								className='w-full bg-linear-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-purple-400/50 transition-all flex items-center justify-center gap-2 group'
 							>
 								<Send className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
 								Send Message

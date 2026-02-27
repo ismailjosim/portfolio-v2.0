@@ -77,20 +77,18 @@ export default function AboutSection() {
 								overflow: 'hidden',
 							}}
 						>
-							{['/assets/about-slide-01.jpg', '/assets/about-slide-02.jpg'].map(
-								(src, i) => (
-									<img
-										key={src}
-										src={src}
-										alt={`About slide ${i + 1}`}
-										className='slide-image absolute inset-0 w-full h-full object-cover'
-										style={{
-											opacity: 0,
-											transition: 'opacity 0.8s ease-in-out',
-										}}
-									/>
-								),
-							)}
+							{['/about-slide-01.jpg', '/about-slide-02.jpg'].map((src, i) => (
+								<img
+									key={src}
+									src={src}
+									alt={`About slide ${i + 1}`}
+									className='slide-image absolute inset-0 w-full h-full object-cover'
+									style={{
+										opacity: 0,
+										transition: 'opacity 0.8s ease-in-out',
+									}}
+								/>
+							))}
 						</div>
 					</FadeUp>
 				</div>

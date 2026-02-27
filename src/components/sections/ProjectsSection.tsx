@@ -92,7 +92,7 @@ export default function ProjectsSection() {
 								>
 									{/* Visual Side */}
 									<div
-										className={`bg-gradient-to-br ${project.gradient} relative overflow-hidden min-h-80 md:min-h-auto flex items-center justify-center ${project.reverse ? 'order-2 md:order-1' : ''}`}
+										className={`bg-linear-to-br ${project.gradient} relative overflow-hidden min-h-80 md:min-h-auto flex items-center justify-center ${project.reverse ? 'order-2 md:order-1' : ''}`}
 									>
 										<div
 											style={{
@@ -126,7 +126,7 @@ export default function ProjectsSection() {
 												{project.subtitle}
 											</div>
 										</div>
-										<div className='absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8'>
+										<div className='absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8'>
 											<p className='text-white text-sm leading-relaxed'>
 												{project.bullets[0]}
 											</p>
@@ -159,7 +159,7 @@ export default function ProjectsSection() {
 														className='flex gap-3 text-sm text-gray-600'
 													>
 														<span
-															className={`${project.accentColor} font-bold flex-shrink-0 mt-0.5`}
+															className={`${project.accentColor} font-bold shrink-0 mt-0.5`}
 														>
 															✓
 														</span>

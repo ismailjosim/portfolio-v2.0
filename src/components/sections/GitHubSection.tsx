@@ -12,7 +12,7 @@ export default function GitHubSection() {
 	return (
 		<section
 			id='github'
-			className='bg-gradient-to-b from-white to-gray-50 flex justify-center items-center'
+			className='bg-linear-to-b from-white to-gray-50 flex justify-center items-center'
 			style={{ padding: '80px 60px', minHeight: '100vh' }}
 		>
 			<div className='container mx-auto'>
@@ -59,12 +59,12 @@ export default function GitHubSection() {
 					</div>
 				</FadeUp>
 
-				<div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12'>
+				{/* <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12'>
 					{githubStats.map((stat, i) => (
 						<FadeUp key={stat.label} delay={i * 80}>
 							<div className='github-stat-card'>
 								<div
-									className='w-14 h-14 rounded-xl flex items-center justify-center text-2xl flex-shrink-0'
+									className='w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0'
 									style={{
 										background:
 											'linear-gradient(135deg, #f0eeff 0%, #e9e7ff 100%)',
@@ -82,7 +82,7 @@ export default function GitHubSection() {
 							</div>
 						</FadeUp>
 					))}
-				</div>
+				</div> */}
 			</div>
 		</section>
 	)

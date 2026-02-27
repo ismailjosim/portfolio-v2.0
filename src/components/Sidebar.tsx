@@ -19,6 +19,7 @@ import {
 	Icon,
 } from 'lucide-react'
 import ThemeToggle from './ui/ThemeToggle'
+import Image from 'next/image'
 
 const navItems = [
 	{ id: 'hero', label: 'Home', icon: Home },
@@ -72,12 +73,17 @@ export default function Sidebar() {
 			<div className='p-6 text-center border-b border-gray-100'>
 				<div className='relative inline-block mb-3'>
 					<div
-						className='w-24 h-24 rounded-full avatar-ring mx-auto bg-linear-to-br from-purple-400 to-indigo-600 flex items-center justify-center text-3xl font-bold text-white select-none'
+						className='w-24 h-24 rounded-full avatar-ring mx-auto flex items-center justify-center text-3xl font-bold text-white select-none overflow-hidden'
 						style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}
 					>
-						MJ
+						<Image
+							className='w-full h-full object-cover '
+							alt='JASIM'
+							src={'/person.jpeg'}
+							width={500}
+							height={500}
+						/>
 					</div>
-					<span className='absolute bottom-1 right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full' />
 				</div>
 				<h3
 					className='font-bold text-gray-900 text-base'
