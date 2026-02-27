@@ -1,5 +1,37 @@
-const Homepage = () => {
-	return <div>this is homepage</div>
-}
+import Sidebar from '../components/Sidebar'
+import SidebarOverlay from '../components/ui/SidebarOverlay'
+import HeroSection from '../components/sections/HeroSection'
+import AboutSection from '../components/sections/AboutSection'
+import SkillsSection from '../components/sections/SkillsSection'
+import ExperienceSection from '../components/sections/ExperienceSection'
+import WorkingAreasSection from '../components/sections/WorkingAreasSection'
+import ProjectsSection from '../components/sections/ProjectsSection'
+import EducationSection from '../components/sections/EducationSection'
+import BlogSection from '../components/sections/BlogSection'
+import GitHubSection from '../components/sections/GitHubSection'
+import ContactSection from '../components/sections/ContactSection'
+import MobileMenuButton from '../components/ui/MobileMenuButton'
+import ScrollToTop from '../components/ui/ScrollToTop'
 
-export default Homepage
+export default function HomePage() {
+	return (
+		<>
+			<SidebarOverlay />
+			<MobileMenuButton />
+			<Sidebar />
+			<main id='main' style={{ marginLeft: '280px', minHeight: '100vh' }}>
+				<HeroSection />
+				<AboutSection />
+				<SkillsSection />
+				<ExperienceSection />
+				<WorkingAreasSection />
+				<ProjectsSection />
+				<EducationSection />
+				<BlogSection />
+				<GitHubSection />
+				<ContactSection />
+			</main>
+			<ScrollToTop />
+		</>
+	)
+}

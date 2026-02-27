@@ -1,0 +1,210 @@
+'use client'
+
+import { useState } from 'react'
+import { toast } from 'sonner'
+import {
+	Phone,
+	Mail,
+	MapPin,
+	Github,
+	Linkedin,
+	Twitter,
+	Send,
+} from 'lucide-react'
+import FadeUp from '../ui/FadeUp'
+
+export default function ContactSection() {
+	const [formData, setFormData] = useState({
+		name: '',
+		email: '',
+		phone: '',
+		subject: '',
+		message: '',
+	})
+
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+	) => {
+		setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }))
+	}
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault()
+		if (
+			!formData.name ||
+			!formData.email ||
+			!formData.subject ||
+			!formData.message
+		) {
+			toast.error('Please fill in all required fields.')
+			return
+		}
+		console.log('Form Data:', formData)
+		toast.success(
+			"Thank you for reaching out! 🎉 I'll get back to you as soon as possible.",
+		)
+		setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+	}
+
+	const contactInfo = [
+		{
+			icon: Phone,
+			label: 'Phone',
+			value: '+880-1715-052-808',
+			href: 'tel:+8801715052808',
+		},
+		{
+			icon: Mail,
+			label: 'Email',
+			value: 'ismailjosim@yahoo.com',
+			href: 'mailto:ismailjosim@yahoo.com',
+		},
+		{
+			icon: MapPin,
+			label: 'Location',
+			value: 'Bangladesh · Remote Available',
+			href: undefined,
+		},
+	]
+
+	const socialLinks = [
+		{ href: 'https://github.com/ismailjosim', icon: Github },
+		{ href: 'https://linkedin.com/in/ismailjosim', icon: Linkedin },
+		{ href: 'https://twitter.com/ismailjosim', icon: Twitter },
+		{ href: 'mailto:ismailjosim@yahoo.com', icon: Mail },
+	]
+
+	return (
+		<section
+			id='contact'
+			className='py-20 bg-linear-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900'
+			style={{ padding: '80px 60px' }}
+		>
+			<div className='container mx-auto max-w-5xl'>
+				<FadeUp>
+					<div className='text-center mb-16'>
+						<span className='text-sm font-semibold text-purple-600 tracking-widest uppercase'>
+							Get in Touch
+						</span>
+						<h2 className='text-4xl md:text-5xl font-bold text-gray-900 mt-3 mb-6'>
+							Contact Me
+						</h2>
+						<div className='w-16 h-1 bg-linear-to-r from-purple-600 to-indigo-600 mx-auto' />
+					</div>
+				</FadeUp>
+
+				<div className='grid md:grid-cols-3 gap-12 mb-16'>
+					<FadeUp delay={100}>
+						<p className='text-gray-600 mb-8 leading-relaxed'>
+							I&apos;m available for freelance projects, full-time roles, and
+							mentoring. Whether you have a specific project in mind or just
+							want to say hi — reach out.
+						</p>
+
+						<div className='space-y-6 mb-8'>
+							{contactInfo.map(({ icon: Icon, label, value, href }) => (
+								<div key={label} className='flex gap-4 items-start'>
+									<div className='w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0 mt-1'>
+										<Icon className='text-purple-600 w-5 h-5' />
+									</div>
+									<div>
+										<div className='text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1'>
+											{label}
+										</div>
+										{href ? (
+											<a
+												href={href}
+												className='text-gray-800 font-medium hover:text-purple-600 transition-colors'
+											>
+												{value}
+											</a>
+										) : (
+											<div className='text-gray-800 font-medium'>{value}</div>
+										)}
+									</div>
+								</div>
+							))}
+						</div>
+
+						<div>
+							<div className='text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4'>
+								Connect With Me
+							</div>
+							<div className='flex gap-3'>
+								{socialLinks.map(({ href, icon: Icon }) => (
+									<a
+										key={href}
+										href={href}
+										target={href.startsWith('http') ? '_blank' : undefined}
+										rel='noreferrer'
+										className='w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all duration-300'
+									>
+										<Icon className='w-4 h-4' />
+									</a>
+								))}
+							</div>
+						</div>
+					</FadeUp>
+
+					<FadeUp delay={200} className='md:col-span-2'>
+						<form onSubmit={handleSubmit} className='space-y-4'>
+							<div className='grid md:grid-cols-2 gap-4'>
+								<input
+									type='text'
+									id='name'
+									placeholder='Your Name'
+									required
+									value={formData.name}
+									onChange={handleChange}
+									className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+								/>
+								<input
+									type='tel'
+									id='phone'
+									placeholder='Phone Number'
+									value={formData.phone}
+									onChange={handleChange}
+									className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+								/>
+							</div>
+							<input
+								type='email'
+								id='email'
+								placeholder='Email Address'
+								required
+								value={formData.email}
+								onChange={handleChange}
+								className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+							/>
+							<input
+								type='text'
+								id='subject'
+								placeholder='Subject'
+								required
+								value={formData.subject}
+								onChange={handleChange}
+								className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+							/>
+							<textarea
+								id='message'
+								placeholder='Your Message'
+								rows={6}
+								required
+								value={formData.message}
+								onChange={handleChange}
+								className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all resize-none'
+							/>
+							<button
+								type='submit'
+								className='w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-purple-400/50 transition-all flex items-center justify-center gap-2 group'
+							>
+								<Send className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
+								Send Message
+							</button>
+						</form>
+					</FadeUp>
+				</div>
+			</div>
+		</section>
+	)
+}

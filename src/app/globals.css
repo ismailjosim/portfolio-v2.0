@@ -87,8 +87,8 @@
 
 body {
   font-family: "Satoshi", sans-serif;
-  background: #f9f9fc;
-  color: #1a1a2e;
+  background: var(--color-background);
+  color: var(--color-foreground);
   overflow-x: hidden;
 }
 
@@ -119,6 +119,15 @@ h5 {
   border-radius: 10px;
 }
 
+/* dark scrollbar variants */
+.dark ::-webkit-scrollbar-track {
+  background: #2a2a3d;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #5751d8;
+}
+
 /* Sidebar */
 #sidebar {
   position: fixed;
@@ -126,8 +135,8 @@ h5 {
   top: 0;
   height: 100vh;
   width: 280px;
-  background: #fff;
-  border-right: 1px solid #ebebf5;
+  background: var(--color-sidebar);
+  border-right: 1px solid var(--color-sidebar-border);
   z-index: 100;
   overflow-y: auto;
 }
