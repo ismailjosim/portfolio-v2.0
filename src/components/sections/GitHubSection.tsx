@@ -4,8 +4,8 @@ import FadeUp from '../ui/FadeUp'
 export default function GitHubSection() {
 	return (
 		<section
-			id='github'
-			className='bg-background flex justify-center items-center py-40'
+			id='contact'
+			className='bg-background flex justify-center items-center py-20'
 		>
 			<div className='container mx-auto'>
 				<FadeUp>

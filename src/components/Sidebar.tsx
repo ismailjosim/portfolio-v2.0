@@ -10,13 +10,12 @@ import {
 	Layers,
 	GraduationCap,
 	BookOpen,
-	Github,
 	MessageCircle,
 	Mail,
 	Phone,
 	Linkedin,
 	X,
-	Icon,
+	Github,
 } from 'lucide-react'
 import ThemeToggle from './ui/ThemeToggle'
 import Image from 'next/image'
@@ -30,7 +29,6 @@ const navItems = [
 	{ id: 'projects', label: 'Projects', icon: Layers },
 	{ id: 'education', label: 'Education', icon: GraduationCap },
 	{ id: 'blog', label: 'Blog', icon: BookOpen },
-	{ id: 'github', label: 'GitHub', icon: Github },
 	{ id: 'contact', label: 'Contact', icon: MessageCircle },
 ]
 
@@ -39,6 +37,7 @@ const socialLinks = [
 	{ href: 'https://linkedin.com/in/ismailjosim', icon: Linkedin },
 	{ href: 'https://twitter.com/ismailjosim', icon: X },
 ]
+
 export default function Sidebar() {
 	const [active, setActive] = useState('hero')
 
@@ -60,7 +59,6 @@ export default function Sidebar() {
 		const el = document.getElementById(id)
 		if (!el) return
 		window.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
-		// Close sidebar on mobile
 		const sidebar = document.getElementById('sidebar')
 		const overlay = document.getElementById('sidebar-overlay')
 		sidebar?.classList.remove('open')
@@ -70,14 +68,14 @@ export default function Sidebar() {
 	return (
 		<aside id='sidebar' className='relative'>
 			{/* Profile */}
-			<div className='p-6 text-center border-b border-gray-100'>
+			<div className='p-6 text-center border-b border-border'>
 				<div className='relative inline-block mb-3'>
 					<div
 						className='w-24 h-24 rounded-full avatar-ring mx-auto flex items-center justify-center text-3xl font-bold text-white select-none overflow-hidden'
 						style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}
 					>
 						<Image
-							className='w-full h-full object-cover '
+							className='w-full h-full object-cover'
 							alt='JASIM'
 							src={'/person.jpeg'}
 							width={500}
@@ -86,12 +84,12 @@ export default function Sidebar() {
 					</div>
 				</div>
 				<h3
-					className='font-bold text-gray-900 text-base'
+					className='font-bold text-foreground text-base'
 					style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}
 				>
 					Md. Jasim
 				</h3>
-				<p className='text-xs text-purple-600 font-medium mt-1'>
+				<p className='text-xs text-accent font-medium mt-1'>
 					Full Stack Developer
 				</p>
 				<div className='flex justify-center gap-2 mt-3'>
@@ -134,23 +132,22 @@ export default function Sidebar() {
 						className={`nav-link w-full text-left ${active === id ? 'active' : ''}`}
 						onClick={() => scrollToSection(id)}
 					>
-						<Icon className='w-4.5 h-4.5 shrink-0' />
+						<Icon className='w-4 h-4 shrink-0' />
 						{label}
 					</button>
 				))}
 			</nav>
 
 			{/* Footer */}
-			<div className='p-4 border-t border-gray-100 mt-2 absolute left-0 w-full bottom-0 flex justify-center items-center'>
+			<div className='p-4 border-t border-border mt-2 absolute left-0 w-full bottom-0 flex justify-center items-center'>
 				<div>
 					<div className='text-center mb-2'>
-						<p className='text-xs text-gray-400 text-center'>
+						<p className='text-xs text-muted-foreground text-center'>
 							© 2026 Md. Jasim
 						</p>
-						<h4 className='font-semibold'>Follow Me</h4>
+						<h4 className='font-semibold text-foreground text-sm'>Follow Me</h4>
 					</div>
 					<div className='flex justify-center items-center gap-3'>
-						{/* theme switcher */}
 						<ThemeToggle />
 						{socialLinks.map(({ href, icon: Icon }) => (
 							<a
@@ -158,7 +155,7 @@ export default function Sidebar() {
 								href={href}
 								target='_blank'
 								rel='noreferrer'
-								className='w-10 h-10 rounded-lg bg-gray-700 dark:bg-gray-200 flex items-center justify-center text-gray-300 dark:text-gray-700 hover:bg-purple-600 hover:text-white transition-all duration-300'
+								className='social-btn'
 							>
 								<Icon className='w-4 h-4' />
 							</a>

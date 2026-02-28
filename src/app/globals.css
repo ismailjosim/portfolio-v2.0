@@ -325,8 +325,8 @@ h5 {
 
 .nav-link:hover,
 .nav-link.active {
-  background: var(--nav-hover-bg);
-  color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-foreground);
 }
 
 /* Skill pill */
