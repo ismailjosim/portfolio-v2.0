@@ -140,15 +140,12 @@ export default function Sidebar() {
 
 			{/* Footer */}
 			<div className='p-4 border-t border-border mt-2 absolute left-0 w-full bottom-0 flex justify-center items-center'>
-				<div>
-					<div className='text-center mb-2'>
-						<p className='text-xs text-muted-foreground text-center'>
-							© 2026 Md. Jasim
-						</p>
-						<h4 className='font-semibold text-foreground text-sm'>Follow Me</h4>
-					</div>
-					<div className='flex justify-center items-center gap-3'>
-						<ThemeToggle />
+				<div className='text-center'>
+					<h4 className='font-semibold text-foreground text-lg uppercase'>
+						Follow Me
+					</h4>
+
+					<div className='flex justify-center items-center gap-3 my-4'>
 						{socialLinks.map(({ href, icon: Icon }) => (
 							<a
 								key={href}
@@ -160,6 +157,12 @@ export default function Sidebar() {
 								<Icon className='w-4 h-4' />
 							</a>
 						))}
+						<ThemeToggle />
+					</div>
+					<div className='text-center'>
+						<p className='text-xs text-muted-foreground text-center'>
+							© 2026 Md. Jasim
+						</p>
 					</div>
 				</div>
 			</div>

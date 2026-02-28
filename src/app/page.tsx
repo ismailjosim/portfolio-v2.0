@@ -19,7 +19,10 @@ export default function HomePage() {
 			<SidebarOverlay />
 			<MobileMenuButton />
 			<Sidebar />
-			<main id='main' style={{ marginLeft: '280px', minHeight: '100vh' }}>
+			<main
+				id='main'
+				className='min-h-screen transition-all duration-300 lg:ml-70'
+			>
 				<HeroSection />
 				<AboutSection />
 				<SkillsSection />
@@ -31,7 +34,9 @@ export default function HomePage() {
 				<GitHubSection />
 				<ContactSection />
 			</main>
+			{/* <footer className='absolute'> */}
 			<ScrollToTop />
+			{/* </footer> */}
 		</>
 	)
 }

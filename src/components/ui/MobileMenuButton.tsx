@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
 export default function MobileMenuButton() {
-  const toggleSidebar = () => {
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("sidebar-overlay");
-    sidebar?.classList.toggle("open");
-    overlay?.classList.toggle("show");
-  };
+	const toggleSidebar = () => {
+		const sidebar = document.getElementById('sidebar')
+		const overlay = document.getElementById('sidebar-overlay')
+		sidebar?.classList.toggle('open')
+		overlay?.classList.toggle('show')
+	}
 
-  return (
-    <>
-      <style>{`
+	return (
+		<>
+			<style>{`
         #sidebar-overlay {
           display: none;
           position: fixed;
@@ -20,9 +20,9 @@ export default function MobileMenuButton() {
         }
         #sidebar-overlay.show { display: block; }
       `}</style>
-      <button id="mobile-nav-toggle" onClick={toggleSidebar}>
-        ☰
-      </button>
-    </>
-  );
+			<button id='mobile-nav-toggle' onClick={toggleSidebar}>
+				☰
+			</button>
+		</>
+	)
 }
