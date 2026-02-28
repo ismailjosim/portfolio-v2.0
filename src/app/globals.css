@@ -108,6 +108,16 @@
   --ring: hsl(239, 84%, 67%);
 
   --destructive: hsl(353, 87%, 56%);
+
+  --badge-frontend-bg: hsl(214, 52%, 25%);
+  --badge-frontend-color: hsl(212, 96%, 78%);
+  --badge-backend-bg: hsl(144, 61%, 20%);
+  --badge-backend-color: hsl(142, 77%, 73%);
+  --badge-tools-bg: hsl(13, 81%, 15%);
+  --badge-tools-color: hsl(31, 97%, 72%);
+  --badge-career-bg: hsl(336, 84%, 17%);
+  --badge-career-color: hsl(327, 87%, 82%);
+  --tech-bg: hsl(217, 33%, 17%);
 }
 
 /* ===================================== */

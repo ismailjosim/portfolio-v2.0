@@ -44,56 +44,49 @@ const stats = [
 	{
 		value: '3+',
 		label: 'Years Experience',
-		color: 'text-orange-500',
-		bg: 'bg-orange-50',
+		colorVar: '--badge-tools-color',
+		bgVar: '--badge-tools-bg',
 	},
 	{
 		value: '2000+',
 		label: 'Students Mentor',
-		color: 'text-blue-500',
-		bg: 'bg-blue-50',
+		colorVar: '--badge-frontend-color',
+		bgVar: '--badge-frontend-bg',
 	},
 	{
 		value: '150+',
 		label: 'Github Repositories',
-		color: 'text-purple-500',
-		bg: 'bg-purple-50',
+		colorVar: '--badge-career-color',
+		bgVar: '--badge-career-bg',
 	},
 	{
 		value: '10+',
 		label: 'Full Stack Project',
-		color: 'text-green-500',
-		bg: 'bg-green-50',
+		colorVar: '--badge-backend-color',
+		bgVar: '--badge-backend-bg',
 	},
 	{
 		value: '11200+',
 		label: 'Student Problems Solved',
-		color: 'text-cyan-500',
-		bg: 'bg-green-50',
+		colorVar: '--accent',
+		bgVar: '--tech-bg',
 	},
 	{
 		value: '1500+',
 		label: 'Hours Live Session',
-		color: 'text-pink-500',
-		bg: 'bg-green-50',
+		colorVar: '--badge-career-color',
+		bgVar: '--badge-career-bg',
 	},
 ]
 
 export default function ExperienceSection() {
 	return (
-		<section
-			id='experience'
-			className='bg-card'
-			style={{ padding: '80px 60px' }}
-		>
-			<div
-				className='container mx-auto flex justify-center items-center'
-				style={{ minHeight: '100vh' }}
-			>
+		<section id='experience' className='bg-card'>
+			<div className='container mx-auto flex justify-center items-center h-screen'>
 				<div className='w-full'>
 					<FadeUp>
 						<p className='section-label'>My journey</p>
-						<h2 className='text-4xl font-bold text-gray-900 mb-10'>
+						<h2 className='text-4xl font-bold mb-10 text-foreground'>
 							Work Experience
 						</h2>
 					</FadeUp>
@@ -105,16 +98,16 @@ export default function ExperienceSection() {
 									<div key={exp.title} className='timeline-item'>
 										<div className='flex flex-wrap justify-between items-start gap-2 mb-2'>
 											<div>
-												<h3 className='text-xl font-bold text-gray-900'>
+												<h3 className='text-xl font-bold text-foreground'>
 													{exp.title}
 												</h3>
-												<p className='text-purple-600 font-semibold text-sm'>
+												<p className='font-semibold text-sm text-accent'>
 													{exp.company}
 												</p>
 											</div>
 											<span className='skill-pill'>{exp.period}</span>
 										</div>
-										<ul className='space-y-1 text-gray-600 text-sm mt-3 list-disc list-inside'>
+										<ul className='space-y-1 text-sm mt-3 list-disc list-inside text-muted-foreground'>
 											{exp.bullets.map((b) => (
 												<li key={b}>{b}</li>
 											))}
@@ -126,15 +119,21 @@ export default function ExperienceSection() {
 
 						<FadeUp delay={200}>
 							<div className='grid grid-cols-2 gap-6'>
-								{stats.map(({ value, label, color, bg }) => (
+								{stats.map(({ value, label, colorVar, bgVar }) => (
 									<div
 										key={label}
-										className={`text-center p-12 ${bg} rounded-2xl`}
+										className='text-center p-12 rounded-2xl'
+										style={{ background: `var(${bgVar})` }}
 									>
-										<div className={`text-5xl font-black ${color} mb-2`}>
+										<div
+											className='text-5xl font-black mb-2'
+											style={{ color: `var(${colorVar})` }}
+										>
 											{value}
 										</div>
-										<div className='text-gray-600 font-medium'>{label}</div>
+										<div className='font-medium text-muted-foreground'>
+											{label}
+										</div>
 									</div>
 								))}
 							</div>
