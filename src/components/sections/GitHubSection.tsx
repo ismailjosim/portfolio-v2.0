@@ -66,10 +66,10 @@ export default function GitHubSection() {
 								<div
 									className='w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0'
 									style={{
-										background:
-											'linear-gradient(135deg, #f0eeff 0%, #e9e7ff 100%)',
-										color: 'var(--accent)',
-									}}
+											background:
+												'linear-gradient(135deg, var(--avatar-ring-1) 0%, var(--tech-border) 100%)',
+											color: 'var(--accent)',
+										}}
 								>
 									<i className={stat.icon} />
 								</div>
