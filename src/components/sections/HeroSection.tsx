@@ -92,8 +92,8 @@ export default function HeroSection() {
 						>
 							Programming Hero
 						</a>
-						. I build scalable web apps with React, Node.js, and MongoDB — and
-						teach 1000+ students to do the same.
+						<br />I build scalable web apps with React, Node.js, and MongoDB —
+						and teach 1000+ students to do the same.
 					</p>
 
 					{/* Buttons */}

@@ -2,91 +2,110 @@
 
 import { useEffect, useRef } from 'react'
 import FadeUp from '../ui/FadeUp'
+import { Phone, MapPin, Mail, Languages } from 'lucide-react'
 
 export default function AboutSection() {
 	const swiperRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
-		// Simple CSS-based slideshow without swiper dependency issues
-		const slides = swiperRef.current?.querySelectorAll('.slide-image')
+		const slides =
+			swiperRef.current?.querySelectorAll<HTMLImageElement>('.slide-image')
 		if (!slides || slides.length === 0) return
 
 		let current = 0
-		;(slides[0] as HTMLElement).style.opacity = '1'
+		slides[0].classList.add('opacity-100')
 
 		const interval = setInterval(() => {
-			;(slides[current] as HTMLElement).style.opacity = '0'
+			slides[current].classList.remove('opacity-100')
+			slides[current].classList.add('opacity-0')
+
 			current = (current + 1) % slides.length
-			;(slides[current] as HTMLElement).style.opacity = '1'
-		}, 3000)
+
+			slides[current].classList.remove('opacity-0')
+			slides[current].classList.add('opacity-100')
+		}, 3500)
 
 		return () => clearInterval(interval)
 	}, [])
 
 	const info = [
-		{ label: '📍 Location', value: 'Bangladesh' },
-		{ label: '📞 Phone', value: '+880-1715-052-808' },
-		{ label: '📧 Email', value: 'ismailjosim@yahoo.com' },
-		{ label: '🌐 Languages', value: 'EN / BN / HI' },
+		{ label: 'Location', value: 'Bangladesh', icon: MapPin },
+		{ label: 'Phone', value: '+880-1715-052-808', icon: Phone },
+		{ label: 'Email', value: 'ismailjosim@yahoo.com', icon: Mail },
+		{ label: 'Languages', value: 'EN / BN / HI', icon: Languages },
 	]
 
 	return (
 		<section
 			id='about'
-			className='flex justify-center items-center bg-card'
-			style={{ padding: '80px 60px', minHeight: '100vh' }}
+			className='bg-card h-screen flex justify-center items-center'
 		>
-			<div className='container mx-auto'>
+			<div className='container mx-auto px-6'>
+				{/* Section Heading */}
 				<FadeUp>
-					<p className='section-label'>Get to know me</p>
-					<h2 className='text-4xl font-bold text-gray-900 mb-10'>About Me</h2>
+					<p className='uppercase tracking-widest text-sm font-semibold text-primary mb-3'>
+						Get to know me
+					</p>
+					<h2 className='text-4xl md:text-5xl font-extrabold text-foreground'>
+						About Me
+					</h2>
 				</FadeUp>
 
-				<div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
+				<div className='grid md:grid-cols-2 gap-16 items-start mt-10'>
+					{/* LEFT CONTENT */}
 					<FadeUp delay={100}>
-						<p className='text-gray-600 leading-relaxed mb-4'>
-							I&apos;m a passionate <strong>Full Stack Developer</strong> based
-							in Bangladesh, specializing in the MERN stack. Currently serving
-							as a <strong>Senior Web Instructor at Programming Hero</strong>, I
-							lead advanced workshops and help shape the next generation of
-							developers.
+						<p className='text-muted-foreground text-lg leading-relaxed mb-5 text-justify'>
+							I’m a passionate{' '}
+							<span className='text-primary font-semibold'>
+								Full Stack Developer
+							</span>{' '}
+							based in Bangladesh, specializing in the MERN stack. Currently
+							serving as a{' '}
+							<span className='text-primary font-semibold'>
+								Senior Web Instructor at Programming Hero
+							</span>
+							, I lead advanced workshops and mentor aspiring developers.
 						</p>
-						<p className='text-gray-600 leading-relaxed mb-6'>
-							I thrive at the intersection of clean code and great teaching.
-							Whether building scalable production APIs, architecting frontend
-							interfaces, or crafting curriculum materials — I bring the same
-							level of care and precision to everything I do.
+
+						<p className='text-muted-foreground leading-relaxed text-justify text-lg mb-12'>
+							I thrive at the intersection of clean code and impactful teaching.
+							Whether building scalable APIs, architecting frontend systems, or
+							designing curriculum — I bring precision and clarity to everything
+							I do.
 						</p>
-						<div className='grid grid-cols-2 gap-4 text-sm'>
-							{info.map(({ label, value }) => (
-								<div key={label}>
-									<span className='text-gray-400'>{label}</span>
-									<p className='font-semibold text-gray-800 text-xs'>{value}</p>
+
+						{/* Info Grid */}
+						<div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+							{info.map(({ label, value, icon: Icon }) => (
+								<div key={label} className='flex items-start gap-3'>
+									<div className='w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center'>
+										<Icon size={18} className='text-primary' />
+									</div>
+									<div>
+										<p className='text-xs uppercase tracking-wide text-muted-foreground'>
+											{label}
+										</p>
+										<p className='font-semibold text-foreground text-sm'>
+											{value}
+										</p>
+									</div>
 								</div>
 							))}
 						</div>
 					</FadeUp>
 
+					{/* RIGHT SLIDESHOW */}
 					<FadeUp delay={200}>
 						<div
 							ref={swiperRef}
-							className='slideshow-container relative'
-							style={{
-								height: '400px',
-								borderRadius: '12px',
-								overflow: 'hidden',
-							}}
+							className='relative h-100 rounded-2xl overflow-hidden shadow-xl'
 						>
 							{['/about-slide-01.jpg', '/about-slide-02.jpg'].map((src, i) => (
 								<img
 									key={src}
 									src={src}
 									alt={`About slide ${i + 1}`}
-									className='slide-image absolute inset-0 w-full h-full object-cover'
-									style={{
-										opacity: 0,
-										transition: 'opacity 0.8s ease-in-out',
-									}}
+									className='slide-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000'
 								/>
 							))}
 						</div>
