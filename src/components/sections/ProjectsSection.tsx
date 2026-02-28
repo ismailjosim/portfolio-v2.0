@@ -10,7 +10,6 @@ const projects = [
 		tags: ['React 19', 'TypeScript', 'Node.js', 'MongoDB'],
 		title: 'Traveler — Tour Management System',
 		type: 'Full Stack Web Application',
-		accentColor: 'text-purple-600',
 		bullets: [
 			'Architected 30+ RESTful API endpoints for tours, bookings, payments & analytics',
 			'JWT + Google OAuth authentication with role-based access control',
@@ -35,7 +34,6 @@ const projects = [
 		tags: ['MERN', 'Firebase', 'Stripe'],
 		title: 'E-Learning Dashboard',
 		type: 'Educational Platform',
-		accentColor: 'text-green-600',
 		bullets: [
 			'Interactive course modules with progress tracking and certification',
 			'Real-time live session integration with video streaming capabilities',
@@ -61,7 +59,6 @@ const projects = [
 		tags: ['Node.js', 'Express', 'MongoDB'],
 		title: 'RESTful API Architecture',
 		type: 'Backend · API Development',
-		accentColor: 'text-orange-600',
 		bullets: [
 			'30+ RESTful endpoints with comprehensive error handling',
 			'JWT authentication, rate limiting, and request validation',
@@ -72,13 +69,13 @@ const projects = [
 	},
 ]
 
-export default function ProjectsSection() {
+const ProjectsSection = () => {
 	return (
-		<section id='projects' className='bg-card' style={{ padding: '80px 60px' }}>
+		<section id='projects' className='bg-card py-20'>
 			<div className='container mx-auto'>
 				<FadeUp>
 					<p className='section-label'>Things I&apos;ve built</p>
-					<h2 className='text-4xl font-bold text-gray-900 mb-12'>
+					<h2 className='text-4xl font-bold mb-12 text-foreground'>
 						Featured Projects
 					</h2>
 				</FadeUp>
@@ -86,7 +83,13 @@ export default function ProjectsSection() {
 				<div className='space-y-12'>
 					{projects.map((project, i) => (
 						<FadeUp key={project.name} delay={i * 100}>
-							<div className='project-card-hybrid group overflow-hidden rounded-2xl border border-gray-200 hover:border-purple-300 transition-all'>
+							<div
+								className='project-card-hybrid group overflow-hidden rounded-2xl transition-all '
+								style={{
+									border: '1px solid var(--border)',
+									background: 'var(--card)',
+								}}
+							>
 								<div
 									className={`grid grid-cols-1 md:grid-cols-2 gap-0 ${project.reverse ? 'direction-reverse' : ''}`}
 								>
@@ -94,35 +97,17 @@ export default function ProjectsSection() {
 									<div
 										className={`bg-linear-to-br ${project.gradient} relative overflow-hidden min-h-80 md:min-h-auto flex items-center justify-center ${project.reverse ? 'order-2 md:order-1' : ''}`}
 									>
-										<div
-											style={{
-												textAlign: 'center',
-												position: 'relative',
-												zIndex: 1,
-											}}
-										>
-											<div style={{ fontSize: '56px', marginBottom: '16px' }}>
-												{project.emoji}
-											</div>
+										<div className='text-center relative z-10'>
+											<div className='text-6xl mb-4'>{project.emoji}</div>
 											<div
+												className='text-4xl font-bold text-accent-foreground'
 												style={{
-													fontFamily: "'Cabinet Grotesk',sans-serif",
-													fontSize: '32px',
-													fontWeight: 700,
-													color: 'rgba(255,255,255,0.95)',
+													fontFamily: "'Cabinet Grotesk', sans-serif",
 												}}
 											>
 												{project.name}
 											</div>
-											<div
-												style={{
-													fontSize: '12px',
-													color: 'rgba(255,255,255,0.7)',
-													marginTop: '8px',
-													textTransform: 'uppercase',
-													letterSpacing: '1px',
-												}}
-											>
+											<div className='text-xs mt-2 text-muted-foreground uppercase leading-0.5'>
 												{project.subtitle}
 											</div>
 										</div>
@@ -138,6 +123,7 @@ export default function ProjectsSection() {
 										className={`p-8 flex flex-col justify-between ${project.reverse ? 'order-1 md:order-2' : ''}`}
 									>
 										<div>
+											{/* Tags */}
 											<div className='flex flex-wrap gap-2 mb-4'>
 												{project.tags.map((tag) => (
 													<span key={tag} className='tech-tag'>
@@ -145,22 +131,25 @@ export default function ProjectsSection() {
 													</span>
 												))}
 											</div>
-											<h3 className='text-2xl font-bold text-gray-900 mb-2'>
+
+											{/* Title */}
+											<h3 className='text-2xl font-bold mb-2 text-foreground'>
 												{project.title}
 											</h3>
-											<p className='text-gray-500 text-sm mb-6'>
+
+											{/* Type */}
+											<p className='text-sm mb-6 text-muted-foreground'>
 												{project.type}
 											</p>
 
+											{/* Bullets */}
 											<ul className='space-y-3 mb-6'>
 												{project.bullets.map((b) => (
 													<li
 														key={b}
-														className='flex gap-3 text-sm text-gray-600'
+														className='flex gap-3 text-sm text-muted-foreground'
 													>
-														<span
-															className={`${project.accentColor} font-bold shrink-0 mt-0.5`}
-														>
+														<span className='font-bold shrink-0 mt-0.5 text-accent'>
 															✓
 														</span>
 														<span>{b}</span>
@@ -168,6 +157,7 @@ export default function ProjectsSection() {
 												))}
 											</ul>
 
+											{/* Badges */}
 											<div className='flex flex-wrap gap-2 mb-6'>
 												{project.badges.map((b) => (
 													<span key={b} className='tech-badge'>
@@ -194,13 +184,12 @@ export default function ProjectsSection() {
 				</div>
 
 				<FadeUp delay={200}>
-					<p className='text-center text-gray-400 text-sm mt-12'>
+					<p className='text-center text-sm mt-12 text-muted-foreground'>
 						More projects coming soon — follow me on{' '}
 						<a
 							href='https://github.com/ismailjosim'
-							className='text-purple-600 font-semibold hover:underline'
+							className='font-semibold hover:underline text-accent'
 							target='_blank'
-							rel='noreferrer'
 						>
 							GitHub
 						</a>
@@ -210,3 +199,4 @@ export default function ProjectsSection() {
 		</section>
 	)
 }
+export default ProjectsSection

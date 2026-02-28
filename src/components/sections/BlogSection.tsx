@@ -65,12 +65,12 @@ export default function BlogSection() {
 			: articles.filter((a) => a.category === activeFilter)
 
 	return (
-		<section id='blog' className='bg-card' style={{ padding: '80px 60px' }}>
-			<div className='container mx-auto'>
+		<section id='blog' className='bg-card py-40'>
+			<div className='container mx-auto '>
 				<div className='text-center mb-12'>
 					<FadeUp>
 						<p className='section-label'>My thoughts and insights</p>
-						<h2 className='text-4xl font-bold text-gray-900 mb-8'>
+						<h2 className='text-4xl font-bold text-foreground mb-8'>
 							Latest Articles &amp; Insights
 						</h2>
 					</FadeUp>
@@ -93,10 +93,15 @@ export default function BlogSection() {
 				<div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
 					{filtered.map((article, i) => (
 						<FadeUp key={article.title} delay={i * 80}>
-							<article className='blog-card h-full'>
+							<article
+								className='h-full rounded-2xl overflow-hidden transition-all flex flex-col'
+								style={{
+									border: '1px solid var(--border)',
+									background: 'var(--blog-card)',
+								}}
+							>
 								<div
-									className={`bg-linear-to-br ${article.gradient} flex items-center justify-center overflow-hidden`}
-									style={{ height: '192px' }}
+									className={`bg-linear-to-br ${article.gradient} h-48 flex items-center justify-center overflow-hidden`}
 								>
 									<i
 										className={`${article.icon} text-white opacity-40`}
@@ -108,19 +113,19 @@ export default function BlogSection() {
 										<span className={`blog-category-badge ${article.category}`}>
 											{article.category}
 										</span>
-										<span className='text-gray-400 text-xs'>
+										<span className='text-muted-foreground text-xs'>
 											{article.readTime}
 										</span>
 									</div>
-									<h3 className='font-bold text-gray-900 text-lg mb-2 hover:text-purple-600 transition-colors'>
+									<h3 className='font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors'>
 										{article.title}
 									</h3>
-									<p className='text-gray-600 text-sm mb-4 flex-1'>
+									<p className='text-muted-foreground text-sm mb-4 flex-1'>
 										{article.desc}
 									</p>
 									<a
 										href='#'
-										className='text-purple-600 text-sm font-medium hover:text-purple-700'
+										className='text-accent text-sm font-medium hover:underline'
 									>
 										Read More →
 									</a>

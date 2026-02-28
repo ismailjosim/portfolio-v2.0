@@ -43,56 +43,57 @@ export default function EducationSection() {
 	return (
 		<section
 			id='education'
-			className='container mx-auto flex justify-center items-center'
-			style={{ padding: '80px 60px', minHeight: '100vh' }}
+			className='container mx-auto flex justify-center items-center h-screen'
 		>
 			<div className='w-full'>
 				<FadeUp>
 					<p className='section-label'>My Academic Journey</p>
-					<h2 className='text-4xl font-bold text-gray-900 mb-12'>
+					<h2 className='text-4xl font-bold mb-12 text-foreground'>
 						Education &amp; Qualifications
 					</h2>
 				</FadeUp>
 
 				<FadeUp delay={100}>
 					<div className='grid lg:grid-cols-2 gap-12'>
+						{/* Academic */}
 						<div>
 							<p className='section-tag mb-2'>2016 - 2025</p>
-							<h3 className='text-2xl font-bold mb-8 text-gray-900'>
+							<h3 className='text-2xl font-bold mb-8 text-foreground'>
 								Academic Education
 							</h3>
 							<div className='space-y-8'>
 								{academic.map((item) => (
 									<div key={item.title} className='timeline-item'>
-										<h4 className='font-bold text-gray-900'>{item.title}</h4>
-										<p className='text-purple-600 text-sm font-medium'>
+										<h4 className='font-bold text-foreground'>{item.title}</h4>
+										<p className='text-sm font-medium text-accent'>
 											{item.sub}
 										</p>
-										<span className='inline-block bg-purple-100 text-purple-600 text-xs font-bold px-2 py-0.5 rounded mt-1 mb-2'>
+										<span className='skill-pill text-xs mt-1 mb-2 inline-block'>
 											{item.grade}
 										</span>
-										<p className='text-gray-500 text-sm'>{item.desc}</p>
+										<p className='text-sm text-muted-foreground'>{item.desc}</p>
 									</div>
 								))}
 							</div>
 						</div>
 
+						{/* Certifications */}
 						<div>
 							<p className='section-tag mb-2'>2023 - Present</p>
-							<h3 className='text-2xl font-bold mb-8 text-gray-900'>
+							<h3 className='text-2xl font-bold mb-8 text-foreground'>
 								Professional Certifications
 							</h3>
 							<div className='space-y-8'>
 								{certifications.map((item) => (
 									<div key={item.title} className='timeline-item'>
-										<h4 className='font-bold text-gray-900'>{item.title}</h4>
-										<p className='text-purple-600 text-sm font-medium'>
+										<h4 className='font-bold text-foreground'>{item.title}</h4>
+										<p className='text-sm font-medium text-accent'>
 											{item.sub}
 										</p>
-										<span className='inline-block bg-purple-100 text-purple-600 text-xs font-bold px-2 py-0.5 rounded mt-1 mb-2'>
+										<span className='skill-pill text-xs mt-1 mb-2 inline-block'>
 											✓ Certified
 										</span>
-										<p className='text-gray-500 text-sm'>{item.desc}</p>
+										<p className='text-sm text-muted-foreground'>{item.desc}</p>
 									</div>
 								))}
 							</div>

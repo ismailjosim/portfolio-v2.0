@@ -118,6 +118,9 @@
   --badge-career-bg: hsl(336, 84%, 17%);
   --badge-career-color: hsl(327, 87%, 82%);
   --tech-bg: hsl(217, 33%, 17%);
+
+  --tech-border: hsl(222, 47%, 24%);
+  --tech-color: hsl(210, 40%, 85%);
 }
 
 /* ===================================== */
@@ -175,6 +178,15 @@ h3,
 h4,
 h5 {
   font-family: "Cabinet Grotesk", sans-serif;
+}
+
+.tech-badge {
+  background: var(--tech-bg);
+  /* #f5f3ff */
+  border: 1px solid var(--tech-border);
+  /* #e9e7ff */
+  color: var(--tech-color);
+  /* #444 */
 }
 
 /* Scrollbar */

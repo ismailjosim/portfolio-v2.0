@@ -74,28 +74,26 @@ export default function ContactSection() {
 		{ href: 'mailto:ismailjosim@yahoo.com', icon: Mail },
 	]
 
+	const inputClass =
+		'w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-foreground placeholder:text-muted-foreground'
+
 	return (
-		<section
-			id='contact'
-			className='py-20 bg-linear-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900'
-			style={{ padding: '80px 60px' }}
-		>
+		<section id='contact' className='bg-background h-screen'>
 			<div className='container mx-auto max-w-5xl'>
 				<FadeUp>
 					<div className='text-center mb-16'>
-						<span className='text-sm font-semibold text-purple-600 tracking-widest uppercase'>
-							Get in Touch
-						</span>
-						<h2 className='text-4xl md:text-5xl font-bold text-gray-900 mt-3 mb-6'>
+						<p className='section-label'>Get in Touch</p>
+						<h2 className='text-4xl md:text-5xl font-bold text-foreground mt-3 mb-6'>
 							Contact Me
 						</h2>
-						<div className='w-16 h-1 bg-linear-to-r from-purple-600 to-indigo-600 mx-auto' />
+						<div className='w-16 h-1 bg-accent mx-auto rounded-full' />
 					</div>
 				</FadeUp>
 
 				<div className='grid md:grid-cols-3 gap-12 mb-16'>
+					{/* Left: Info */}
 					<FadeUp delay={100}>
-						<p className='text-gray-600 mb-8 leading-relaxed'>
+						<p className='text-muted-foreground mb-8 leading-relaxed text-justify text-base'>
 							I&apos;m available for freelance projects, full-time roles, and
 							mentoring. Whether you have a specific project in mind or just
 							want to say hi — reach out.
@@ -104,22 +102,22 @@ export default function ContactSection() {
 						<div className='space-y-6 mb-8'>
 							{contactInfo.map(({ icon: Icon, label, value, href }) => (
 								<div key={label} className='flex gap-4 items-start'>
-									<div className='w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center shrink-0 mt-1'>
-										<Icon className='text-purple-600 w-5 h-5' />
+									<div className='w-12 h-12 rounded-lg flex items-center justify-center shrink-0 mt-1 bg-skill-bg border border-border '>
+										<Icon className='w-5 h-5 text-accent ' />
 									</div>
 									<div>
-										<div className='text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1'>
+										<div className='text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1'>
 											{label}
 										</div>
 										{href ? (
 											<a
 												href={href}
-												className='text-gray-800 font-medium hover:text-purple-600 transition-colors'
+												className='text-foreground font-medium transition-colors'
 											>
 												{value}
 											</a>
 										) : (
-											<div className='text-gray-800 font-medium'>{value}</div>
+											<div className='text-foreground font-medium'>{value}</div>
 										)}
 									</div>
 								</div>
@@ -127,7 +125,7 @@ export default function ContactSection() {
 						</div>
 
 						<div>
-							<div className='text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4'>
+							<div className='text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4'>
 								Connect With Me
 							</div>
 							<div className='flex gap-3'>
@@ -137,15 +135,16 @@ export default function ContactSection() {
 										href={href}
 										target={href.startsWith('http') ? '_blank' : undefined}
 										rel='noreferrer'
-										className='w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all duration-300'
+										className='social-btn border border-border text-accent hover:text-white'
 									>
-										<Icon className='w-4 h-4' />
+										<Icon className='w-4 h-4 ' />
 									</a>
 								))}
 							</div>
 						</div>
 					</FadeUp>
 
+					{/* Right: Form */}
 					<FadeUp delay={200} className='md:col-span-2'>
 						<form onSubmit={handleSubmit} className='space-y-4'>
 							<div className='grid md:grid-cols-2 gap-4'>
@@ -156,7 +155,7 @@ export default function ContactSection() {
 									required
 									value={formData.name}
 									onChange={handleChange}
-									className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+									className={inputClass}
 								/>
 								<input
 									type='tel'
@@ -164,7 +163,7 @@ export default function ContactSection() {
 									placeholder='Phone Number'
 									value={formData.phone}
 									onChange={handleChange}
-									className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+									className={inputClass}
 								/>
 							</div>
 							<input
@@ -174,7 +173,7 @@ export default function ContactSection() {
 								required
 								value={formData.email}
 								onChange={handleChange}
-								className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+								className={inputClass}
 							/>
 							<input
 								type='text'
@@ -183,7 +182,7 @@ export default function ContactSection() {
 								required
 								value={formData.subject}
 								onChange={handleChange}
-								className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all'
+								className={inputClass}
 							/>
 							<textarea
 								id='message'
@@ -192,11 +191,11 @@ export default function ContactSection() {
 								required
 								value={formData.message}
 								onChange={handleChange}
-								className='w-full px-4 py-3 bg-card dark:bg-card border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition-all resize-none'
+								className={`${inputClass} resize-none`}
 							/>
 							<button
 								type='submit'
-								className='w-full bg-linear-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-purple-400/50 transition-all flex items-center justify-center gap-2 group'
+								className='btn-primary w-full justify-center group'
 							>
 								<Send className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
 								Send Message
