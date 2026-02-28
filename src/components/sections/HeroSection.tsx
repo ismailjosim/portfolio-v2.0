@@ -67,7 +67,7 @@ export default function HeroSection() {
 			<div className='absolute -top-24 -right-16 w-100 h-100 bg-primary/20 rounded-full blur-3xl' />
 			<div className='absolute bottom-10 left-20 w-70 h-70 bg-accent/20 rounded-full blur-3xl' />
 
-			<div className='w-full grid lg:grid-cols-2 gap-12 items-center relative z-10'>
+			<div className='w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 items-center relative z-10'>
 				{/* LEFT */}
 				<div>
 					<p className='uppercase tracking-widest text-sm font-semibold text-primary mb-4'>
@@ -116,9 +116,12 @@ export default function HeroSection() {
 					</div>
 
 					{/* Stats */}
-					<div className='flex flex-wrap items-center gap-8'>
+					<div className='flex flex-wrap sm:justify-start justify-center items-center lg:gap-8 md:gap-12 gap-16'>
 						{stats.map((stat, i) => (
-							<div key={stat.label} className='flex items-center gap-8'>
+							<div
+								key={stat.label}
+								className='flex justify-center text-center items-center gap-8'
+							>
 								{i > 0 && (
 									<div className='hidden sm:block w-px h-10 bg-border' />
 								)}
@@ -139,7 +142,7 @@ export default function HeroSection() {
 				<div className='relative flex justify-center lg:justify-end'>
 					{/* Image */}
 					<div
-						className='hero-morph w-72 h-72 sm:w-150 sm:h-150 bg-center bg-cover'
+						className='hero-morph w-72 h-72 lg:w-150 lg:h-150 md:w-110 md:h-110 bg-center bg-cover'
 						style={{ backgroundImage: "url('/person.jpeg')" }}
 					/>
 
@@ -147,7 +150,7 @@ export default function HeroSection() {
 					<div className='absolute w-150 h-150 bg-primary/10 rounded-full blur-3xl -z-10' />
 
 					{/* Floating Badge 1 */}
-					<div className='absolute -top-4 -right-6 bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y'>
+					<div className='absolute sm:-top-4 -top-10 sm:-right-6 -right-8 bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y'>
 						<div className='w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center'>
 							<Trophy size={18} className='text-orange-500' />
 						</div>
@@ -158,7 +161,7 @@ export default function HeroSection() {
 					</div>
 
 					{/* Floating Badge 2 */}
-					<div className='absolute bottom-6 left-20 bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y [animation-delay:1.5s] border sm:border-transparent'>
+					<div className='absolute lg:bottom-6 bottom-1 lg:left-20 -left-10 bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y [animation-delay:1.5s] border sm:border-transparent'>
 						<div className='w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'>
 							<CheckCircle2 size={18} className='text-green-500' />
 						</div>

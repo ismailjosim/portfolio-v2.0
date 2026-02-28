@@ -43,7 +43,7 @@ export default function EducationSection() {
 	return (
 		<section
 			id='education'
-			className='container mx-auto flex justify-center items-center h-screen'
+			className='container mx-auto flex justify-center items-center lg:h-screen'
 		>
 			<div className='w-full'>
 				<FadeUp>
@@ -54,7 +54,7 @@ export default function EducationSection() {
 				</FadeUp>
 
 				<FadeUp delay={100}>
-					<div className='grid lg:grid-cols-2 gap-12'>
+					<div className='grid sm:grid-cols-2 gap-12'>
 						{/* Academic */}
 						<div>
 							<p className='section-tag mb-2'>2016 - 2025</p>

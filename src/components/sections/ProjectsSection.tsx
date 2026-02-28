@@ -91,13 +91,13 @@ const ProjectsSection = () => {
 								}}
 							>
 								<div
-									className={`grid grid-cols-1 md:grid-cols-2 gap-0 ${project.reverse ? 'direction-reverse' : ''}`}
+									className={`grid grid-cols-1 lg:grid-cols-2 gap-0 ${project.reverse ? 'direction-reverse' : ''}`}
 								>
 									{/* Visual Side */}
 									<div
-										className={`bg-linear-to-br ${project.gradient} relative overflow-hidden min-h-80 md:min-h-auto flex items-center justify-center ${project.reverse ? 'order-2 md:order-1' : ''}`}
+										className={`bg-linear-to-br ${project.gradient} relative overflow-hidden min-h-80 md:min-h-auto flex items-center justify-center lg:${project.reverse ? 'order-2 md:order-1' : ''}`}
 									>
-										<div className='text-center relative z-10'>
+										<div className='text-center relative z-10 md:h-64 flex flex-col items-center justify-center'>
 											<div className='text-6xl mb-4'>{project.emoji}</div>
 											<div
 												className='text-4xl font-bold text-accent-foreground'

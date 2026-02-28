@@ -66,14 +66,11 @@ export default function Sidebar() {
 	}
 
 	return (
-		<aside id='sidebar' className='relative'>
+		<aside id='sidebar' className='flex flex-col'>
 			{/* Profile */}
-			<div className='p-6 text-center border-b border-border'>
+			<div className='p-6 text-center border-b border-border shrink-0'>
 				<div className='relative inline-block mb-3'>
-					<div
-						className='w-24 h-24 rounded-full avatar-ring mx-auto flex items-center justify-center text-3xl font-bold text-white select-none overflow-hidden'
-						style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}
-					>
+					<div className='w-24 h-24 rounded-full avatar-ring mx-auto overflow-hidden'>
 						<Image
 							className='w-full h-full object-cover'
 							alt='JASIM'
@@ -124,8 +121,8 @@ export default function Sidebar() {
 				</div>
 			</div>
 
-			{/* Nav */}
-			<nav className='p-4 space-y-1'>
+			{/* Nav — scrollable */}
+			<nav className='p-4 space-y-1 flex-1 overflow-y-auto'>
 				{navItems.map(({ id, label, icon: Icon }) => (
 					<button
 						key={id}
@@ -138,14 +135,13 @@ export default function Sidebar() {
 				))}
 			</nav>
 
-			{/* Footer */}
-			<div className='p-4 border-t border-border mt-2 absolute left-0 w-full bottom-0 flex justify-center items-center'>
+			{/* Footer — always visible at bottom */}
+			<div className='p-4 border-t border-border shrink-0'>
 				<div className='text-center'>
-					<h4 className='font-semibold text-foreground text-lg uppercase'>
+					<h4 className='font-semibold text-foreground text-sm uppercase tracking-widest mb-3'>
 						Follow Me
 					</h4>
-
-					<div className='flex justify-center items-center gap-3 my-4'>
+					<div className='flex justify-center items-center gap-3 mb-3'>
 						{socialLinks.map(({ href, icon: Icon }) => (
 							<a
 								key={href}
@@ -159,11 +155,7 @@ export default function Sidebar() {
 						))}
 						<ThemeToggle />
 					</div>
-					<div className='text-center'>
-						<p className='text-xs text-muted-foreground text-center'>
-							© 2026 Md. Jasim
-						</p>
-					</div>
+					<p className='text-xs text-muted-foreground'>© 2026 Md. Jasim</p>
 				</div>
 			</div>
 		</aside>

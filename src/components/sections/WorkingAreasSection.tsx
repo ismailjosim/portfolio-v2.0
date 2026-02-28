@@ -61,7 +61,7 @@ export default function WorkingAreasSection() {
 	return (
 		<section
 			id='workings'
-			className='container mx-auto flex justify-center items-center h-screen'
+			className='container mx-auto flex justify-center items-center lg:h-screen'
 		>
 			<div className='w-full'>
 				<FadeUp>

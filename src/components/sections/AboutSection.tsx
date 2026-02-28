@@ -38,7 +38,7 @@ export default function AboutSection() {
 	return (
 		<section
 			id='about'
-			className='bg-card h-screen flex justify-center items-center'
+			className='bg-card sm:h-screen flex justify-center items-center'
 		>
 			<div className='container mx-auto px-6'>
 				{/* Section Heading */}
@@ -51,7 +51,7 @@ export default function AboutSection() {
 					</h2>
 				</FadeUp>
 
-				<div className='grid md:grid-cols-2 gap-16 items-start mt-10'>
+				<div className='grid md:grid-cols-2 lg:gap-16 md:gap-10 gap-6 items-start mt-10'>
 					{/* LEFT CONTENT */}
 					<FadeUp delay={100}>
 						<p className='text-muted-foreground text-lg leading-relaxed mb-5 text-justify'>
@@ -67,7 +67,7 @@ export default function AboutSection() {
 							, I lead advanced workshops and mentor aspiring developers.
 						</p>
 
-						<p className='text-muted-foreground leading-relaxed text-justify text-lg mb-12'>
+						<p className='text-muted-foreground leading-relaxed text-justify text-lg mb-12 '>
 							I thrive at the intersection of clean code and impactful teaching.
 							Whether building scalable APIs, architecting frontend systems, or
 							designing curriculum — I bring precision and clarity to everything
@@ -75,7 +75,7 @@ export default function AboutSection() {
 						</p>
 
 						{/* Info Grid */}
-						<div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+						<div className='grid grid-cols-1 lg:grid-cols-2 gap-6 '>
 							{info.map(({ label, value, icon: Icon }) => (
 								<div key={label} className='flex items-start gap-3'>
 									<div className='w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center'>

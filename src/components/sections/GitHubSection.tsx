@@ -10,17 +10,17 @@ export default function GitHubSection() {
 			<div className='container mx-auto'>
 				<FadeUp>
 					<div className='text-center mb-12'>
-						<h2 className='text-4xl font-bold text-accent mb-4'>
+						<h2 className='lg:text-4xl md:text-3xl text-2xl font-bold text-accent sm:mb-4 mb-2'>
 							My GitHub Contributions
 						</h2>
 					</div>
 				</FadeUp>
 
 				<FadeUp delay={100}>
-					<div className='bg-card border border-border rounded-2xl p-10 flex flex-col items-center gap-6'>
+					<div className='bg-card border border-border rounded-2xl sm:p-10 p-4 flex flex-col items-center gap-6'>
 						{/* Description */}
 						<p className='text-muted-foreground text-sm'>
-							Here&apos;s a snapshot of my recent activity on GitHub.
+							Here&apos;s my recent GitHub snapshot.
 						</p>
 
 						{/* Contribution Graph */}

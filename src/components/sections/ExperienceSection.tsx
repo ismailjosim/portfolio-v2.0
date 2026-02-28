@@ -81,64 +81,68 @@ const stats = [
 
 export default function ExperienceSection() {
 	return (
-		<section id='experience' className='bg-card'>
-			<div className='container mx-auto flex justify-center items-center h-screen'>
-				<div className='w-full'>
-					<FadeUp>
-						<p className='section-label'>My journey</p>
-						<h2 className='text-4xl font-bold mb-10 text-foreground'>
-							Work Experience
-						</h2>
+		<section id='experience' className='bg-card py-16 sm:py-20 lg:py-24'>
+			<div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+				<FadeUp>
+					<p className='uppercase tracking-widest text-xs sm:text-sm font-semibold text-primary mb-2 sm:mb-3'>
+						My journey
+					</p>
+					<h2 className='text-3xl sm:text-4xl md:text-5xl font-bold mb-10 text-foreground'>
+						Work Experience
+					</h2>
+				</FadeUp>
+
+				<div className='lg:grid flex flex-col-reverse md:grid-cols-2 gap-10'>
+					{/* Experiences */}
+					<FadeUp delay={100}>
+						<div className='space-y-10'>
+							{experiences.map((exp) => (
+								<div key={exp.title} className='timeline-item'>
+									<div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2'>
+										<div>
+											<h3 className='text-lg sm:text-xl font-bold text-foreground'>
+												{exp.title}
+											</h3>
+											<p className='font-semibold text-sm sm:text-base text-accent'>
+												{exp.company}
+											</p>
+										</div>
+										<span className='skill-pill text-sm sm:text-base mt-1 sm:mt-0'>
+											{exp.period}
+										</span>
+									</div>
+									<ul className='space-y-1 text-sm sm:text-base mt-3 list-disc list-inside text-muted-foreground'>
+										{exp.bullets.map((b) => (
+											<li key={b}>{b}</li>
+										))}
+									</ul>
+								</div>
+							))}
+						</div>
 					</FadeUp>
 
-					<div className='grid grid-cols-2 gap-10'>
-						<FadeUp delay={100}>
-							<div className='space-y-10'>
-								{experiences.map((exp) => (
-									<div key={exp.title} className='timeline-item'>
-										<div className='flex flex-wrap justify-between items-start gap-2 mb-2'>
-											<div>
-												<h3 className='text-xl font-bold text-foreground'>
-													{exp.title}
-												</h3>
-												<p className='font-semibold text-sm text-accent'>
-													{exp.company}
-												</p>
-											</div>
-											<span className='skill-pill'>{exp.period}</span>
-										</div>
-										<ul className='space-y-1 text-sm mt-3 list-disc list-inside text-muted-foreground'>
-											{exp.bullets.map((b) => (
-												<li key={b}>{b}</li>
-											))}
-										</ul>
-									</div>
-								))}
-							</div>
-						</FadeUp>
-
-						<FadeUp delay={200}>
-							<div className='grid grid-cols-2 gap-6'>
-								{stats.map(({ value, label, colorVar, bgVar }) => (
+					{/* Stats */}
+					<FadeUp delay={200}>
+						<div className='grid grid-cols-2 gap-6'>
+							{stats.map(({ value, label, colorVar, bgVar }) => (
+								<div
+									key={label}
+									className='text-center p-6 sm:p-8 md:p-12 rounded-2xl'
+									style={{ background: `var(${bgVar})` }}
+								>
 									<div
-										key={label}
-										className='text-center p-12 rounded-2xl'
-										style={{ background: `var(${bgVar})` }}
+										className='text-2xl sm:text-4xl md:text-5xl font-black mb-2'
+										style={{ color: `var(${colorVar})` }}
 									>
-										<div
-											className='text-5xl font-black mb-2'
-											style={{ color: `var(${colorVar})` }}
-										>
-											{value}
-										</div>
-										<div className='font-medium text-muted-foreground'>
-											{label}
-										</div>
+										{value}
 									</div>
-								))}
-							</div>
-						</FadeUp>
-					</div>
+									<div className='font-medium text-muted-foreground text-sm sm:text-base'>
+										{label}
+									</div>
+								</div>
+							))}
+						</div>
+					</FadeUp>
 				</div>
 			</div>
 		</section>

@@ -16,9 +16,11 @@ import ScrollToTop from '../components/ui/ScrollToTop'
 export default function HomePage() {
 	return (
 		<>
-			<SidebarOverlay />
-			<MobileMenuButton />
-			<Sidebar />
+			<header className='lg:block hidden'>
+				<SidebarOverlay />
+				<MobileMenuButton />
+				<Sidebar />
+			</header>
 			<main
 				id='main'
 				className='min-h-screen transition-all duration-300 lg:ml-70'

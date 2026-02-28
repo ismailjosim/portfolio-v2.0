@@ -21,7 +21,7 @@
   --card-foreground: hsl(222, 47%, 11%);
 
   /* Primary = Electric Indigo */
-  --primary: hsl(205, 98%, 22%);
+  --primary: hsl(187, 100%, 42%);
 
   --primary-foreground: hsl(0, 0%, 100%);
 
@@ -91,7 +91,7 @@
   --card: hsl(222, 47%, 14%);
   --card-foreground: hsl(210, 40%, 98%);
 
-  --primary: hsl(239, 84%, 67%);
+  --primary: hsl(187, 100%, 42%);
   --primary-foreground: hsl(0, 0%, 100%);
 
   --secondary: hsl(222, 47%, 18%);
@@ -611,7 +611,14 @@ h5 {
 @media (max-width: 900px) {
   #sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
+    z-index: 100;
+    /* ← must be above overlay (99) */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
   }
 
   #sidebar.open {
@@ -619,8 +626,11 @@ h5 {
   }
 
   #main {
-    margin-left: 0;
+    margin-left: 0 !important;
   }
+
+
+
 
   section {
     padding: 60px 24px;

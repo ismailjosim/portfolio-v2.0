@@ -78,13 +78,10 @@ export default function ContactSection() {
 		'w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-foreground placeholder:text-muted-foreground'
 
 	return (
-		<section
-			id='contact'
-			className='bg-background h--[80vh] pb-20 flex items-center'
-		>
+		<section id='contact' className='bg-background sm:pb-20 flex items-center'>
 			<div className='container mx-auto max-w-7xl'>
 				<FadeUp>
-					<div className='text-center mb-16'>
+					<div className='text-center sm:mb-16 mb-8'>
 						<p className='section-label'>Get in Touch</p>
 						<h2 className='text-4xl md:text-5xl font-bold text-foreground mt-3 mb-6'>
 							Contact Me
@@ -93,7 +90,7 @@ export default function ContactSection() {
 					</div>
 				</FadeUp>
 
-				<div className='grid md:grid-cols-3 gap-12'>
+				<div className='lg:grid flex flex-col md:grid-cols-3 gap-12'>
 					{/* Left: Info */}
 					<FadeUp delay={100}>
 						<p className='text-muted-foreground mb-8 leading-relaxed text-justify text-base'>
