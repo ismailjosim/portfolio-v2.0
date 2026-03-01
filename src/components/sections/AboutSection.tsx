@@ -54,7 +54,7 @@ export default function AboutSection() {
 				<div className='grid md:grid-cols-2 lg:gap-16 md:gap-10 gap-6 items-start mt-10'>
 					{/* LEFT CONTENT */}
 					<FadeUp delay={100}>
-						<p className='text-muted-foreground text-lg leading-relaxed mb-5 text-justify'>
+						<p className='text-muted-foreground sm:text-lg leading-relaxed mb-5 sm:text-justify'>
 							I’m a passionate{' '}
 							<span className='text-primary font-semibold'>
 								Full Stack Developer
@@ -67,7 +67,7 @@ export default function AboutSection() {
 							, I lead advanced workshops and mentor aspiring developers.
 						</p>
 
-						<p className='text-muted-foreground leading-relaxed text-justify text-lg mb-12 '>
+						<p className='text-muted-foreground leading-relaxed sm:text-justify sm:text-lg mb-12 '>
 							I thrive at the intersection of clean code and impactful teaching.
 							Whether building scalable APIs, architecting frontend systems, or
 							designing curriculum — I bring precision and clarity to everything

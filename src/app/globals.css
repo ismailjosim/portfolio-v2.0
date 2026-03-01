@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 
 @custom-variant dark (&:is(.dark *));
+
+
 
 /* ===================================== */
 /* ========== LIGHT THEME ============== */
@@ -127,16 +131,6 @@
 /* ============ BASE LAYER ============= */
 /* ===================================== */
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground antialiased;
-  }
-}
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -160,16 +154,32 @@
   --color-ring: var(--ring);
 }
 
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/*
+===========================================
+*                            Global styling
+===========================================
+*/
+* {
+
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
 body {
-  font-family: "Satoshi", sans-serif;
+  font-family: "Inter", sans-serif;
   background: var(--color-background);
   color: var(--color-foreground);
   overflow-x: hidden;
-}
-
-* {
-  scroll-behavior: smooth;
-  box-sizing: border-box;
 }
 
 h1,
@@ -177,7 +187,28 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: "Cabinet Grotesk", sans-serif;
+  font-family: "Rajdhani", sans-serif;
+}
+
+
+/*
+===========================================
+*                   Sidebar section styling
+===========================================
+*/
+
+@keyframes morph {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
 }
 
 .tech-badge {
@@ -225,33 +256,12 @@ h5 {
   overflow-y: auto;
 }
 
-/* Animated cursor */
-.cursor {
-  display: inline-block;
-  width: 3px;
-  height: 1em;
-  background: var(--accent);
-  margin-left: 2px;
-  vertical-align: middle;
-  animation: blink 1s steps(1) infinite;
-}
 
-@keyframes blink {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0;
-  }
-}
 
 /* Avatar ring */
-.avatar-ring {
+/* .avatar-ring {
   box-shadow: 0 0 0 4px var(--avatar-ring-1), 0 0 0 8px var(--avatar-ring-2);
-}
+} */
 
 /* Blob */
 .blob {
@@ -279,20 +289,6 @@ h5 {
   .hero-img {
     height: 35rem;
     width: 35rem;
-  }
-}
-
-@keyframes morph {
-  0% {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-
-  50% {
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
-
-  100% {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
 }
 

@@ -19,6 +19,8 @@ import {
 } from 'lucide-react'
 import ThemeToggle from './ui/ThemeToggle'
 import Image from 'next/image'
+import { Button } from './ui/button'
+import SocialIcons from './modules/SocialIcons'
 
 const navItems = [
 	{ id: 'hero', label: 'Home', icon: Home },
@@ -70,7 +72,7 @@ export default function Sidebar() {
 			{/* Profile */}
 			<div className='p-6 text-center border-b border-border shrink-0'>
 				<div className='relative inline-block mb-3'>
-					<div className='w-24 h-24 rounded-full avatar-ring mx-auto overflow-hidden'>
+					<div className='w-24 h-24 rounded-full ring-2 ring-primary mx-auto overflow-hidden'>
 						<Image
 							className='w-full h-full object-cover'
 							alt='JASIM'
@@ -80,44 +82,14 @@ export default function Sidebar() {
 						/>
 					</div>
 				</div>
-				<h3
-					className='font-bold text-foreground text-base'
-					style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}
-				>
-					Md. Jasim
-				</h3>
+				<h3 className='font-bold text-foreground text-base'>Md. Jasim</h3>
 				<p className='text-xs text-accent font-medium mt-1'>
 					Full Stack Developer
 				</p>
 				<div className='flex justify-center gap-2 mt-3'>
-					<a
-						href='mailto:ismailjosim@yahoo.com'
-						className='social-btn'
-						title='Email'
-					>
-						<Mail className='w-4 h-4' />
-					</a>
-					<a
-						href='https://github.com/ismailjosim'
-						target='_blank'
-						rel='noreferrer'
-						className='social-btn'
-						title='GitHub'
-					>
-						<Github className='w-4 h-4' />
-					</a>
-					<a
-						href='https://linkedin.com/in/ismailjosim'
-						target='_blank'
-						rel='noreferrer'
-						className='social-btn'
-						title='LinkedIn'
-					>
-						<Linkedin className='w-4 h-4' />
-					</a>
-					<a href='tel:+8801715052808' className='social-btn' title='Phone'>
-						<Phone className='w-4 h-4' />
-					</a>
+					<SocialIcons.Phone />
+					<SocialIcons.Email />
+					<SocialIcons.WhatsApp />
 				</div>
 			</div>
 
