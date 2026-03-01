@@ -114,17 +114,10 @@ export default function Sidebar() {
 						Follow Me
 					</h4>
 					<div className='flex justify-center items-center gap-3 mb-3'>
-						{socialLinks.map(({ href, icon: Icon }) => (
-							<a
-								key={href}
-								href={href}
-								target='_blank'
-								rel='noreferrer'
-								className='social-btn'
-							>
-								<Icon className='w-4 h-4' />
-							</a>
-						))}
+						<SocialIcons.Facebook />
+						<SocialIcons.Linkedin />
+						<SocialIcons.Github />
+						<SocialIcons.Twitter />
 						<ThemeToggle />
 					</div>
 					<p className='text-xs text-muted-foreground'>© 2026 Md. Jasim</p>

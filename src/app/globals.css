@@ -66,7 +66,6 @@
   --tech-color: #444;
   --section-tag-color: #999;
   --timeline-line: #e0deff;
-  --btn-primary-hover-bg: #5751d8;
   --card-border: #ebebf5;
   --muted-text: #555;
   --border-light: #ebebf5;
@@ -413,44 +412,8 @@ h5 {
   display: none;
 }
 
-/* Buttons */
-.btn-primary {
-  background: var(--accent);
-  color: var(--white);
-  padding: 12px 28px;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  border: none;
-  font-family: 'Cabinet Grotesk', sans-serif;
-}
 
-.btn-primary:hover {
-  background: var(--btn-primary-hover-bg);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
-}
 
-.btn-outline {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  padding: 12px 28px;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-family: 'Cabinet Grotesk', sans-serif;
-}
 
 .btn-outline:hover {
   background: var(--accent);
@@ -458,24 +421,7 @@ h5 {
   transform: translateY(-2px);
 }
 
-/* Social btn */
-.social-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid var(--timeline-line);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted-text);
-  transition: all 0.2s;
-}
 
-.social-btn:hover {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-}
 
 /* Slideshow */
 .slideshow-container {

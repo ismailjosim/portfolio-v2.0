@@ -39,7 +39,7 @@ const SocialIcons = {
 
 	Github: () => (
 		<SocialButton
-			href='https://github.com/yourusername'
+			href='https://github.com/ismailjosim'
 			label='GitHub'
 			icon={Github}
 		/>
@@ -47,7 +47,7 @@ const SocialIcons = {
 
 	Linkedin: () => (
 		<SocialButton
-			href='https://linkedin.com/in/yourusername'
+			href='https://www.linkedin.com/in/ismailjosim/'
 			label='LinkedIn'
 			icon={Linkedin}
 		/>
@@ -55,7 +55,7 @@ const SocialIcons = {
 
 	Facebook: () => (
 		<SocialButton
-			href='https://facebook.com/yourusername'
+			href='https://www.facebook.com/ismailjosim99'
 			label='Facebook'
 			icon={Facebook}
 		/>
@@ -63,8 +63,8 @@ const SocialIcons = {
 
 	Twitter: () => (
 		<SocialButton
-			href='https://twitter.com/yourusername'
-			label='Twitter'
+			href='https://x.com/ismail_josim'
+			label='X (Twitter)'
 			icon={X}
 		/>
 	),
@@ -77,8 +77,8 @@ const SocialIcons = {
 	),
 	WhatsApp: () => (
 		<SocialButton
-			href='tel:+8801715052808'
-			label='Phone'
+			href="https://wa.me/8801715052808"
+			label="WhatsApp"
 			icon={MessageCircleMore}
 		/>
 	),

@@ -1,0 +1,73 @@
+import { Project } from '../interface/content.interface'
+
+export const projectsSectionData: Project[] = [
+	{
+		emoji: '🚀',
+		name: 'TRAVELER',
+		subtitle: 'Tour Management',
+		gradient: 'from-purple-500 to-indigo-600',
+		tags: ['React 19', 'TypeScript', 'Node.js', 'MongoDB'],
+		title: 'Traveler — Tour Management System',
+		type: 'Full Stack Web Application',
+		bullets: [
+			'Architected 30+ RESTful API endpoints for tours, bookings, payments & analytics',
+			'JWT + Google OAuth authentication with role-based access control',
+			'Cloudinary image management & Nodemailer automated notifications',
+			'Deployed on Vercel with lazy loading and performance optimizations',
+		],
+		badges: [
+			'Redux',
+			'Express.js',
+			'Cloudinary',
+			'Nodemailer',
+			'JWT',
+			'Google OAuth',
+			'Vercel',
+		],
+		githubUrl:
+			'https://github.com/ismailjosim/tour-management-system-client.git',
+	},
+	{
+		emoji: '🎓',
+		name: 'EDU PLATFORM',
+		subtitle: '1000+ Students',
+		gradient: 'from-green-500 to-teal-600',
+		tags: ['MERN', 'Firebase', 'Stripe'],
+		title: 'E-Learning Dashboard',
+		type: 'Educational Platform',
+		bullets: [
+			'Interactive course modules with progress tracking and certification',
+			'Real-time live session integration with video streaming capabilities',
+			'Payment integration with Stripe for course enrollment',
+			'Admin dashboard for course management and student analytics',
+		],
+		badges: [
+			'React',
+			'Next.js',
+			'Node.js',
+			'Express',
+			'MongoDB',
+			'Firebase',
+			'Stripe',
+		],
+		reverse: true,
+		githubUrl: 'https://github.com/ismailjosim/edu-platform',
+	},
+	{
+		emoji: '⚡',
+		name: 'REST API',
+		subtitle: 'Backend · Node.js',
+		gradient: 'from-orange-500 to-red-600',
+		tags: ['Node.js', 'Express', 'MongoDB'],
+		title: 'RESTful API Architecture',
+		type: 'Backend · API Development',
+		bullets: [
+			'30+ RESTful endpoints with comprehensive error handling',
+			'JWT authentication, rate limiting, and request validation',
+			'Redis caching for optimized performance and reduced load',
+			'Comprehensive API documentation with Swagger/OpenAPI',
+		],
+		badges: ['Express.js', 'MongoDB', 'JWT', 'Redis', 'Axios', 'Swagger'],
+		githubUrl: 'https://github.com/ismailjosim/rest-api',
+	},
+]
