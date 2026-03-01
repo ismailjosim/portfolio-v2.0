@@ -47,7 +47,7 @@ export default function EducationSection() {
 		>
 			<div className='w-full'>
 				<FadeUp>
-					<p className='section-label'>My Academic Journey</p>
+					<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>My Academic Journey</p>
 					<h2 className='text-4xl font-bold mb-12 text-foreground'>
 						Education &amp; Qualifications
 					</h2>
@@ -57,7 +57,7 @@ export default function EducationSection() {
 					<div className='grid sm:grid-cols-2 gap-12'>
 						{/* Academic */}
 						<div>
-							<p className='section-tag mb-2'>2016 - 2025</p>
+							<p className='mb-2 text-xs font-semibold leading-0.5 uppercase text-[#999]'>2016 - 2025</p>
 							<h3 className='text-2xl font-bold mb-8 text-foreground'>
 								Academic Education
 							</h3>
@@ -79,7 +79,7 @@ export default function EducationSection() {
 
 						{/* Certifications */}
 						<div>
-							<p className='section-tag mb-2'>2023 - Present</p>
+							<p className='mb-2 text-xs font-semibold leading-0.5 uppercase text-[#999]'>2023 - Present</p>
 							<h3 className='text-2xl font-bold mb-8 text-foreground'>
 								Professional Certifications
 							</h3>

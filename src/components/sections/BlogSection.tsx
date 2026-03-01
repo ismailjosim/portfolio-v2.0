@@ -69,7 +69,7 @@ export default function BlogSection() {
 			<div className='container mx-auto '>
 				<div className='text-center mb-12'>
 					<FadeUp>
-						<p className='section-label'>My thoughts and insights</p>
+						<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>My thoughts and insights</p>
 						<h2 className='text-4xl font-bold text-foreground mb-8'>
 							Latest Articles &amp; Insights
 						</h2>

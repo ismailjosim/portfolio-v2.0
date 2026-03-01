@@ -1,4 +1,26 @@
-import { Project } from '../interface/content.interface'
+import {
+	Layers,
+	Rocket,
+	ServerCog,
+	Users,
+	Code2,
+	FileCode2,
+	Braces,
+	Globe,
+	Palette,
+	Database,
+	Server,
+	CreditCard,
+	Wrench,
+	Leaf,
+	Link2,
+	Cpu,
+	Shield,
+	GitBranch,
+	Cloud,
+	DatabaseZap,
+} from 'lucide-react'
+import { IWorkArea, Project, SkillGroup } from '../interface/content.interface'
 
 export const projectsSectionData: Project[] = [
 	{
@@ -69,5 +91,132 @@ export const projectsSectionData: Project[] = [
 		],
 		badges: ['Express.js', 'MongoDB', 'JWT', 'Redis', 'Axios', 'Swagger'],
 		githubUrl: 'https://github.com/ismailjosim/rest-api',
+	},
+]
+
+export const areas: IWorkArea[] = [
+	{
+		Icon: Code2,
+		iconColor: 'text-orange-500',
+		iconBg: 'bg-orange-100 dark:bg-orange-500/20',
+		title: 'Frontend Development',
+		desc: 'Pixel-perfect, responsive UIs with React, Next.js, TypeScript, Tailwind CSS, and modern animation libraries.',
+	},
+	{
+		Icon: ServerCog,
+		iconColor: 'text-blue-500',
+		iconBg: 'bg-blue-100 dark:bg-blue-500/20',
+		title: 'Backend & API Development',
+		desc: 'Scalable RESTful APIs with Node.js, Express.js, JWT auth, Redis caching, and cloud integrations.',
+	},
+	{
+		Icon: Database,
+		iconColor: 'text-purple-500',
+		iconBg: 'bg-purple-100 dark:bg-purple-500/20',
+		title: 'Database Design',
+		desc: 'Efficient schema design with MongoDB, Mongoose ODM, and PostgreSQL for performant data access.',
+	},
+	{
+		Icon: Layers,
+		iconColor: 'text-pink-500',
+		iconBg: 'bg-pink-100 dark:bg-pink-500/20',
+		title: 'Full Stack MERN Apps',
+		desc: 'End-to-end application development with auth, payments (Stripe/SSLCommerz), real-time features, and deployment.',
+	},
+	{
+		Icon: Users,
+		iconColor: 'text-yellow-500',
+		iconBg: 'bg-yellow-100 dark:bg-yellow-500/20',
+		title: 'Web Mentoring',
+		desc: '1-on-1 or group mentoring for aspiring developers on React, Node.js, JavaScript, and career guidance.',
+	},
+	{
+		Icon: Rocket,
+		iconColor: 'text-green-500',
+		iconBg: 'bg-green-100 dark:bg-green-500/20',
+		title: 'Deployment & DevOps',
+		desc: 'Production-ready deployments on Vercel, Netlify, and Firebase with CI/CD and performance optimization.',
+	},
+]
+
+export const skillGroups: SkillGroup[] = [
+	{
+		label: 'Languages',
+		icon: Code2,
+		skills: [
+			{ name: 'JavaScript', icon: FileCode2 },
+			{ name: 'TypeScript', icon: Braces },
+			{ name: 'HTML5', icon: Globe },
+			{ name: 'CSS3', icon: Palette },
+			{ name: 'C / C++', icon: Cpu },
+		],
+	},
+	{
+		label: 'Frontend',
+		icon: Globe,
+		skills: [
+			{ name: 'React.js', icon: Cpu },
+			{ name: 'Next.js', icon: Globe },
+			{ name: 'Redux Toolkit', icon: GitBranch },
+			{ name: 'TanStack Query', icon: Database },
+			{ name: 'React Router', icon: Globe },
+			{ name: 'React Hook Form', icon: FileCode2 },
+			{ name: 'Socket.io', icon: Server },
+		],
+	},
+	{
+		label: 'Styling & UI',
+		icon: Palette,
+		skills: [
+			{ name: 'Tailwind CSS', icon: Palette },
+			{ name: 'Material UI', icon: Braces },
+			{ name: 'Shadcn UI', icon: Braces },
+			{ name: 'Ant Design', icon: Braces },
+			{ name: 'Framer Motion', icon: Cpu },
+		],
+	},
+	{
+		label: 'Backend',
+		icon: Server,
+		skills: [
+			{ name: 'Node.js', icon: Server },
+			{ name: 'Express.js', icon: Server },
+			{ name: 'JWT / OAuth', icon: Shield },
+			{ name: 'Firebase Auth', icon: Shield },
+			{ name: 'NextAuth', icon: Shield },
+			{ name: 'Nodemailer', icon: FileCode2 },
+			{ name: 'Redis', icon: Database },
+		],
+	},
+	{
+		label: 'Database',
+		icon: Database,
+		skills: [
+			{ name: 'MongoDB', icon: Leaf },
+			{ name: 'Mongoose', icon: Link2 },
+			{ name: 'PostgreSQL', icon: Database },
+			{ name: 'Prisma', icon: DatabaseZap },
+		],
+	},
+	{
+		label: 'Tools & DevOps',
+		icon: Wrench,
+		skills: [
+			{ name: 'Git / GitHub', icon: GitBranch },
+			{ name: 'Vercel', icon: Cloud },
+			{ name: 'Netlify', icon: Cloud },
+			{ name: 'Firebase', icon: Cloud },
+			{ name: 'Linux', icon: Cpu },
+		],
+	},
+	{
+		label: 'Payment & Validation',
+		icon: CreditCard,
+		skills: [
+			{ name: 'Stripe', icon: CreditCard },
+			{ name: 'SSLCommerz', icon: CreditCard },
+			{ name: 'Zod', icon: Shield },
+			{ name: 'Axios', icon: Globe },
+		],
 	},
 ]

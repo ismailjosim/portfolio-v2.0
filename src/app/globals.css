@@ -64,7 +64,6 @@
   --tech-bg: #f5f3ff;
   --tech-border: #e9e7ff;
   --tech-color: #444;
-  --section-tag-color: #999;
   --timeline-line: #e0deff;
   --card-border: #ebebf5;
   --muted-text: #555;
@@ -210,14 +209,7 @@ h5 {
   }
 }
 
-.tech-badge {
-  background: var(--tech-bg);
-  /* #f5f3ff */
-  border: 1px solid var(--tech-border);
-  /* #e9e7ff */
-  color: var(--tech-color);
-  /* #444 */
-}
+
 
 /* Scrollbar */
 ::-webkit-scrollbar {
@@ -336,50 +328,6 @@ h5 {
   display: inline-block;
 }
 
-/* Tech badge */
-.tech-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: var(--tech-bg);
-  border: 1px solid var(--tech-border);
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--tech-color);
-  margin: 4px;
-}
-
-/* Tech tag */
-.tech-tag {
-  font-size: 11px;
-  background: var(--skill-bg);
-  color: var(--accent);
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-weight: 500;
-  display: inline-block;
-}
-
-/* Section label */
-.section-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-
-/* Section tag */
-.section-tag {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--section-tag-color);
-}
 
 /* Timeline */
 .timeline-item {
@@ -411,9 +359,6 @@ h5 {
 .timeline-item:last-child::after {
   display: none;
 }
-
-
-
 
 .btn-outline:hover {
   background: var(--accent);

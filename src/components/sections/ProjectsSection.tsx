@@ -11,7 +11,7 @@ const ProjectsSection = () => {
 		<section id="projects" className="bg-card py-20">
 			<div className="container mx-auto px-6">
 				<FadeUp>
-					<p className="section-label">Things I&apos;ve built</p>
+					<p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">Things I&apos;ve built</p>
 					<h2 className="text-4xl font-bold mb-12 text-foreground">Featured Projects</h2>
 				</FadeUp>
 

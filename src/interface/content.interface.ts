@@ -1,3 +1,5 @@
+import { LucideIcon } from 'lucide-react'
+
 export interface Project {
 	emoji: string
 	name: string
@@ -10,4 +12,26 @@ export interface Project {
 	badges: string[]
 	reverse?: boolean
 	githubUrl?: string
+}
+
+export interface IWorkArea {
+	Icon: LucideIcon
+	iconColor: string
+	iconBg: string
+	title: string
+	desc: string
+}
+
+// --------------------------
+// Interfaces
+// --------------------------
+export interface Skill {
+	name: string
+	icon: LucideIcon
+}
+
+export interface SkillGroup {
+	label: string
+	icon: LucideIcon
+	skills: Skill[]
 }
