@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback } from 'react'
-import { Mail, Layers, Trophy, GithubIcon } from 'lucide-react'
+import { Mail, Layers, Trophy, GithubIcon, Code2, FileCheck, Users } from 'lucide-react'
 import { ReactTyped } from 'react-typed'
 
 const TYPED_TEXTS = [
@@ -20,20 +20,43 @@ const STATS = [
 const BADGES = [
 	{
 		icon: Trophy,
-		title: '3+ Years',
-		subtitle: 'Experience',
-		iconBg: 'bg-orange-100',
-		iconColor: 'text-orange-500',
-		position: 'sm:-top-4 -top-10 sm:-right-6 -right-8',
+		title: '1500+ Hrs',
+		subtitle: 'Live Sessions',
+		iconBg: 'bg-amber-100',
+		iconColor: 'text-amber-600',
+		position: 'sm:-top-6 -top-10 sm:-right-8 -right-4',
 	},
 	{
 		icon: GithubIcon,
-		title: '150+',
-		subtitle: 'Github Repo',
+		title: '135+',
+		subtitle: 'Github Repos',
 		iconBg: 'bg-green-100',
 		iconColor: 'text-green-500',
-		position:
-			'lg:bottom-6 bottom-1 lg:left-20 -left-10 [animation-delay:1.5s] border sm:border-transparent',
+		position: 'lg:bottom-10 bottom-2 lg:left-20 -left-6 [animation-delay:1.5s]',
+	},
+	{
+		icon: Code2,
+		title: '11K+',
+		subtitle: 'Problems Solved',
+		iconBg: 'bg-blue-100',
+		iconColor: 'text-blue-500',
+		position: 'top-1/4 -left-12 sm:-left-20 [animation-delay:0.7s]',
+	},
+	{
+		icon: FileCheck,
+		title: '8.9K+',
+		subtitle: 'Projects Reviewed',
+		iconBg: 'bg-purple-100',
+		iconColor: 'text-purple-500',
+		position: 'bottom-1/3 -right-10 sm:-right-16 [animation-delay:1s]',
+	},
+	{
+		icon: Users,
+		title: 'Senior',
+		subtitle: 'Web Instructor',
+		iconBg: 'bg-rose-100',
+		iconColor: 'text-rose-500',
+		position: 'top-0 -left-4 sm:top-10 sm:-left-24 [animation-delay:1.2s]',
 	},
 ]
 
