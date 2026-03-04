@@ -11,7 +11,7 @@ const DashboardLayout = ({
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main>
+            <main className='container mx-auto'>
                 <SidebarTrigger />
                 {children}
             </main>
