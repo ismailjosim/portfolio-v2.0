@@ -40,7 +40,7 @@ const BADGES = [
 		subtitle: 'Problems Solved',
 		iconBg: 'bg-blue-100',
 		iconColor: 'text-blue-500',
-		position: 'top-1/4 -left-12 sm:-left-20 [animation-delay:0.7s]',
+		position: 'top-1/3 -left-12 sm:left-5 [animation-delay:0.7s]',
 	},
 	{
 		icon: FileCheck,
@@ -48,7 +48,7 @@ const BADGES = [
 		subtitle: 'Projects Reviewed',
 		iconBg: 'bg-purple-100',
 		iconColor: 'text-purple-500',
-		position: 'bottom-1/3 -right-10 sm:-right-16 [animation-delay:1s]',
+		position: 'bottom-0 -right-10 sm:-right-16 [animation-delay:1s]',
 	},
 	{
 		icon: Users,
@@ -56,7 +56,7 @@ const BADGES = [
 		subtitle: 'Web Instructor',
 		iconBg: 'bg-rose-100',
 		iconColor: 'text-rose-500',
-		position: 'top-0 -left-4 sm:top-10 sm:-left-24 [animation-delay:1.2s]',
+		position: 'top-0 -left-4 sm:left-32 [animation-delay:1.2s]',
 	},
 ]
 

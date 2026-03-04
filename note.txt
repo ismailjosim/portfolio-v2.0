@@ -1,0 +1,14 @@
+dashboard page:
+Skills
+Blog
+work experience
+Projects
+
+
+in my dashboard add  sidebar with  the follow menu with icons:
+
+1.  Skills page to show all Skills in  table format at the top left corder of  the table add a button to  add new skill clicking the button will open a modal  which includes a form with some fields for now just show two fields: name and icon
+
+
+2. blog page: here it will show a form with markdown to add new blog.
+the ui is similar to the skill section but add new blog modal includes a form where we can includes markdown option with image attached option and title.

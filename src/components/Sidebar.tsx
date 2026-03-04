@@ -11,16 +11,13 @@ import {
 	GraduationCap,
 	BookOpen,
 	MessageCircle,
-	Mail,
-	Phone,
-	Linkedin,
-	X,
-	Github,
 } from 'lucide-react'
 import ThemeToggle from './ui/ThemeToggle'
 import Image from 'next/image'
-import { Button } from './ui/button'
+
 import SocialIcons from './modules/SocialIcons'
+import { Button } from './ui/button'
+import Link from 'next/link'
 
 const navItems = [
 	{ id: 'hero', label: 'Home', icon: Home },
@@ -32,12 +29,7 @@ const navItems = [
 	{ id: 'education', label: 'Education', icon: GraduationCap },
 	{ id: 'blog', label: 'Blog', icon: BookOpen },
 	{ id: 'contact', label: 'Contact', icon: MessageCircle },
-]
-
-const socialLinks = [
-	{ href: 'https://github.com/ismailjosim', icon: Github },
-	{ href: 'https://linkedin.com/in/ismailjosim', icon: Linkedin },
-	{ href: 'https://twitter.com/ismailjosim', icon: X },
+	{ id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
 ]
 
 export default function Sidebar() {
@@ -95,16 +87,33 @@ export default function Sidebar() {
 
 			{/* Nav — scrollable */}
 			<nav className='p-4 space-y-1 flex-1 overflow-y-auto'>
-				{navItems.map(({ id, label, icon: Icon }) => (
-					<button
-						key={id}
-						className={`nav-link w-full text-left ${active === id ? 'active' : ''}`}
-						onClick={() => scrollToSection(id)}
-					>
-						<Icon className='w-4 h-4 shrink-0' />
-						{label}
-					</button>
+				{navItems.map(({ id, label, icon: Icon, href }) => (
+					href ? (
+						<Link
+							key={id}
+							href={href}
+							className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${active === id
+									? 'bg-primary text-primary-foreground'
+									: 'text-foreground hover:bg-secondary'
+								}`}
+						>
+							<Icon size={18} />
+							{label}
+						</Link>
+					) : (
+						<Button
+							key={id}
+							variant='ghost'
+							className={`w-full justify-start ${active === id ? 'bg-primary text-primary-foreground' : ''
+								}`}
+							onClick={() => scrollToSection(id)}
+						>
+							<Icon size={18} />
+							{label}
+						</Button>
+					)
 				))}
+
 			</nav>
 
 			{/* Footer — always visible at bottom */}
