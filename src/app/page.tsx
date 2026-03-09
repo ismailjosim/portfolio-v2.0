@@ -13,6 +13,7 @@ import ContactSection from '../components/sections/ContactSection'
 import MobileMenuButton from '../components/ui/MobileMenuButton'
 import ScrollToTop from '../components/ui/ScrollToTop'
 
+
 export default function HomePage() {
 	return (
 		<>

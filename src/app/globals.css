@@ -455,23 +455,6 @@ h5 {
   color: var(--badge-career-color);
 }
 
-/* GitHub stat cards */
-.github-stat-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: all 0.3s ease;
-}
-
-.github-stat-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(108, 99, 255, 0.12);
-  transform: translateY(-2px);
-}
 
 /* Fade up animation for scroll */
 .fade-up {
@@ -495,13 +478,8 @@ h5 {
   box-shadow: 0 16px 40px rgba(108, 99, 255, 0.15);
 }
 
-/* Swiper custom */
-.swiper-slide img {
-  border-radius: 12px;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
+
+
 
 /* Mobile */
 #mobile-nav-toggle {
@@ -525,13 +503,8 @@ h5 {
     transform: translateX(0);
   }
 
-  #main {
-    margin-left: 0 !important;
-  }
 
-  section {
-    padding: 60px 24px;
-  }
+
 
   #mobile-nav-toggle {
     display: block;
@@ -548,26 +521,6 @@ h5 {
     cursor: pointer;
     font-size: 20px;
   }
-}
-
-/* Scroll to top */
-#scrollToTop {
-  transition: all 0.3s ease;
-}
-
-#scrollToTop.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-#scrollToTop:hover {
-  transform: translateY(-4px);
-}
-
-/* Cursor */
-.cursor {
-  @apply inline-block w-[3px] h-[1em] bg-primary ml-1 align-middle;
-  animation: blink 1s steps(1) infinite;
 }
 
 @keyframes blink {

@@ -40,7 +40,7 @@ const BADGES = [
 		subtitle: 'Problems Solved',
 		iconBg: 'bg-blue-100',
 		iconColor: 'text-blue-500',
-		position: 'top-1/3 -left-12 sm:left-5 [animation-delay:0.7s]',
+		position: 'top-1/3 -left-12 lg:left-5 md:-left-36 [animation-delay:0.7s]',
 	},
 	{
 		icon: FileCheck,
@@ -56,7 +56,7 @@ const BADGES = [
 		subtitle: 'Web Instructor',
 		iconBg: 'bg-rose-100',
 		iconColor: 'text-rose-500',
-		position: 'top-0 -left-4 sm:left-32 [animation-delay:1.2s]',
+		position: 'top-0 -left-4 lg:left-32 md:left-0 [animation-delay:1.2s]',
 	},
 ]
 
@@ -72,9 +72,7 @@ export default function HeroSection() {
 	}, [])
 
 	return (
-		<section
-			id='hero'
-			className='relative overflow-hidden min-h-screen flex items-center px-6 md:px-16 bg-linear-to-br from-background to-secondary/40'
+		<section id='hero' className='relative overflow-hidden min-h-screen flex items-center px-6 md:px-16 bg-linear-to-br from-background to-secondary/40'
 		>
 			{/* Background Blobs */}
 			<div className='absolute -top-24 -right-16 w-100 h-100 bg-primary/20 rounded-full blur-3xl' />
@@ -168,10 +166,11 @@ export default function HeroSection() {
 					/>
 
 					{/* Glow */}
-					<div className='absolute w-150 h-150 bg-primary/10 rounded-full blur-3xl -z-10' />
+					<div className='absolute  w-150 h-150 bg-primary/10 rounded-full blur-3xl -z-10' />
 
 					{/* Floating Badges */}
-					{BADGES.map((badge, i) => {
+					<div className='sm:block hidden'>
+							{BADGES.map((badge, i) => {
 						const Icon = badge.icon
 
 						return (
@@ -195,6 +194,7 @@ export default function HeroSection() {
 							</div>
 						)
 					})}
+				</div>
 				</div>
 			</div>
 		</section>
