@@ -43,7 +43,7 @@ const BlogPage = () => {
     }
 
     return (
-        <div className="w-11/12 mx-auto">
+        <section className="space-y-6">
             <SectionHeader
                 title="All Blogs"
                 buttonLabel="Add New Blog"
@@ -97,7 +97,7 @@ const BlogPage = () => {
                     </SheetClose>
                 </SheetContent>
             </Sheet>
-        </div >
+        </section>
     )
 }
 

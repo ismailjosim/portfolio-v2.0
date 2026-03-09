@@ -1,10 +1,11 @@
 
 const AddBlogPage = () => {
-    return (
-        <div>
-            <h2>Add New Blog Page</h2>
-        </div>
-    );
-};
+	return (
+		<div>
 
-export default AddBlogPage;
+			<h2>Add New Blog Page</h2>
+		</div>
+	)
+}
+
+export default AddBlogPage

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 "use client"
 
 import * as React from "react"
@@ -273,7 +274,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      <PanelLeftIcon  />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
