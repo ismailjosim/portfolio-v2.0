@@ -333,16 +333,7 @@ h5 {
 }
 
 /* Skill pill */
-.skill-pill {
-  background: var(--skill-bg);
-  color: var(--accent);
-  border: 1px solid var(--skill-border);
-  font-size: 13px;
-  font-weight: 500;
-  padding: 4px 14px;
-  border-radius: 100px;
-  display: inline-block;
-}
+
 
 /* Timeline */
 .timeline-item {

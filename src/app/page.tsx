@@ -12,20 +12,15 @@ import GitHubSection from '../components/sections/GitHubSection'
 import ContactSection from '../components/sections/ContactSection'
 import MobileMenuButton from '../components/ui/MobileMenuButton'
 import ScrollToTop from '../components/ui/ScrollToTop'
-
+import Navbar from '../components/shared/Navbar'
 
 export default function HomePage() {
 	return (
 		<>
-			<header className='lg:block hidden'>
-				<SidebarOverlay />
-				<MobileMenuButton />
-				<Sidebar />
+			<header>
+				<Navbar />
 			</header>
-			<main
-				id='main'
-				className='min-h-screen transition-all duration-300 lg:ml-70'
-			>
+			<main className='min-h-screen transition-all duration-300'>
 				<HeroSection />
 				<AboutSection />
 				<SkillsSection />

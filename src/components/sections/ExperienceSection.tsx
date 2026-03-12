@@ -107,7 +107,7 @@ export default function ExperienceSection() {
 												{exp.company}
 											</p>
 										</div>
-										<span className='skill-pill text-sm sm:text-base mt-1 sm:mt-0'>
+										<span className='text-foreground py-1 px-3.5 inline-block font-medium rounded-2xl bg-primary text-sm'>
 											{exp.period}
 										</span>
 									</div>

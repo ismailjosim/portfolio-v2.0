@@ -72,13 +72,13 @@ export default function HeroSection() {
 	}, [])
 
 	return (
-		<section id='hero' className='relative overflow-hidden min-h-screen flex items-center px-6 md:px-16 bg-linear-to-br from-background to-secondary/40'
+		<section id='hero' className='relative overflow-hidden min-h-screen flex items-center px-6 md:px-16 pt-32 lg:pt-10 bg-linear-to-br from-background to-secondary/40'
 		>
 			{/* Background Blobs */}
 			<div className='absolute -top-24 -right-16 w-100 h-100 bg-primary/20 rounded-full blur-3xl' />
 			<div className='absolute bottom-10 left-20 w-70 h-70 bg-accent/20 rounded-full blur-3xl' />
 
-			<div className='relative z-10 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 items-center'>
+			<div className='relative z-10 container mx-auto flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 items-center'>
 				{/* LEFT CONTENT */}
 				<div>
 					<p className='uppercase tracking-widest text-sm font-semibold text-primary mb-4'>
@@ -120,7 +120,7 @@ export default function HeroSection() {
 					<div className='flex flex-wrap gap-4 mb-12'>
 						<a
 							href='mailto:ismailjosim@yahoo.com'
-							className='flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-semibold transition-transform hover:scale-105'
+							className='flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-2xl font-semibold transition-transform hover:scale-105'
 						>
 							<Mail size={16} />
 							Hire Me
@@ -128,7 +128,7 @@ export default function HeroSection() {
 
 						<button
 							onClick={() => scrollToSection('projects')}
-							className='flex items-center gap-2 border border-primary text-primary px-6 py-3 rounded-full font-semibold transition-colors hover:bg-primary hover:text-white'
+							className='flex items-center gap-2 border border-primary text-primary px-6 py-3 rounded-2xl font-semibold transition-colors hover:bg-primary hover:text-white'
 						>
 							<Layers size={16} />
 							View Projects
@@ -159,7 +159,7 @@ export default function HeroSection() {
 				<div className='relative flex justify-center lg:justify-end'>
 					{/* Profile Image */}
 					<div
-						className='hero-morph w-72 h-72 md:w-110 md:h-110 lg:w-150 lg:h-150 bg-center bg-cover'
+						className='hero-morph w-80 h-80 md:w-110 md:h-110 lg:w-150 lg:h-150 bg-center bg-cover'
 						style={{ backgroundImage: "url('/person.jpeg')" }}
 						role='img'
 						aria-label='Md. Jasim profile image'
@@ -179,7 +179,7 @@ export default function HeroSection() {
 								className={`absolute ${badge.position} bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y`}
 							>
 								<div
-									className={`w-10 h-10 ${badge.iconBg} rounded-full flex items-center justify-center`}
+									className={`w-10 h-10 ${badge.iconBg} rounded-2xl flex items-center justify-center`}
 								>
 									<Icon size={18} className={badge.iconColor} />
 								</div>

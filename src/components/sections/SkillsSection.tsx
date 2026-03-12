@@ -32,7 +32,7 @@ export default function SkillsSection() {
 							>
 								{/* Group Header */}
 								<div className="flex items-center gap-3 mb-6">
-									<div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+									<div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
 										<GroupIcon size={20} className="text-primary" />
 									</div>
 									<h4 className="text-lg font-semibold text-foreground">{label}</h4>
@@ -43,7 +43,7 @@ export default function SkillsSection() {
 									{skills.map(({ name, icon: SkillIcon }) => (
 										<div
 											key={name}
-											className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted text-muted-foreground hover:bg-primary hover:text-white transition group cursor-default"
+											className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-muted text-muted-foreground hover:bg-primary hover:text-white transition group cursor-default"
 										>
 											<SkillIcon
 												size={16}

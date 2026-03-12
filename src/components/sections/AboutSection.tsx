@@ -90,7 +90,7 @@ export default function AboutSection() {
 							<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
 								{aboutInfo.map(({ label, value, icon: Icon }) => (
 									<div key={label} className="flex items-start gap-3">
-										<div className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10">
+										<div className="w-10 h-10 flex items-center justify-center rounded-2xl bg-primary/10">
 											<Icon size={18} className="text-primary" />
 										</div>
 										<div>
