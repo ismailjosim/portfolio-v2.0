@@ -7,7 +7,7 @@ import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import ThemeToggle from '../ui/ThemeToggle'
-import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 const navItems = [
 	{ name: 'Home', href: '#home' },
@@ -50,7 +50,7 @@ export default function Navbar() {
 	}, [])
 
 	return (
-		<header className='fixed top-4 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none'>
+		<header className='fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none'>
 			<nav
 				className={cn(
 					'pointer-events-auto container mx-auto flex items-center justify-between px-4 py-2.5 rounded-2xl border transition-all duration-300',
@@ -61,15 +61,15 @@ export default function Navbar() {
 			>
 				{/* ── Logo + availability badge ── */}
 				<div className='flex flex-col justify-center'>
-					<Link
-						href='#home'
-						className='flex items-center gap-1.5 font-bold text-lg tracking-tight text-foreground hover:text-accent transition-colors'
-						style={{ fontFamily: 'Rajdhani, sans-serif' }}
-					>
-
-						<Image className='w-10 h-10 object-cover rounded-2xl' width={50} height={50} src={'/person.jpeg'} alt='Jasim'/>
+					<Link href='/' style={{ fontFamily: 'Rajdhani, sans-serif' }}>
+						<Avatar className=' w-10 h-10'>
+							<AvatarImage
+								className='object-contain border border-primary rounded-full'
+								src='/logo-v2.png'
+							/>
+							<AvatarFallback>J.</AvatarFallback>
+						</Avatar>
 					</Link>
-
 				</div>
 
 				{/* ── Desktop nav links (hidden below lg because 8 items need space) ── */}
