@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,25 +25,21 @@ import {
 export const title = "Form with Multiple Selects";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+  title: z.string().min(2, {
+    message: "Title must be at least 2 characters.",
   }),
-  country: z.string().min(1, {
-    message: "Please select a country.",
+  details: z.string().min(2, {
+    message: "details must be at least 2 characters.",
   }),
-  timezone: z.string().min(1, {
-    message: "Please select a timezone.",
-  }),
-  language: z.string().min(1, {
-    message: "Please select a language.",
-  }),
+
 });
 
 const Example = () => {
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(),
     defaultValues: {
-      name: "",
+      title: "",
+      details: ""
     },
   });
 
@@ -55,7 +52,7 @@ const Example = () => {
       <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Controller
-            name="name"
+            name="title"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
@@ -74,7 +71,7 @@ const Example = () => {
             )}
           />
           <Controller
-            name="country"
+            name="details"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
@@ -100,63 +97,7 @@ const Example = () => {
               </Field>
             )}
           />
-          <Controller
-            name="timezone"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Timezone</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    className="bg-background"
-                  >
-                    <SelectValue placeholder="Select timezone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="est">Eastern Time</SelectItem>
-                    <SelectItem value="cst">Central Time</SelectItem>
-                    <SelectItem value="mst">Mountain Time</SelectItem>
-                    <SelectItem value="pst">Pacific Time</SelectItem>
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="language"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Language</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    className="bg-background"
-                  >
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="es">Spanish</SelectItem>
-                    <SelectItem value="fr">French</SelectItem>
-                    <SelectItem value="de">German</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FieldDescription>
-                  Choose your preferred language.
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
+
         </FieldGroup>
         <Button type="submit">Save Settings</Button>
       </form>
