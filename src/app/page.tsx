@@ -1,5 +1,4 @@
-import Sidebar from '../components/Sidebar'
-import SidebarOverlay from '../components/ui/SidebarOverlay'
+
 import HeroSection from '../components/sections/HeroSection'
 import AboutSection from '../components/sections/AboutSection'
 import SkillsSection from '../components/sections/SkillsSection'
@@ -10,7 +9,6 @@ import EducationSection from '../components/sections/EducationSection'
 import BlogSection from '../components/sections/BlogSection'
 import GitHubSection from '../components/sections/GitHubSection'
 import ContactSection from '../components/sections/ContactSection'
-import MobileMenuButton from '../components/ui/MobileMenuButton'
 import ScrollToTop from '../components/ui/ScrollToTop'
 import Navbar from '../components/shared/Navbar'
 

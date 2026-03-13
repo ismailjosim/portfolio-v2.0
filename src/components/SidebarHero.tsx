@@ -32,7 +32,7 @@ const navItems = [
 	{ id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
 ]
 
-export default function Sidebar() {
+export default function SidebarHero() {
 	const [active, setActive] = useState('hero')
 
 	useEffect(() => {
@@ -93,8 +93,8 @@ export default function Sidebar() {
 							key={id}
 							href={href}
 							className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${active === id
-									? 'bg-primary text-primary-foreground'
-									: 'text-foreground hover:bg-secondary'
+								? 'bg-primary text-primary-foreground'
+								: 'text-foreground hover:bg-secondary'
 								}`}
 						>
 							<Icon size={18} />

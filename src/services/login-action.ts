@@ -7,7 +7,7 @@ export type LoginState = { error?: string } | undefined
 
 const COOKIE_NAME = 'dashboard_session'
 const SESSION_VALUE = 'authenticated'
-const MAX_AGE = 60 * 60 * 24 * 7 // 7 days
+const MAX_AGE = 60 * 60 * 24 * 7
 
 // useActionState requires: (prevState, formData) => State
 // The first param is the previous state — we can ignore it but it MUST be declared

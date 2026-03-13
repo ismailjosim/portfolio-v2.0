@@ -2,10 +2,6 @@
 
 import { useActionState } from 'react'
 import { loginAction, type LoginState } from '../../services/login-action'
-// import { Button } from '@/components/ui/button'
-// import { Input } from '@/components/ui/input'
-// import { Label } from '@/components/ui/label'
-// import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '../ui/alert'
 import { Label } from '../ui/label'
@@ -13,8 +9,6 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 
 export default function LoginForm({ from }: { from: string }) {
-	// useActionState signature: action must be (prevState, formData) => State
-	// First arg is initial state, second (optional) is permalink
 	const [state, formAction, isPending] = useActionState<LoginState, FormData>(
 		loginAction,
 		undefined,

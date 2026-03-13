@@ -334,7 +334,6 @@ h5 {
 
 /* Skill pill */
 
-
 /* Timeline */
 .timeline-item {
   position: relative;
@@ -446,7 +445,6 @@ h5 {
   color: var(--badge-career-color);
 }
 
-
 /* Fade up animation for scroll */
 .fade-up {
   opacity: 0;
@@ -469,9 +467,6 @@ h5 {
   box-shadow: 0 16px 40px rgba(108, 99, 255, 0.15);
 }
 
-
-
-
 /* Mobile */
 #mobile-nav-toggle {
   display: none;
@@ -493,9 +488,6 @@ h5 {
   #sidebar.open {
     transform: translateX(0);
   }
-
-
-
 
   #mobile-nav-toggle {
     display: block;
