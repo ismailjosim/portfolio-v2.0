@@ -1,12 +1,14 @@
-import { Loading } from "../../../components/ui/loading";
+import { ManagementPageLoading } from '../../../components/shared/ManagementPageLoading'
 
+const ManagementLoading = () => {
+	return (
+		<ManagementPageLoading
+			columns={10}
+			hasActionButton
+			filterCount={5}
+			filterWidths={['w-48', 'w-32', 'w-40', 'w-24', 'w-36']}
+		/>
+	)
+}
 
-const PageLoading = () => {
-    return (
-        <div className="min-h-[60vh] flex items-center justify-center">
-            <Loading message="Loading blog editor..." />
-        </div>
-    );
-};
-
-export default PageLoading;
+export default ManagementLoading

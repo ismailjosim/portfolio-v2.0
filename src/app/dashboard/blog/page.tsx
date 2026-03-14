@@ -1,104 +1,30 @@
-"use client"
+import BlogManagementHeader from '../../../components/dashboard/BlogPage/BlogManagementHeader'
 
-import { useState } from "react"
-import BlogTable, { blogData as initialBlogs, Blog } from "../../../components/modules/blog/blog-table"
-import { SectionHeader } from "../../../components/section-header"
-import { Button } from "../../../components/ui/button"
-import {
-    Sheet,
-    SheetTrigger,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetDescription,
-    SheetFooter,
-    SheetClose,
-} from "../../../components/ui/sheet"
-import { Label } from "../../../components/ui/label"
-import { Input } from "../../../components/ui/input"
-import { Textarea } from "../../../components/ui/textarea"
+const DashboardBlogPage = () => {
+	return (
+		<section className='p-6'>
+			<BlogManagementHeader />
 
-const BlogPage = () => {
-    const [blogs, setBlogs] = useState<Blog[]>(initialBlogs)
-    const [sheetOpen, setSheetOpen] = useState(false)
-    const [title, setTitle] = useState("")
-    const [content, setContent] = useState("")
-    const [image, setImage] = useState("")
-
-    const handleAdd = (e: React.FormEvent) => {
-        e.preventDefault()
-        const newBlog: Blog = {
-            id: Date.now().toString(),
-            image: image || "/placeholder.png",
-            title,
-            author: "You",
-            publishedAt: new Date().toLocaleDateString(),
-            status: "Draft",
-        }
-        setBlogs((prev) => [newBlog, ...prev])
-        setTitle("")
-        setContent("")
-        setImage("")
-        setSheetOpen(false)
-    }
-
-    return (
-        <section className="space-y-6">
-            <SectionHeader
-                title="All Blogs"
-                buttonLabel="Add New Blog"
-                onAdd={() => setSheetOpen(true)}
-            />
-            <BlogTable data={blogs} />
-
-            {/* sheet modal */}
-            <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                <SheetContent>
-                    <SheetHeader>
-                        <SheetTitle>New Blog</SheetTitle>
-                        <SheetDescription>Write your post using markdown</SheetDescription>
-                    </SheetHeader>
-                    <form onSubmit={handleAdd} className="space-y-4 p-4">
-                        <div className="space-y-1">
-                            <Label htmlFor="title">Title</Label>
-                            <Input
-                                id="title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <Label htmlFor="content">Content</Label>
-                            <Textarea
-                                id="content"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                placeholder="Markdown here..."
-                                required
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <Label htmlFor="image">Image URL</Label>
-                            <Input
-                                id="image"
-                                value={image}
-                                onChange={(e) => setImage(e.target.value)}
-                            />
-                        </div>
-                        <SheetFooter>
-                            <Button type="submit">Save</Button>
-                        </SheetFooter>
-                    </form>
-                    <SheetClose asChild>
-                        <Button variant="ghost" className="absolute top-4 right-4">
-                            Close
-                        </Button>
-                    </SheetClose>
-                </SheetContent>
-            </Sheet>
-        </section>
-    )
+			<div className='mt-6 border rounded-lg overflow-hidden'>
+				<table className='w-full text-left'>
+					<thead className='bg-gray-50 border-b'>
+						<tr>
+							<th className='px-4 py-2'>Title</th>
+							<th className='px-4 py-2'>Author</th>
+							<th className='px-4 py-2'>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td className='px-4 py-2 border-b'>Table content will go here</td>
+							<td className='px-4 py-2 border-b'>...</td>
+							<td className='px-4 py-2 border-b'>...</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	)
 }
 
-export default BlogPage;
+export default DashboardBlogPage
