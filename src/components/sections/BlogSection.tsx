@@ -65,18 +65,20 @@ export default function BlogSection() {
 			: articles.filter((a) => a.category === activeFilter)
 
 	return (
-		<section id='blog' className='bg-card py-40'>
+		<section id='blog'>
 			<div className='container mx-auto '>
 				<div className='text-center mb-12'>
 					<FadeUp>
-						<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>My thoughts and insights</p>
+						<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>
+							My thoughts and insights
+						</p>
 						<h2 className='text-4xl font-bold text-foreground mb-8'>
 							Latest Articles &amp; Insights
 						</h2>
 					</FadeUp>
 
 					<FadeUp delay={100}>
-						<div className='flex flex-wrap justify-center gap-3 mb-12'>
+						<div className='flex flex-wrap justify-center gap-3'>
 							{filters.map((f) => (
 								<button
 									key={f}

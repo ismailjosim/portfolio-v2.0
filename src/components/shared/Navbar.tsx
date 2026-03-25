@@ -60,12 +60,12 @@ export default function Navbar() {
 				)}
 			>
 				{/* ── Logo + availability badge ── */}
-				<div className='flex flex-col justify-center'>
+				<div className='flex flex-col justify-center  border border-primary rounded-full'>
 					<Link href='/' style={{ fontFamily: 'Rajdhani, sans-serif' }}>
 						<Avatar className=' w-10 h-10'>
 							<AvatarImage
-								className='object-contain border border-primary rounded-full'
-								src='/logo-v2.png'
+								className='object-contain'
+								src='/person-vector.svg'
 							/>
 							<AvatarFallback>J.</AvatarFallback>
 						</Avatar>

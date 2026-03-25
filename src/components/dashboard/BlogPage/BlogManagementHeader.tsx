@@ -4,6 +4,7 @@ import ManagementPageHeader from '../../shared/ManagementPageHeader'
 import BlogFormDialog from './BlogFormDialog'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
+import { AddBlogModal } from '../../modules/blog/AddBlogModal'
 
 const BlogManagementHeader = () => {
 	const router = useRouter()
@@ -28,7 +29,7 @@ const BlogManagementHeader = () => {
 
 	return (
 		<>
-			<BlogFormDialog
+			<AddBlogModal
 				key={dialogKey}
 				open={isDialogOpen}
 				onClose={handleCloseDialog}
