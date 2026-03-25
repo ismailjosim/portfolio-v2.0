@@ -2,11 +2,12 @@
 
 <div align="center">
 
-![Portfolio Screenshot](./JASIM_-_Full_Stack_Developer___Instructor.png)
+<!-- Using HTML to control size -->
+<img src="./public/person-vector.png" alt="Portfolio Screenshot" width="200" height="200" style="border: 2px solid white; border-radius: 100%; display: inline-block; margin-bottom:20px" />
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Portfolio-00d4ff?style=for-the-badge)](https://ismailjosim.github.io)
-[![GitHub](https://img.shields.io/badge/GitHub-ismailjosim-181717?style=for-the-badge&logo=github)](https://github.com/ismailjosim/portfolio-v2.0)
-[![Version](https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge)](https://github.com/ismailjosim/portfolio-v2.0)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Portfolio-00d4ff?style=for-the-badge)](https://ismailjosim.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-ismailjosim-181717?style=for-the-badge&logo=github)](https://github.com/ismailjosim/portfolio-v2.0.git)
+[![Version](https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge)](https://github.com/ismailjosim/portfolio-v2.0.git)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 **A modern, dark-themed full-stack developer portfolio built to showcase skills, projects, and professional journey.**

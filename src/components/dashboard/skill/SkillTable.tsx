@@ -48,23 +48,23 @@ const SkillTable = () => {
 
 	return (
 		<>
-			<ManagementTable
+			{/* <ManagementTable
 				data={skills}
 				columns={SkillColumns}
 				onDelete={handleDelete}
 				getRowKey={(skill) => skill.id}
 				emptyMessage='No skill found'
-			/>
+			/> */}
 
 			{/* Delete Confirmation Dialog */}
-			<DeleteConfirmationDialog
+			{/* <DeleteConfirmationDialog
 				open={!!deletingSkill}
 				onOpenChange={(open) => !open && setDeletingSkill(null)}
 				onConfirm={confirmDelete}
 				title='Delete Specialty'
 				description={`Are you sure you want to delete ${deletingSkill?.title}? This action cannot be undone.`}
 				isDeleting={isDeletingDialog}
-			/>
+			/> */}
 		</>
 	)
 }
