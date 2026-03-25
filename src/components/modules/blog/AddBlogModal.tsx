@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import Select from 'react-select'
 import MDEditor from '@uiw/react-md-editor'
-import { Upload } from 'lucide-react'
+import { FileUp, Upload } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
 // shadcn ui
@@ -65,15 +63,33 @@ interface FormValues {
 	content: string
 }
 
+export interface Blog {
+	id: string | number
+	title: string
+	category: string
+	coverImagePreview?: string
+	tags: string[]
+	content: string
+	createdAt?: string
+}
+
 interface Props {
 	open: boolean
 	onClose: () => void
 	onSuccess: (data: any) => void
+	/** Pass a blog to enter edit mode; omit for create mode */
+	blog?: Blog | null
 }
+
+// ─── Helpers ───────────────────────────────────────────────
+
+const tagsToOptions = (tags: string[]): { value: string; label: string }[] =>
+	tags.map((t) => ({ value: t, label: t }))
 
 // ─── Component ─────────────────────────────────────────────
 
-export function AddBlogModal({ open, onClose, onSuccess }: Props) {
+const AddBlogModal = ({ open, onClose, onSuccess, blog }: Props) => {
+	const isEditMode = Boolean(blog)
 	const coverInputRef = useRef<HTMLInputElement>(null)
 	const mdFileInputRef = useRef<HTMLInputElement>(null)
 
@@ -89,6 +105,29 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 			content: '',
 		},
 	})
+
+	// Populate form when blog prop changes (edit mode)
+	useEffect(() => {
+		if (blog) {
+			form.reset({
+				title: blog.title,
+				category: blog.category,
+				coverImage: null,
+				coverImagePreview: blog.coverImagePreview ?? '',
+				tags: tagsToOptions(blog.tags),
+				content: blog.content,
+			})
+		} else {
+			form.reset({
+				title: '',
+				category: '',
+				coverImage: null,
+				coverImagePreview: '',
+				tags: [],
+				content: '',
+			})
+		}
+	}, [blog, form])
 
 	const coverPreview = form.watch('coverImagePreview')
 
@@ -120,9 +159,12 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 
 	const onSubmit = async (data: FormValues) => {
 		const payload = {
+			...(isEditMode && blog ? { id: blog.id } : {}),
 			...data,
 			tags: data.tags.map((t) => t.value),
-			createdAt: new Date().toISOString(),
+			...(isEditMode
+				? { updatedAt: new Date().toISOString() }
+				: { createdAt: new Date().toISOString() }),
 		}
 		console.log({ data: payload })
 
@@ -137,9 +179,13 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 		<Dialog open={open} onOpenChange={onClose}>
 			<DialogContent className='sm:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col'>
 				<DialogHeader>
-					<DialogTitle>Create new blog post</DialogTitle>
+					<DialogTitle>
+						{isEditMode ? 'Edit blog post' : 'Create new blog post'}
+					</DialogTitle>
 					<DialogDescription>
-						Write your content with markdown support.
+						{isEditMode
+							? 'Update your blog post content below.'
+							: 'Write your content with markdown support.'}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -247,6 +293,7 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 								/>
 							</FormItem>
 						</div>
+
 						{/* Cover Image */}
 						<FormItem className='w-full grid grid-cols-2 justify-between items-center'>
 							<div>
@@ -282,24 +329,27 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 						</FormItem>
 
 						{/* Markdown Upload */}
-						<div className='flex justify-end'>
-							<Button
-								type='button'
-								variant='secondary'
-								size='sm'
-								onClick={() => mdFileInputRef.current?.click()}
-							>
-								<Upload className='h-4 w-4 mr-1' />
-								Upload .md
-							</Button>
-						</div>
+						<div>
+							<div className='flex w-full justify-end'>
+								<Button
+									type='button'
+									variant='secondary'
+									size='sm'
+									className='cursor-pointer hover:bg-accent hover:text-accent-foreground'
+									onClick={() => mdFileInputRef.current?.click()}
+								>
+									<span>Upload .md</span>
+									<FileUp className='h-4 w-4' />
+								</Button>
+							</div>
 
-						<input
-							ref={mdFileInputRef}
-							type='file'
-							hidden
-							onChange={handleMdUpload}
-						/>
+							<input
+								ref={mdFileInputRef}
+								type='file'
+								hidden
+								onChange={handleMdUpload}
+							/>
+						</div>
 
 						{/* Content */}
 						<FormField
@@ -325,7 +375,13 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 								Cancel
 							</Button>
 							<Button type='submit' disabled={form.formState.isSubmitting}>
-								{form.formState.isSubmitting ? 'Publishing...' : 'Publish Post'}
+								{form.formState.isSubmitting
+									? isEditMode
+										? 'Saving...'
+										: 'Publishing...'
+									: isEditMode
+										? 'Save Changes'
+										: 'Publish Post'}
 							</Button>
 						</DialogFooter>
 					</form>
@@ -334,3 +390,5 @@ export function AddBlogModal({ open, onClose, onSuccess }: Props) {
 		</Dialog>
 	)
 }
+
+export default AddBlogModal
