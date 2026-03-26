@@ -1,95 +1,62 @@
 'use client'
 
-import { ChevronRight, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/src/lib/utils'
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/src/components/ui/collapsible'
+type NavItem = {
+	title: string
+	url: string
+	icon: React.ElementType
+}
 
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from '@/src/components/ui/sidebar'
+export function NavMain({ items }: { items: NavItem[] }) {
+	const pathname = usePathname()
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
-  return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+	return (
+		<nav className='flex flex-col gap-1 p-2'>
+			{items.map((item) => {
+				// ✅ build full path correctly
+				const fullPath = `/dashboard${item.url}`
 
-      <SidebarMenu>
-        {items.map((item) => {
-          const hasSubItems = item.items && item.items.length > 0
+				// ✅ correct active detection
+				const isActive =
+					pathname === fullPath || pathname.startsWith(fullPath + '/')
 
-          if (!hasSubItems) {
-            return (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild tooltip={item.title}>
-                  <Link href={`/dashboard/${item.url}`}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )
-          }
+				return (
+					<Link
+						key={item.title}
+						href={fullPath}
+						className={cn(
+							'relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200',
 
-          return (
-            <Collapsible
-              key={item.title}
-              asChild
-              defaultOpen={item.isActive}
-              className="group/collapsible"
-            >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={item.title}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
+							// default
+							'text-muted-foreground hover:text-foreground hover:bg-accent',
 
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
+							// active
+							isActive &&
+								'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90',
+						)}
+					>
+						{/* 🔥 Active Indicator */}
+						{isActive && (
+							<span className='absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary' />
+						)}
 
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
-                          <Link href={subItem.url}>
-                            <span>{subItem.title}</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
-          )
-        })}
-      </SidebarMenu>
-    </SidebarGroup>
-  )
+						<item.icon
+							className={cn(
+								'h-4 w-4 transition-colors',
+								isActive ? 'text-primary-foreground' : 'text-muted-foreground',
+							)}
+						/>
+
+						{/* Hide text in collapsed mode */}
+						<span className='truncate group-data-[collapsible=icon]:hidden'>
+							{item.title}
+						</span>
+					</Link>
+				)
+			})}
+		</nav>
+	)
 }
