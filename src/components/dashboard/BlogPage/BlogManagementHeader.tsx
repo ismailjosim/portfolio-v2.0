@@ -1,49 +1,34 @@
 'use client'
 import { Plus } from 'lucide-react'
 import ManagementPageHeader from '../../shared/ManagementPageHeader'
-
-import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
 import AddBlogModal from '../../modules/blog/AddBlogModal'
 import { IBlog } from '../../../types/blog.interface'
 
-const BlogManagementHeader = () => {
-	const router = useRouter()
-	const [, startTransition] = useTransition()
-	const [isDialogOpen, setIsDialogOpen] = useState(false)
-	const [dialogKey, setDialogKey] = useState(0)
-	const [selectedBlog, setSelectedBlog] = useState<IBlog | null>(null)
+interface BlogManagementHeaderProps {
+	onOpenEdit: (blog: IBlog | null) => void
+	isDialogOpen: boolean
+	selectedBlog: IBlog | null
+	onCloseDialog: () => void
+	onSuccess: () => void
+}
 
-	const handleSuccess = () => {
-		startTransition(() => {
-			router.refresh()
-		})
-	}
-
+const BlogManagementHeader = ({
+	onOpenEdit,
+	isDialogOpen,
+	selectedBlog,
+	onCloseDialog,
+	onSuccess,
+}: BlogManagementHeaderProps) => {
 	const handleOpenCreate = () => {
-		setSelectedBlog(null)
-		setDialogKey((prev) => prev + 1)
-		setIsDialogOpen(true)
-	}
-
-	const handleOpenEdit = (blog: IBlog) => {
-		setSelectedBlog(blog)
-		setDialogKey((prev) => prev + 1)
-		setIsDialogOpen(true)
-	}
-
-	const handleCloseDialog = () => {
-		setIsDialogOpen(false)
-		setSelectedBlog(null)
+		onOpenEdit(null)
 	}
 
 	return (
 		<>
 			<AddBlogModal
-				key={dialogKey}
 				open={isDialogOpen}
-				onClose={handleCloseDialog}
-				onSuccess={handleSuccess}
+				onClose={onCloseDialog}
+				onSuccess={onSuccess}
 				blog={selectedBlog}
 			/>
 

@@ -50,3 +50,62 @@ export async function updateBlog(slug: string, payload: IBlogPayload) {
 		return { success: false, message: 'Failed to update blog' }
 	}
 }
+
+export async function getAllBlogs(queryStr?: string) {
+	try {
+		const url = `/api/blogs${queryStr ? `?${queryStr}` : ''}`
+		const res = await fetch(url, {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json' },
+		})
+
+		if (!res.ok) {
+			return { success: false, message: 'Failed to fetch blogs' }
+		}
+
+		const result = await res.json()
+		return { success: true, data: result.blogs, pagination: result.pagination }
+	} catch (error) {
+		console.error('getAllBlogs', error)
+		return { success: false, message: 'Failed to fetch blogs' }
+	}
+}
+
+export async function deleteBlog(slug: string) {
+	try {
+		const res = await fetch(`/api/blogs/${encodeURIComponent(slug)}`, {
+			method: 'DELETE',
+		})
+
+		if (!res.ok) {
+			const result = await res.json()
+			return { success: false, ...result }
+		}
+
+		return { success: true }
+	} catch (error) {
+		console.error('deleteBlog', error)
+		return { success: false, message: 'Failed to delete blog' }
+	}
+}
+
+
+
+export async function getBlogById(id: string) {
+	try {
+		const res = await fetch(`/api/blogs/${encodeURIComponent(id)}`, {
+			method: 'GET',
+		})
+
+		if (!res.ok) {
+			const result = await res.json()
+			return { success: false, ...result }
+		}
+
+		const blog = (await res.json()) as IBlog
+		return { success: true, data: blog }
+	} catch (error) {
+		console.error('getBlogById', error)
+		return { success: false, message: 'Failed to fetch blog' }
+	}
+}
