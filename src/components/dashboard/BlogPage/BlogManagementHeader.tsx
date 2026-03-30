@@ -4,14 +4,15 @@ import ManagementPageHeader from '../../shared/ManagementPageHeader'
 
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
-import AddBlogModal, { Blog } from '../../modules/blog/AddBlogModal'
+import AddBlogModal from '../../modules/blog/AddBlogModal'
+import { IBlog } from '../../../types/blog.interface'
 
 const BlogManagementHeader = () => {
 	const router = useRouter()
 	const [, startTransition] = useTransition()
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [dialogKey, setDialogKey] = useState(0)
-	const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null)
+	const [selectedBlog, setSelectedBlog] = useState<IBlog | null>(null)
 
 	const handleSuccess = () => {
 		startTransition(() => {
@@ -25,7 +26,7 @@ const BlogManagementHeader = () => {
 		setIsDialogOpen(true)
 	}
 
-	const handleOpenEdit = (blog: Blog) => {
+	const handleOpenEdit = (blog: IBlog) => {
 		setSelectedBlog(blog)
 		setDialogKey((prev) => prev + 1)
 		setIsDialogOpen(true)

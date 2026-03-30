@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import React, { useRef, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -33,6 +32,13 @@ import {
 } from '../../ui/select'
 import { Button } from '../../ui/button'
 import CreatableSelect from 'react-select/creatable'
+import { toast } from 'sonner'
+import { IBlog, IBlogTag } from '../../../types/blog.interface'
+import {
+	createBlog,
+	updateBlog,
+	IBlogPayload,
+} from '../../../services/blog-management'
 
 // ─── Constants ─────────────────────────────────────────────
 
@@ -54,37 +60,21 @@ const TAG_OPTIONS = [
 
 // ─── Types ─────────────────────────────────────────────────
 
-interface FormValues {
+interface BlogFormValues {
 	title: string
 	category: string
+	content: string
+	tags: IBlogTag[]
 	coverImage: File | null
-	coverImagePreview: string
-	tags: { value: string; label: string }[]
-	content: string
-}
-
-export interface Blog {
-	id: string | number
-	title: string
-	category: string
 	coverImagePreview?: string
-	tags: string[]
-	content: string
-	createdAt?: string
 }
 
 interface Props {
 	open: boolean
 	onClose: () => void
-	onSuccess: (data: any) => void
-	/** Pass a blog to enter edit mode; omit for create mode */
-	blog?: Blog | null
+	onSuccess: (data: IBlog) => void
+	blog?: IBlog | null
 }
-
-// ─── Helpers ───────────────────────────────────────────────
-
-const tagsToOptions = (tags: string[]): { value: string; label: string }[] =>
-	tags.map((t) => ({ value: t, label: t }))
 
 // ─── Component ─────────────────────────────────────────────
 
@@ -95,7 +85,7 @@ const AddBlogModal = ({ open, onClose, onSuccess, blog }: Props) => {
 
 	const { theme } = useTheme()
 
-	const form = useForm<FormValues>({
+	const form = useForm<BlogFormValues>({
 		defaultValues: {
 			title: '',
 			category: '',
@@ -113,8 +103,8 @@ const AddBlogModal = ({ open, onClose, onSuccess, blog }: Props) => {
 				title: blog.title,
 				category: blog.category,
 				coverImage: null,
-				coverImagePreview: blog.coverImagePreview ?? '',
-				tags: tagsToOptions(blog.tags),
+				coverImagePreview: blog.coverImage ?? '',
+				tags: (blog.tags || []).map((tag) => ({ value: tag, label: tag })),
 				content: blog.content,
 			})
 		} else {
@@ -157,20 +147,37 @@ const AddBlogModal = ({ open, onClose, onSuccess, blog }: Props) => {
 		reader.readAsText(file)
 	}
 
-	const onSubmit = async (data: FormValues) => {
-		const payload = {
-			...(isEditMode && blog ? { id: blog.id } : {}),
-			...data,
-			tags: data.tags.map((t) => t.value),
-			...(isEditMode
-				? { updatedAt: new Date().toISOString() }
-				: { createdAt: new Date().toISOString() }),
+	const onSubmit = async (data: BlogFormValues) => {
+		const payload: IBlogPayload = {
+			title: data.title,
+			category: data.category,
+			content: data.content,
+			tags: data.tags.map((item) => item.value),
+			coverImage: data.coverImagePreview ?? undefined,
 		}
-		console.log({ data: payload })
 
-		onSuccess(payload)
-		onClose()
-		form.reset()
+		try {
+			let result
+			if (isEditMode && blog && blog.slug) {
+				result = await updateBlog(blog.slug, payload)
+			} else {
+				result = await createBlog(payload)
+			}
+
+			if (!result.success) {
+				toast.error(result.message || 'Failed to save blog')
+				return
+			}
+
+			const createdBlog = result.data as IBlog
+			onSuccess(createdBlog)
+			toast.success(isEditMode ? 'Blog updated' : 'Blog created')
+			onClose()
+			form.reset()
+		} catch (error) {
+			console.error('AddBlogModal submit', error)
+			toast.error('Something went wrong while saving blog')
+		}
 	}
 
 	// ─── UI ────────────────────────────────────────────────
@@ -390,5 +397,7 @@ const AddBlogModal = ({ open, onClose, onSuccess, blog }: Props) => {
 		</Dialog>
 	)
 }
+
+export type Blog = IBlog
 
 export default AddBlogModal
