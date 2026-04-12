@@ -34,7 +34,8 @@ export default function AboutSection() {
 	// Slideshow Logic
 	// --------------------------
 	useEffect(() => {
-		const slides = swiperRef.current?.querySelectorAll<HTMLImageElement>('.slide-image')
+		const slides =
+			swiperRef.current?.querySelectorAll<HTMLImageElement>('.slide-image')
 		if (!slides || slides.length === 0) return
 
 		let current = 0
@@ -54,50 +55,59 @@ export default function AboutSection() {
 	}, [])
 
 	return (
-		<section id="about" className="bg-card sm:min-h-screen flex items-center px-6 py-16">
-			<div className="container mx-auto">
+		<section
+			id='about'
+			className='bg-card sm:min-h-screen flex items-center px-6 py-16'
+		>
+			<div className='container mx-auto'>
 				{/* Section Heading */}
 				<FadeUp>
-					<p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
+					<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>
 						Get to know me
 					</p>
-					<h2 className="text-4xl md:text-5xl font-extrabold text-foreground">
+					<h2 className='text-4xl md:text-5xl font-extrabold text-foreground'>
 						About Me
 					</h2>
 				</FadeUp>
 
-				<div className="grid md:grid-cols-2 lg:gap-16 md:gap-10 gap-6 items-start mt-10">
+				<div className='grid md:grid-cols-2 lg:gap-16 md:gap-10 gap-6 items-start mt-10'>
 					{/* LEFT CONTENT */}
 					<FadeUp delay={100}>
-						<div className="space-y-5">
-							<p className="text-muted-foreground sm:text-lg sm:text-justify leading-relaxed">
+						<div className='space-y-5'>
+							<p className='text-muted-foreground sm:text-lg sm:text-justify leading-relaxed'>
 								I’m a passionate{' '}
-								<span className="text-primary font-semibold">Full Stack Developer</span>{' '}
-								based in Bangladesh, specializing in the MERN stack. Currently serving as a{' '}
-								<span className="text-primary font-semibold">
+								<span className='text-primary font-semibold'>
+									Full Stack Developer
+								</span>{' '}
+								based in Bangladesh, specializing in the MERN stack. Currently
+								serving as a{' '}
+								<span className='text-primary font-semibold'>
 									Senior Web Instructor at Programming Hero
 								</span>
 								, I lead advanced workshops and mentor aspiring developers.
 							</p>
 
-							<p className="text-muted-foreground sm:text-lg sm:text-justify leading-relaxed">
-								I thrive at the intersection of clean code and impactful teaching. Whether
-								building scalable APIs, architecting frontend systems, or designing
-								curriculum — I bring precision and clarity to everything I do.
+							<p className='text-muted-foreground sm:text-lg sm:text-justify leading-relaxed'>
+								I thrive at the intersection of clean code and impactful
+								teaching. Whether building scalable APIs, architecting frontend
+								systems, or designing curriculum — I bring precision and clarity
+								to everything I do.
 							</p>
 
 							{/* Info Grid */}
-							<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
+							<div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5'>
 								{aboutInfo.map(({ label, value, icon: Icon }) => (
-									<div key={label} className="flex items-start gap-3">
-										<div className="w-10 h-10 flex items-center justify-center rounded-2xl bg-primary/10">
-											<Icon size={18} className="text-primary" />
+									<div key={label} className='flex items-start gap-3'>
+										<div className='w-10 h-10 flex items-center justify-center rounded-2xl bg-primary/10'>
+											<Icon size={18} className='text-primary' />
 										</div>
 										<div>
-											<p className="text-xs uppercase tracking-wide text-muted-foreground">
+											<p className='text-xs uppercase tracking-wide text-muted-foreground'>
 												{label}
 											</p>
-											<p className="text-sm font-semibold text-foreground">{value}</p>
+											<p className='text-sm font-semibold text-foreground'>
+												{value}
+											</p>
 										</div>
 									</div>
 								))}
@@ -109,14 +119,14 @@ export default function AboutSection() {
 					<FadeUp delay={200}>
 						<div
 							ref={swiperRef}
-							className="relative h-96 rounded-2xl overflow-hidden shadow-xl"
+							className='relative h-96 rounded-2xl overflow-hidden shadow-xl'
 						>
 							{['/about-slide-01.jpg', '/about-slide-02.jpg'].map((src, i) => (
 								<img
 									key={src}
 									src={src}
 									alt={`About slide ${i + 1}`}
-									className="slide-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+									className='slide-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000'
 								/>
 							))}
 						</div>

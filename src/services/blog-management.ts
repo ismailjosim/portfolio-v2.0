@@ -54,10 +54,13 @@ export async function updateBlog(slug: string, payload: IBlogPayload) {
 export async function getAllBlogs(queryStr?: string) {
 	try {
 		const url = `/api/blogs${queryStr ? `?${queryStr}` : ''}`
+		console.log(url);
+
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'Content-Type': 'application/json' },
 		})
+		console.log({ url, res });
 
 		if (!res.ok) {
 			return { success: false, message: 'Failed to fetch blogs' }

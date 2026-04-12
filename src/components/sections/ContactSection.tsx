@@ -45,8 +45,6 @@ const contactInfo: IContactInfoItem[] = [
 	},
 ]
 
-
-
 export default function ContactSection() {
 	const [formData, setFormData] = useState<FormState>({
 		name: '',
@@ -75,9 +73,7 @@ export default function ContactSection() {
 
 		console.log('Form Data:', formData)
 
-		toast.success(
-			"Thank you for reaching out! 🎉 I'll get back to you soon.",
-		)
+		toast.success("Thank you for reaching out! 🎉 I'll get back to you soon.")
 
 		setFormData({
 			name: '',
@@ -89,31 +85,31 @@ export default function ContactSection() {
 	}
 
 	return (
-		<section id="contact" className="bg-background py-16 lg:py-24">
-			<div className="container mx-auto max-w-7xl px-6">
+		<section id='contact' className='bg-background py-16 lg:py-24'>
+			<div className='container mx-auto max-w-7xl px-6'>
 				{/* Section Header */}
 				<FadeUp>
-					<div className="mb-12 text-center">
-						<p className="text-sm font-semibold uppercase tracking-widest text-accent">
+					<div className='mb-12 text-center'>
+						<p className='text-sm font-semibold uppercase tracking-widest text-accent'>
 							Get in Touch
 						</p>
-						<h2 className="mt-3 text-4xl font-bold text-foreground md:text-5xl">
+						<h2 className='mt-3 text-4xl font-bold text-foreground md:text-5xl'>
 							Contact Me
 						</h2>
-						<div className="mx-auto mt-4 h-1 w-16 rounded-full bg-accent" />
+						<div className='mx-auto mt-4 h-1 w-16 rounded-full bg-accent' />
 					</div>
 				</FadeUp>
 
-				<div className="grid gap-12 lg:grid-cols-3">
+				<div className='grid gap-12 lg:grid-cols-3'>
 					{/* Left Side */}
 					<FadeUp delay={100}>
-						<p className="mb-8 text-base leading-relaxed text-muted-foreground">
+						<p className='mb-8 text-base leading-relaxed text-muted-foreground'>
 							I&apos;m available for freelance projects, full-time roles, and
 							mentoring. Whether you have a project in mind or just want to say
 							hi — feel free to reach out.
 						</p>
 
-						<div className="space-y-6">
+						<div className='space-y-6'>
 							{contactInfo.map((item: IContactInfoItem) => (
 								<ContactItem key={item.label} {...item} />
 							))}
@@ -121,72 +117,72 @@ export default function ContactSection() {
 					</FadeUp>
 
 					{/* Right Side - Form */}
-					<FadeUp delay={200} className="lg:col-span-2">
+					<FadeUp delay={200} className='lg:col-span-2'>
 						<form
 							onSubmit={handleSubmit}
-							className="space-y-5 rounded-xl border border-border bg-card p-6 shadow-sm"
+							className='space-y-5 rounded-xl border border-border bg-card p-6 shadow-sm'
 						>
-							<div className="grid gap-4 md:grid-cols-2">
-								<div className="space-y-2">
-									<Label htmlFor="name">Name *</Label>
+							<div className='grid gap-4 md:grid-cols-2'>
+								<div className='space-y-2'>
+									<Label htmlFor='name'>Name *</Label>
 									<Input
-										id="name"
-										placeholder="Your Name"
+										id='name'
+										placeholder='Your Name'
 										value={formData.name}
 										onChange={handleChange}
 										required
 									/>
 								</div>
 
-								<div className="space-y-2">
-									<Label htmlFor="phone">Phone</Label>
+								<div className='space-y-2'>
+									<Label htmlFor='phone'>Phone</Label>
 									<Input
-										id="phone"
-										type="tel"
-										placeholder="Phone Number"
+										id='phone'
+										type='tel'
+										placeholder='Phone Number'
 										value={formData.phone}
 										onChange={handleChange}
 									/>
 								</div>
 							</div>
 
-							<div className="space-y-2">
-								<Label htmlFor="email">Email *</Label>
+							<div className='space-y-2'>
+								<Label htmlFor='email'>Email *</Label>
 								<Input
-									id="email"
-									type="email"
-									placeholder="Email Address"
+									id='email'
+									type='email'
+									placeholder='Email Address'
 									value={formData.email}
 									onChange={handleChange}
 									required
 								/>
 							</div>
 
-							<div className="space-y-2">
-								<Label htmlFor="subject">Subject *</Label>
+							<div className='space-y-2'>
+								<Label htmlFor='subject'>Subject *</Label>
 								<Input
-									id="subject"
-									placeholder="Subject"
+									id='subject'
+									placeholder='Subject'
 									value={formData.subject}
 									onChange={handleChange}
 									required
 								/>
 							</div>
 
-							<div className="space-y-2">
-								<Label htmlFor="message">Message *</Label>
+							<div className='space-y-2'>
+								<Label htmlFor='message'>Message *</Label>
 								<Textarea
-									id="message"
+									id='message'
 									rows={5}
-									placeholder="Your Message"
+									placeholder='Your Message'
 									value={formData.message}
 									onChange={handleChange}
 									required
 								/>
 							</div>
 
-							<Button type="submit" className="w-full group">
-								<Send className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+							<Button type='submit' className='w-full group'>
+								<Send className='mr-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
 								Send Message
 							</Button>
 						</form>
