@@ -1,12 +1,11 @@
 import BlogManagementHeader from '../../../components/dashboard/BlogPage/BlogManagementHeader'
-
 import { getAllBlogs } from '../../../services/blog-management'
-
 import { queryStringFormatter } from '../../../lib/formatters.ts'
 import { Suspense } from 'react'
 import { TableSkeleton } from '../../../components/shared/TableSkeleton'
 import BlogTable from '../../../components/modules/blogsManagement/blog-table'
 import TablePagination from '../../../components/shared/TablePagination'
+import BlogsFilter from '../../../components/modules/blogsManagement/BlogsFilter'
 
 const DashboardBlogPage = async ({
 	searchParams,
@@ -16,6 +15,7 @@ const DashboardBlogPage = async ({
 	const searchParamsObj = await searchParams
 	const queryString = queryStringFormatter(searchParamsObj)
 	const blogsResult = await getAllBlogs(queryString)
+
 	const totalPages = Math.ceil(
 		(blogsResult?.pagination?.total || 1) /
 			(blogsResult?.pagination?.limit || 1),
@@ -24,6 +24,9 @@ const DashboardBlogPage = async ({
 	return (
 		<div className='space-y-6'>
 			<BlogManagementHeader />
+
+			{/* search filter */}
+			<BlogsFilter />
 
 			<Suspense fallback={<TableSkeleton columns={8} rows={10} />}>
 				<BlogTable blogs={blogsResult?.data || []} />
