@@ -1,8 +1,12 @@
 import BlogManagementHeader from '../../../components/dashboard/BlogPage/BlogManagementHeader'
-import { IBlog } from '../../../types/blog.interface'
-import { deleteBlog, getAllBlogs } from '../../../services/blog-management'
+
+import { getAllBlogs } from '../../../services/blog-management'
 
 import { queryStringFormatter } from '../../../lib/formatters.ts'
+import { Suspense } from 'react'
+import { TableSkeleton } from '../../../components/shared/TableSkeleton'
+import BlogTable from '../../../components/modules/blogsManagement/blog-table'
+import TablePagination from '../../../components/shared/TablePagination'
 
 const DashboardBlogPage = async ({
 	searchParams,
@@ -12,20 +16,23 @@ const DashboardBlogPage = async ({
 	const searchParamsObj = await searchParams
 	const queryString = queryStringFormatter(searchParamsObj)
 	const blogsResult = await getAllBlogs(queryString)
-	console.log(blogsResult)
+	const totalPages = Math.ceil(
+		(blogsResult?.pagination?.total || 1) /
+			(blogsResult?.pagination?.limit || 1),
+	)
 
 	return (
-		<section className='p-6'>
-			{/* <BlogManagementHeader
-				onOpenEdit={handleOpenEdit}
-				isDialogOpen={isDialogOpen}
-				selectedBlog={selectedBlog}
-				onCloseDialog={handleCloseDialog}
-				onSuccess={handleSuccess}
-			/> */}
+		<div className='space-y-6'>
+			<BlogManagementHeader />
 
-			<div className='mt-6 border rounded-lg overflow-hidden'></div>
-		</section>
+			<Suspense fallback={<TableSkeleton columns={8} rows={10} />}>
+				<BlogTable blogs={blogsResult?.data || []} />
+				<TablePagination
+					currentPage={blogsResult?.pagination?.page || 1}
+					totalPages={totalPages || 1}
+				/>
+			</Suspense>
+		</div>
 	)
 }
 

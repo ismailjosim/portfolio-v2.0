@@ -15,7 +15,7 @@ import {
 import ThemeToggle from './ui/ThemeToggle'
 import Image from 'next/image'
 
-import SocialIcons from './modules/SocialIcons'
+import SocialIcons from './shared/SocialIcons'
 import { Button } from './ui/button'
 import Link from 'next/link'
 
@@ -87,15 +87,16 @@ export default function SidebarHero() {
 
 			{/* Nav — scrollable */}
 			<nav className='p-4 space-y-1 flex-1 overflow-y-auto'>
-				{navItems.map(({ id, label, icon: Icon, href }) => (
+				{navItems.map(({ id, label, icon: Icon, href }) =>
 					href ? (
 						<Link
 							key={id}
 							href={href}
-							className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${active === id
-								? 'bg-primary text-primary-foreground'
-								: 'text-foreground hover:bg-secondary'
-								}`}
+							className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+								active === id
+									? 'bg-primary text-primary-foreground'
+									: 'text-foreground hover:bg-secondary'
+							}`}
 						>
 							<Icon size={18} />
 							{label}
@@ -104,16 +105,16 @@ export default function SidebarHero() {
 						<Button
 							key={id}
 							variant='ghost'
-							className={`w-full justify-start ${active === id ? 'bg-primary text-primary-foreground' : ''
-								}`}
+							className={`w-full justify-start ${
+								active === id ? 'bg-primary text-primary-foreground' : ''
+							}`}
 							onClick={() => scrollToSection(id)}
 						>
 							<Icon size={18} />
 							{label}
 						</Button>
-					)
-				))}
-
+					),
+				)}
 			</nav>
 
 			{/* Footer — always visible at bottom */}

@@ -2,7 +2,7 @@
 'use client'
 
 import Image from 'next/image'
-import SocialIcons from '../modules/SocialIcons'
+import SocialIcons from './SocialIcons'
 import ThemeToggle from '../ui/ThemeToggle'
 
 export function SidebarProfile() {

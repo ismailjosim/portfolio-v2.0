@@ -11,7 +11,7 @@ export interface IBlogPayload {
 
 export async function createBlog(payload: IBlogPayload) {
 	try {
-		const res = await fetch('/api/blogs', {
+		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(payload),
@@ -32,11 +32,14 @@ export async function createBlog(payload: IBlogPayload) {
 
 export async function updateBlog(slug: string, payload: IBlogPayload) {
 	try {
-		const res = await fetch(`/api/blogs/${encodeURIComponent(slug)}`, {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload),
-		})
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${encodeURIComponent(slug)}`,
+			{
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			},
+		)
 
 		if (!res.ok) {
 			const result = await res.json()
@@ -53,14 +56,12 @@ export async function updateBlog(slug: string, payload: IBlogPayload) {
 
 export async function getAllBlogs(queryStr?: string) {
 	try {
-		const url = `/api/blogs${queryStr ? `?${queryStr}` : ''}`
-		console.log(url);
+		const url = `${process.env.NEXT_PUBLIC_API_URL}/blogs${queryStr ? `?${queryStr}` : ''}`
 
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'Content-Type': 'application/json' },
 		})
-		console.log({ url, res });
 
 		if (!res.ok) {
 			return { success: false, message: 'Failed to fetch blogs' }
@@ -76,9 +77,12 @@ export async function getAllBlogs(queryStr?: string) {
 
 export async function deleteBlog(slug: string) {
 	try {
-		const res = await fetch(`/api/blogs/${encodeURIComponent(slug)}`, {
-			method: 'DELETE',
-		})
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${encodeURIComponent(slug)}`,
+			{
+				method: 'DELETE',
+			},
+		)
 
 		if (!res.ok) {
 			const result = await res.json()
@@ -92,13 +96,14 @@ export async function deleteBlog(slug: string) {
 	}
 }
 
-
-
 export async function getBlogById(id: string) {
 	try {
-		const res = await fetch(`/api/blogs/${encodeURIComponent(id)}`, {
-			method: 'GET',
-		})
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${encodeURIComponent(id)}`,
+			{
+				method: 'GET',
+			},
+		)
 
 		if (!res.ok) {
 			const result = await res.json()

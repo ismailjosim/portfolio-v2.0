@@ -8,7 +8,7 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { Label } from '../ui/label'
-import ContactItem from '../modules/ContactItem'
+import ContactItem from '../shared/ContactItem'
 
 type FormState = {
 	name: string

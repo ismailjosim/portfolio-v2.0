@@ -1,4 +1,12 @@
-import { Mail, Github, Linkedin, Facebook, X, Phone, MessageCircleMore } from 'lucide-react'
+import {
+	Mail,
+	Github,
+	Linkedin,
+	Facebook,
+	X,
+	Phone,
+	MessageCircleMore,
+} from 'lucide-react'
 import { Button } from '../ui/button'
 
 type SocialButtonProps = {
@@ -69,16 +77,12 @@ const SocialIcons = {
 		/>
 	),
 	Phone: () => (
-		<SocialButton
-			href='tel:+8801715052808'
-			label='Phone'
-			icon={Phone}
-		/>
+		<SocialButton href='tel:+8801715052808' label='Phone' icon={Phone} />
 	),
 	WhatsApp: () => (
 		<SocialButton
-			href="https://wa.me/8801715052808"
-			label="WhatsApp"
+			href='https://wa.me/8801715052808'
+			label='WhatsApp'
 			icon={MessageCircleMore}
 		/>
 	),
