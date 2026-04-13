@@ -4,11 +4,14 @@ import Blog from '../../../../models/Blog'
 import { parseMongooseError } from '../../../../lib/parseMongooseError'
 import { connectDB } from '../../../../lib/mongodb'
 
-export async function PATCH(req: Request, { params }: { params: { slug: string } }) {
+export async function PATCH(
+    req: Request,
+    { params }: { params: Promise<{ slug: string }> }
+) {
     try {
         await connectDB()
 
-        const { slug } = params
+        const { slug } = await params
         const body = await req.json()
 
         if (!body) {
@@ -35,18 +38,18 @@ export async function PATCH(req: Request, { params }: { params: { slug: string }
         return NextResponse.json({ error: 'Failed to update blog' }, { status: 500 })
     }
 }
-export async function DELETE(req: Request, { params }: { params: { slug: string } }) {
+export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ slug: string }> }
+) {
     try {
         await connectDB()
-
-        const { slug } = params
-
+        const { slug } = await params
+        console.log({ slug })
         const deleted = await Blog.findOneAndDelete({ slug })
-
         if (!deleted) {
             return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
         }
-
         return NextResponse.json({ message: 'Blog deleted successfully' })
     } catch (err: unknown) {
         console.error('[DELETE /api/blogs/:slug]', err)

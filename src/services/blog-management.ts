@@ -1,3 +1,4 @@
+import { serverFetch } from '../lib/server-fetch'
 import { IBlog } from '../types/blog.interface'
 
 export interface IBlogPayload {
@@ -32,14 +33,11 @@ export async function createBlog(payload: IBlogPayload) {
 
 export async function updateBlog(slug: string, payload: IBlogPayload) {
 	try {
-		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${encodeURIComponent(slug)}`,
-			{
-				method: 'PATCH',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload),
-			},
-		)
+		const res = await serverFetch.delete(`/blogs/${slug}`, {
+			method: 'PATCH',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload),
+		})
 
 		if (!res.ok) {
 			const result = await res.json()
@@ -77,12 +75,7 @@ export async function getAllBlogs(queryStr?: string) {
 
 export async function deleteBlog(slug: string) {
 	try {
-		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${encodeURIComponent(slug)}`,
-			{
-				method: 'DELETE',
-			},
-		)
+		const res = await serverFetch.delete(`/blogs/${slug}`)
 
 		if (!res.ok) {
 			const result = await res.json()
@@ -99,7 +92,7 @@ export async function deleteBlog(slug: string) {
 export async function getBlogById(id: string) {
 	try {
 		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${encodeURIComponent(id)}`,
+			`${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(id)}`,
 			{
 				method: 'GET',
 			},
