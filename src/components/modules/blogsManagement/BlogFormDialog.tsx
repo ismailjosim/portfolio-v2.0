@@ -32,7 +32,7 @@ import {
 import { Button } from '../../ui/button'
 import CreatableSelect from 'react-select/creatable'
 import { toast } from 'sonner'
-import { IBlog, IBlogTag } from '../../../types/blog.interface'
+import { BlogStatus, IBlog, IBlogTag } from '../../../types/blog.interface'
 import {
 	createBlog,
 	updateBlog,
@@ -57,6 +57,13 @@ const TAG_OPTIONS = [
 	{ value: 'nextjs', label: 'Next.js' },
 ]
 
+export const BLOG_STATUS_OPTIONS = [
+	{ value: 'draft', label: 'Draft' },
+	{ value: 'review', label: 'In Review' },
+	{ value: 'scheduled', label: 'Scheduled' },
+	{ value: 'published', label: 'Published' },
+	{ value: 'archived', label: 'Archived' },
+]
 // ─── Types ─────────────────────────────────────────────────
 
 interface BlogFormValues {
@@ -66,6 +73,7 @@ interface BlogFormValues {
 	tags: IBlogTag[]
 	coverImage: File | null
 	coverImagePreview?: string
+	status: BlogStatus
 }
 
 interface IBlogDialogProps {
@@ -98,6 +106,7 @@ const BlogFormDialog = ({
 			coverImagePreview: '',
 			tags: [],
 			content: '',
+			status: 'draft',
 		},
 	})
 
@@ -113,6 +122,7 @@ const BlogFormDialog = ({
 					typeof tag === 'string' ? { value: tag, label: tag } : tag,
 				),
 				content: blog.content,
+				status: (blog.status as BlogStatus) || 'draft',
 			})
 		} else {
 			form.reset({
@@ -122,6 +132,7 @@ const BlogFormDialog = ({
 				coverImagePreview: '',
 				tags: [],
 				content: '',
+				status: 'draft',
 			})
 		}
 	}, [blog, form])
@@ -166,6 +177,7 @@ const BlogFormDialog = ({
 			content: data.content,
 			tags: data.tags.map((item) => item.value),
 			coverImage: data.coverImagePreview ?? undefined,
+			status: data.status,
 		}
 
 		try {
@@ -231,7 +243,7 @@ const BlogFormDialog = ({
 							/>
 
 							{/* Category + Tags */}
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-4 w-full'>
+							<div className='grid grid-cols-1 md:grid-cols-3 gap-4 w-full'>
 								{/* Category */}
 								<FormField
 									control={form.control}
@@ -261,7 +273,37 @@ const BlogFormDialog = ({
 										</FormItem>
 									)}
 								/>
+								{/* status */}
+								<FormField
+									control={form.control}
+									name='status'
+									rules={{ required: 'Status is required' }}
+									render={({ field }) => (
+										<FormItem className='w-full'>
+											<FormLabel>Status</FormLabel>
+											<SelectElement
+												onValueChange={field.onChange}
+												value={field.value}
+											>
+												<FormControl>
+													<SelectTrigger className='w-full'>
+														<SelectValue placeholder='Select status' />
+													</SelectTrigger>
+												</FormControl>
 
+												<SelectContent className='bg-secondary'>
+													{BLOG_STATUS_OPTIONS.map((s) => (
+														<SelectItem key={s.value} value={s.value}>
+															{s.label}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</SelectElement>
+
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								{/* Tags */}
 								<FormItem>
 									<FormLabel>Tags</FormLabel>

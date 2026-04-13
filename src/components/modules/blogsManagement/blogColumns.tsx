@@ -7,7 +7,7 @@ import Image from 'next/image'
 export const blogColumns: Column<IBlog>[] = [
 	{
 		header: 'Blog',
-		accessor: (blog) => (
+		accessor: (blog: IBlog) => (
 			<div className='flex items-center gap-3'>
 				<Image
 					src={
@@ -31,7 +31,7 @@ export const blogColumns: Column<IBlog>[] = [
 
 	{
 		header: 'Category',
-		accessor: (blog) => (
+		accessor: (blog: IBlog) => (
 			<div className='flex flex-col'>
 				<span className='text-sm'>{blog.category}</span>
 				<span className='text-xs text-gray-500'>{blog.tags?.join(', ')}</span>
@@ -41,7 +41,7 @@ export const blogColumns: Column<IBlog>[] = [
 
 	{
 		header: 'Engagement',
-		accessor: (blog) => (
+		accessor: (blog: IBlog) => (
 			<div className='text-sm flex flex-col'>
 				<span>👁 {blog.views}</span>
 				<span>❤️ {blog.likesCount}</span>
@@ -52,7 +52,7 @@ export const blogColumns: Column<IBlog>[] = [
 
 	{
 		header: 'Created',
-		accessor: (blog) => (
+		accessor: (blog: IBlog) => (
 			<span className='text-sm'>
 				{new Date(blog.createdAt).toLocaleDateString()}
 			</span>
@@ -62,18 +62,18 @@ export const blogColumns: Column<IBlog>[] = [
 
 	{
 		header: 'Status',
-		accessor: (blog) => {
-			const status = blog.views > 0 ? 'Published' : 'Draft'
+		accessor: (blog: IBlog) => {
+			const statusStyles: Record<IBlog['status'], string> = {
+				published: 'bg-green-500/20 text-green-600',
+				draft: 'bg-yellow-500/20 text-yellow-600',
+				archived: 'bg-gray-500/20 text-gray-500',
+			}
 
 			return (
 				<span
-					className={`px-2 py-1 text-xs rounded-full ${
-						status === 'Published'
-							? 'bg-green-500/20 text-green-600'
-							: 'bg-yellow-500/20 text-yellow-600'
-					}`}
+					className={`px-2 py-1 text-xs rounded-full capitalize ${statusStyles[blog.status]}`}
 				>
-					{status}
+					{blog.status}
 				</span>
 			)
 		},

@@ -5,13 +5,15 @@ export interface IBlogPayload {
 	title: string
 	category: string
 	content: string
-	tags: string[]
 	coverImage?: string
+	status: string
+	tags: string[]
 	slug?: string
 }
 
 export async function createBlog(payload: IBlogPayload) {
 	try {
+
 		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },

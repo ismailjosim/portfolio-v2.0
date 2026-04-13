@@ -2,7 +2,6 @@
 import { Plus } from 'lucide-react'
 import ManagementPageHeader from '../../shared/ManagementPageHeader'
 import AddBlogModal from '../../modules/blogsManagement/BlogFormDialog'
-import { IBlog } from '../../../types/blog.interface'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 

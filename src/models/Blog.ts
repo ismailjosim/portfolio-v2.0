@@ -7,6 +7,7 @@ export interface IBlog extends Document {
     tags: string[]
     content: string
     slug: string
+    status: string
     views: number
     likesCount: number
     commentsCount: number
@@ -54,6 +55,11 @@ const BlogSchema = new Schema<IBlog>(
                 /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
                 'Slug must be lowercase letters, numbers, and hyphens only (e.g. my-blog-post)',
             ],
+        },
+        status: {
+            type: String,
+            enum: ['draft', 'published', 'archived'],
+            default: 'draft',
         },
         views: { type: Number, default: 0, min: [0, 'Views cannot be negative'] },
         likesCount: { type: Number, default: 0, min: [0, 'Likes count cannot be negative'] },

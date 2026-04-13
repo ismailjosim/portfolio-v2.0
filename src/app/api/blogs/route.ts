@@ -12,7 +12,10 @@ export async function GET(req: Request) {
 
         const { searchParams } = new URL(req.url)
         const page = Math.max(1, Number(searchParams.get('page') ?? 1))
-        const limit = Math.min(50, Math.max(1, Number(searchParams.get('limit') ?? 10)))
+        const limit = Math.min(
+            50,
+            Math.max(1, Number(searchParams.get('limit') ?? 10)),
+        )
         const category = searchParams.get('category')
         const tag = searchParams.get('tag')
         const search = searchParams.get('search')
@@ -20,14 +23,15 @@ export async function GET(req: Request) {
         const filter: Record<string, unknown> = {}
         if (category) filter.category = category
         if (tag) filter.tags = tag
-        if (search) filter.$or = [
-            { title: { $regex: search, $options: 'i' } },
-            { content: { $regex: search, $options: 'i' } },
-        ]
+        if (search)
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { content: { $regex: search, $options: 'i' } },
+            ]
 
         const [blogs, total] = await Promise.all([
             Blog.find(filter)
-                .select('-v')
+                .select('-__v')
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
@@ -50,7 +54,7 @@ export async function GET(req: Request) {
         console.error('[GET /api/blogs]', err)
         return NextResponse.json(
             { error: 'Failed to fetch blogs' },
-            { status: 500 }
+            { status: 500 },
         )
     }
 }
@@ -72,6 +76,7 @@ export async function POST(req: Request) {
         }
 
         const blog = await Blog.create(body)
+        console.log("after create: ", blog);
 
         return NextResponse.json(blog, { status: 201 })
     } catch (err: unknown) {
@@ -82,7 +87,7 @@ export async function POST(req: Request) {
         console.error('[POST /api/blogs]', err)
         return NextResponse.json(
             { error: 'Failed to create blog' },
-            { status: 500 }
+            { status: 500 },
         )
     }
 }
