@@ -27,7 +27,7 @@ export async function GET(req: Request) {
 
         const [blogs, total] = await Promise.all([
             Blog.find(filter)
-                .select('-content')           // exclude heavy content from list
+                .select('-v')
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)

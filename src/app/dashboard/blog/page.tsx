@@ -3,9 +3,9 @@ import { getAllBlogs } from '../../../services/blog-management'
 import { queryStringFormatter } from '../../../lib/formatters.ts'
 import { Suspense } from 'react'
 import { TableSkeleton } from '../../../components/shared/TableSkeleton'
-import BlogTable from '../../../components/modules/blogsManagement/blog-table'
 import TablePagination from '../../../components/shared/TablePagination'
 import BlogsFilter from '../../../components/modules/blogsManagement/BlogsFilter'
+import BlogsTable from '../../../components/modules/blogsManagement/BlogsTable'
 
 const DashboardBlogPage = async ({
 	searchParams,
@@ -29,7 +29,7 @@ const DashboardBlogPage = async ({
 			<BlogsFilter />
 
 			<Suspense fallback={<TableSkeleton columns={8} rows={10} />}>
-				<BlogTable blogs={blogsResult?.data || []} />
+				<BlogsTable blogs={blogsResult?.data || []} />
 				<TablePagination
 					currentPage={blogsResult?.pagination?.page || 1}
 					totalPages={totalPages || 1}
