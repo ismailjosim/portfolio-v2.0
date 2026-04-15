@@ -38,6 +38,7 @@ import {
 	updateBlog,
 	IBlogPayload,
 } from '../../../services/blog-management'
+import { uploadImage } from '@/src/services/upload.action'
 
 // ─── Constants ─────────────────────────────────────────────
 
@@ -71,7 +72,7 @@ interface BlogFormValues {
 	category: string
 	content: string
 	tags: IBlogTag[]
-	coverImage: File | null
+	coverImage: string | null
 	coverImagePreview?: string
 	status: BlogStatus
 }
@@ -141,14 +142,27 @@ const BlogFormDialog = ({
 
 	// ─── Handlers ──────────────────────────────────────────
 
-	const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
-		if (!file) return
-		if (!file.type.startsWith('image/')) return
+		if (!file || !file.type.startsWith('image/')) return
 
-		const url = URL.createObjectURL(file)
-		form.setValue('coverImage', file)
-		form.setValue('coverImagePreview', url)
+		// Show local preview immediately while uploading
+		const localPreview = URL.createObjectURL(file)
+		form.setValue('coverImagePreview', localPreview)
+
+		const formData = new FormData()
+		formData.append('image', file)
+
+		const result = await uploadImage(formData)
+
+		if (!result.success) {
+			toast.error('Image upload failed')
+			return
+		}
+
+		// Store the Cloudinary URL, not the File
+		form.setValue('coverImage', result.url!)
+		form.setValue('coverImagePreview', result.url!)
 	}
 
 	const handleMdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,7 +190,7 @@ const BlogFormDialog = ({
 			category: data.category,
 			content: data.content,
 			tags: data.tags.map((item) => item.value),
-			coverImage: data.coverImagePreview ?? undefined,
+			coverImage: data.coverImage || undefined,
 			status: data.status,
 		}
 

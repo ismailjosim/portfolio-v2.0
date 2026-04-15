@@ -1,4 +1,3 @@
-import BlogManagementHeader from '../../../components/dashboard/BlogPage/BlogManagementHeader'
 import { getAllBlogs } from '../../../services/blog-management'
 import { queryStringFormatter } from '../../../lib/formatters.ts'
 import { Suspense } from 'react'
@@ -6,6 +5,7 @@ import { TableSkeleton } from '../../../components/shared/TableSkeleton'
 import TablePagination from '../../../components/shared/TablePagination'
 import BlogsFilter from '../../../components/modules/blogsManagement/BlogsFilter'
 import BlogsTable from '../../../components/modules/blogsManagement/BlogsTable'
+import BlogManagementHeader from '@/src/components/modules/blogsManagement/BlogManagementHeader'
 
 const DashboardBlogPage = async ({
 	searchParams,

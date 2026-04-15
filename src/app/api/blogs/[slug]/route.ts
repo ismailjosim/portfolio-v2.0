@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import Blog from '../../../../models/Blog'
 import { parseMongooseError } from '../../../../lib/parseMongooseError'
 import { connectDB } from '../../../../lib/mongodb'
+import { deleteCloudinaryImage } from '../../../../lib/cloudinary'
 
 export async function PATCH(
     req: Request,
@@ -16,6 +17,22 @@ export async function PATCH(
 
         if (!body) {
             return NextResponse.json({ error: 'No payload' }, { status: 400 })
+        }
+
+        // Get the existing blog to check if image is being updated
+        const existingBlog = await Blog.findOne({ slug })
+        if (!existingBlog) {
+            return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
+        }
+
+        // If a new cover image is being set and it's different from the old one, delete the old image
+        if (body.coverImage && existingBlog.coverImage && body.coverImage !== existingBlog.coverImage) {
+            try {
+                await deleteCloudinaryImage(existingBlog.coverImage)
+            } catch (error) {
+                console.error('Failed to delete old image:', error)
+                // Continue with update even if deletion fails
+            }
         }
 
         const updated = await Blog.findOneAndUpdate(
@@ -45,7 +62,23 @@ export async function DELETE(
     try {
         await connectDB()
         const { slug } = await params
-        console.log({ slug })
+
+        // Get the blog before deleting to access the cover image
+        const blog = await Blog.findOne({ slug })
+        if (!blog) {
+            return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
+        }
+
+        // Delete the cover image from Cloudinary if it exists
+        if (blog.coverImage) {
+            try {
+                await deleteCloudinaryImage(blog.coverImage)
+            } catch (error) {
+                console.error('Failed to delete cover image:', error)
+                // Continue with deletion even if image deletion fails
+            }
+        }
+
         const deleted = await Blog.findOneAndDelete({ slug })
         if (!deleted) {
             return NextResponse.json({ error: 'Blog not found' }, { status: 404 })

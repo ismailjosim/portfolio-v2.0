@@ -1,7 +1,7 @@
 'use client'
 import { Plus } from 'lucide-react'
 import ManagementPageHeader from '../../shared/ManagementPageHeader'
-import AddBlogModal from '../../modules/blogsManagement/BlogFormDialog'
+import AddBlogModal from './BlogFormDialog'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 

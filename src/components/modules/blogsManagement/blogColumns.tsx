@@ -1,13 +1,21 @@
 'use client'
 
+import { Eye, Heart, MessageCircleMore } from 'lucide-react'
 import { IBlog } from '../../../types/blog.interface'
-import { Column } from '../../data-table'
 import Image from 'next/image'
+
+import { DateCell } from '../../shared/DateCell'
+
+export interface Column<T> {
+	header: string
+	accessor: keyof T | ((row: T) => React.ReactNode)
+	sortKey?: keyof T
+}
 
 export const blogColumns: Column<IBlog>[] = [
 	{
 		header: 'Blog',
-		accessor: (blog: IBlog) => (
+		accessor: (blog) => (
 			<div className='flex items-center gap-3'>
 				<Image
 					src={
@@ -31,7 +39,7 @@ export const blogColumns: Column<IBlog>[] = [
 
 	{
 		header: 'Category',
-		accessor: (blog: IBlog) => (
+		accessor: (blog) => (
 			<div className='flex flex-col'>
 				<span className='text-sm'>{blog.category}</span>
 				<span className='text-xs text-gray-500'>{blog.tags?.join(', ')}</span>
@@ -41,29 +49,39 @@ export const blogColumns: Column<IBlog>[] = [
 
 	{
 		header: 'Engagement',
-		accessor: (blog: IBlog) => (
-			<div className='text-sm flex flex-col'>
-				<span>👁 {blog.views}</span>
-				<span>❤️ {blog.likesCount}</span>
-				<span>💬 {blog.commentsCount}</span>
+		accessor: (blog) => (
+			<div className='text-sm flex items-center gap-3'>
+				<p className='flex items-center gap-1 text-muted-foreground'>
+					<Eye size={18} />
+					<span>{blog.views}</span>
+				</p>
+
+				<p className='flex items-center gap-1 text-destructive'>
+					<Heart fill='currentColor' size={18} />
+					<span>{blog.likesCount}</span>
+				</p>
+
+				<p className='flex items-center gap-1 text-accent'>
+					<MessageCircleMore size={18} />
+					<span>{blog.commentsCount}</span>
+				</p>
 			</div>
 		),
+		sortKey: 'views',
 	},
 
 	{
 		header: 'Created',
-		accessor: (blog: IBlog) => (
-			<span className='text-sm'>
-				{new Date(blog.createdAt).toLocaleDateString()}
-			</span>
-		),
+		accessor: (blog) => <DateCell date={blog.createdAt} />,
 		sortKey: 'createdAt',
 	},
 
 	{
 		header: 'Status',
-		accessor: (blog: IBlog) => {
-			const statusStyles: Record<IBlog['status'], string> = {
+		accessor: (blog) => {
+			const statusStyles: Record<string, string> = {
+				review: 'bg-blue-500/20 text-blue-600',
+				scheduled: 'bg-purple-500/20 text-purple-600',
 				published: 'bg-green-500/20 text-green-600',
 				draft: 'bg-yellow-500/20 text-yellow-600',
 				archived: 'bg-gray-500/20 text-gray-500',
@@ -71,11 +89,14 @@ export const blogColumns: Column<IBlog>[] = [
 
 			return (
 				<span
-					className={`px-2 py-1 text-xs rounded-full capitalize ${statusStyles[blog.status]}`}
+					className={`px-2 py-1 text-xs rounded-full capitalize ${
+						statusStyles[blog.status] || 'bg-gray-500/20 text-gray-500'
+					}`}
 				>
 					{blog.status}
 				</span>
 			)
 		},
+		sortKey: 'status',
 	},
 ]
