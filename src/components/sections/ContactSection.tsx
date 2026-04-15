@@ -71,7 +71,7 @@ export default function ContactSection() {
 			return
 		}
 
-		console.log('Form Data:', formData)
+		// console.log('Form Data:', formData)
 
 		toast.success("Thank you for reaching out! 🎉 I'll get back to you soon.")
 

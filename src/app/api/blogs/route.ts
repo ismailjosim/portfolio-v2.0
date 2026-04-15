@@ -76,7 +76,6 @@ export async function POST(req: Request) {
         }
 
         const blog = await Blog.create(body)
-        console.log("after create: ", blog);
 
         return NextResponse.json(blog, { status: 201 })
     } catch (err: unknown) {
