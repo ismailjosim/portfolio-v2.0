@@ -68,7 +68,7 @@ const BlogSchema = new Schema<IBlog>(
     { timestamps: true }
 )
 
-BlogSchema.index({ slug: 1 })
+
 BlogSchema.index({ category: 1 })
 BlogSchema.index({ tags: 1 })
 

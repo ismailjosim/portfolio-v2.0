@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import slugify from 'slugify'
 
 import Blog from '../../../models/Blog'
 import { parseMongooseError } from '../../../lib/parseMongooseError'
@@ -11,23 +12,28 @@ export async function GET(req: Request) {
         await connectDB()
 
         const { searchParams } = new URL(req.url)
+
         const page = Math.max(1, Number(searchParams.get('page') ?? 1))
         const limit = Math.min(
             50,
-            Math.max(1, Number(searchParams.get('limit') ?? 10)),
+            Math.max(1, Number(searchParams.get('limit') ?? 10))
         )
+
         const category = searchParams.get('category')
         const tag = searchParams.get('tag')
         const search = searchParams.get('search')
 
         const filter: Record<string, unknown> = {}
+
         if (category) filter.category = category
         if (tag) filter.tags = tag
-        if (search)
+
+        if (search) {
             filter.$or = [
                 { title: { $regex: search, $options: 'i' } },
                 { content: { $regex: search, $options: 'i' } },
             ]
+        }
 
         const [blogs, total] = await Promise.all([
             Blog.find(filter)
@@ -36,6 +42,7 @@ export async function GET(req: Request) {
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .lean(),
+
             Blog.countDocuments(filter),
         ])
 
@@ -52,9 +59,10 @@ export async function GET(req: Request) {
         })
     } catch (err) {
         console.error('[GET /api/blogs]', err)
+
         return NextResponse.json(
             { error: 'Failed to fetch blogs' },
-            { status: 500 },
+            { status: 500 }
         )
     }
 }
@@ -66,27 +74,42 @@ export async function POST(req: Request) {
 
         const body = await req.json()
 
-        // Auto-generate slug from title if not provided
-        if (!body.slug && body.title) {
-            body.slug = body.title
-                .toLowerCase()
-                .trim()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
+        // Generate slug from title if not provided
+        let slug =
+            body.slug ||
+            slugify(body.title || '', {
+                lower: true,
+                strict: true,
+                trim: true,
+            })
+
+        // Ensure unique slug
+        const existing = await Blog.findOne({ slug })
+
+        if (existing) {
+            slug = `${slug}-${Date.now()}`
         }
+
+        body.slug = slug
 
         const blog = await Blog.create(body)
 
         return NextResponse.json(blog, { status: 201 })
     } catch (err: unknown) {
         const errors = parseMongooseError(err)
+
         if (errors) {
-            return NextResponse.json({ errors }, { status: 422 })
+            return NextResponse.json(
+                { errors },
+                { status: 422 }
+            )
         }
+
         console.error('[POST /api/blogs]', err)
+
         return NextResponse.json(
             { error: 'Failed to create blog' },
-            { status: 500 },
+            { status: 500 }
         )
     }
 }
