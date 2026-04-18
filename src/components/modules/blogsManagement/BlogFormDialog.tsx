@@ -94,6 +94,7 @@ const BlogFormDialog = ({
 }: IBlogDialogProps) => {
 	const coverInputRef = useRef<HTMLInputElement>(null)
 	const mdFileInputRef = useRef<HTMLInputElement>(null)
+	const coverFileRef = useRef<File | null>(null)
 
 	const isEdit = !!blog?.slug
 
@@ -142,27 +143,18 @@ const BlogFormDialog = ({
 
 	// ─── Handlers ──────────────────────────────────────────
 
-	const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (!file || !file.type.startsWith('image/')) return
 
-		// Show local preview immediately while uploading
+		// Store the file for later upload on submit
+		coverFileRef.current = file
+
+		// Show local preview immediately
 		const localPreview = URL.createObjectURL(file)
 		form.setValue('coverImagePreview', localPreview)
-
-		const formData = new FormData()
-		formData.append('image', file)
-
-		const result = await uploadImage(formData)
-
-		if (!result.success) {
-			toast.error('Image upload failed')
-			return
-		}
-
-		// Store the Cloudinary URL, not the File
-		form.setValue('coverImage', result.url!)
-		form.setValue('coverImagePreview', result.url!)
+		// Clear the coverImage so it won't use old URL
+		form.setValue('coverImage', null)
 	}
 
 	const handleMdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,21 +172,41 @@ const BlogFormDialog = ({
 	}
 
 	const handleClose = () => {
+		coverFileRef.current = null
 		form.reset()
 		onClose()
 	}
 
 	const onSubmit = async (data: BlogFormValues) => {
-		const payload: IBlogPayload = {
-			title: data.title,
-			category: data.category,
-			content: data.content,
-			tags: data.tags.map((item) => item.value),
-			coverImage: data.coverImage || undefined,
-			status: data.status,
-		}
-
 		try {
+			let coverImageUrl = data.coverImage
+
+			// Upload cover image if a new file was selected
+			if (coverFileRef.current) {
+				const formData = new FormData()
+				formData.append('image', coverFileRef.current)
+
+				const result = await uploadImage(formData)
+
+				if (!result.success) {
+					toast.error('Image upload failed')
+					return
+				}
+
+				coverImageUrl = result.url!
+				// Update preview with the Cloudinary URL
+				form.setValue('coverImagePreview', coverImageUrl)
+			}
+
+			const payload: IBlogPayload = {
+				title: data.title,
+				category: data.category,
+				content: data.content,
+				tags: data.tags.map((item) => item.value),
+				coverImage: coverImageUrl || undefined,
+				status: data.status,
+			}
+
 			let result
 			if (isEdit && blog?.slug) {
 				result = await updateBlog(blog.slug, payload)
@@ -210,6 +222,10 @@ const BlogFormDialog = ({
 			toast.success(
 				isEdit ? 'Blog updated successfully' : 'Blog created successfully',
 			)
+
+			// Reset the file ref after successful upload
+			coverFileRef.current = null
+
 			onSuccess()
 			handleClose()
 		} catch (error) {

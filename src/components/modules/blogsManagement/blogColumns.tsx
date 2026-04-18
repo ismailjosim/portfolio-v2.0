@@ -17,17 +17,19 @@ export const blogColumns: Column<IBlog>[] = [
 		header: 'Blog',
 		accessor: (blog) => (
 			<div className='flex items-center gap-3'>
-				<Image
-					src={
-						blog.coverImage?.startsWith('blob')
-							? '/placeholder.jpg'
-							: blog.coverImage || '/placeholder.jpg'
-					}
-					alt={blog.title}
-					width={40}
-					height={40}
-					className='rounded-md object-cover'
-				/>
+				<div className='relative w-10 h-10 shrink-0'>
+					<Image
+						src={
+							blog.coverImage?.startsWith('blob')
+								? '/placeholder.jpg'
+								: blog.coverImage || '/placeholder.jpg'
+						}
+						alt={blog.title}
+						fill
+						className='rounded-md object-cover'
+						sizes='40px'
+					/>
+				</div>
 				<div className='flex flex-col'>
 					<span className='font-medium text-sm'>{blog.title}</span>
 					<span className='text-xs text-gray-500'>{blog.slug}</span>
