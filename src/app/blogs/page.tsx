@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Search } from 'lucide-react'
 import { IBlog } from '@/src/types/blog.interface'
 import { Input } from '@/src/components/ui/input'
+import BlogCard from '@/src/components/blogs/BlogCard'
 
 export const metadata: Metadata = {
 	title: 'Blog',
@@ -80,7 +81,7 @@ export default async function BlogsPage() {
 
 			{/* Blog Content */}
 			<section className='py-12'>
-				<div className='container mx-auto grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10'>
+				<div className='container mx-auto  '>
 					{blogs.length === 0 ? (
 						<div className='text-center py-16'>
 							<p className='text-xl text-muted-foreground'>
@@ -88,70 +89,9 @@ export default async function BlogsPage() {
 							</p>
 						</div>
 					) : (
-						<div className='space-y-8'>
-							{blogs.map((blog: IBlog) => (
-								<Link
-									key={blog._id}
-									href={`/blogs/${blog.slug}`}
-									className='group block'
-								>
-									<article className='flex flex-col md:flex-row gap-6 hover:opacity-80 transition-opacity'>
-										{/* Cover Image */}
-										{blog.coverImage ? (
-											<div className='relative w-full md:w-64 h-48 rounded-lg overflow-hidden shrink-0 bg-muted'>
-												<Image
-													src={blog.coverImage}
-													alt={blog.title}
-													fill
-													className='object-cover group-hover:scale-105 transition-transform'
-												/>
-											</div>
-										) : (
-											<div
-												className={`relative w-full md:w-64 h-48 rounded-lg overflow-hidden shrink-0 bg-linear-to-br ${getCategoryColor(blog.category)} flex items-center justify-center`}
-											>
-												<div className='text-white opacity-40 text-5xl'>📝</div>
-											</div>
-										)}
-
-										{/* Content */}
-										<div className='flex-1 flex flex-col justify-between'>
-											<div>
-												<div className='flex items-center gap-3 mb-3'>
-													<span className='text-sm font-semibold text-accent'>
-														{blog.category}
-													</span>
-													<time className='text-sm text-muted-foreground'>
-														{new Date(blog.createdAt!).toLocaleDateString(
-															'en-US',
-															{
-																year: 'numeric',
-																month: 'short',
-																day: 'numeric',
-															},
-														)}
-													</time>
-												</div>
-												<h2 className='text-2xl font-bold mb-3 group-hover:text-accent transition-colors'>
-													{blog.title}
-												</h2>
-												<p className='text-muted-foreground line-clamp-2'>
-													{blog.content
-														.replace(/<[^>]*>/g, '')
-														.substring(0, 150)}
-													...
-												</p>
-											</div>
-
-											{/* Meta */}
-											<div className='flex items-center gap-4 mt-4 text-sm text-muted-foreground'>
-												<span>{blog.views} views</span>
-												<span>{blog.likesCount} likes</span>
-												<span>{blog.commentsCount} comments</span>
-											</div>
-										</div>
-									</article>
-								</Link>
+						<div className='space-y-8 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10'>
+							{blogs.map((blog: IBlog, index: number) => (
+								<BlogCard blog={blog} key={blog._id} index={index} />
 							))}
 						</div>
 					)}
