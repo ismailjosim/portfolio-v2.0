@@ -5,6 +5,43 @@ import { parseMongooseError } from '../../../../lib/parseMongooseError'
 import { connectDB } from '../../../../lib/mongodb'
 import { deleteCloudinaryImage } from '../../../../lib/cloudinary'
 
+export async function GET(
+    req: Request,
+    { params }: { params: Promise<{ slug: string }> },
+) {
+    try {
+        await connectDB()
+
+        const { slug } = await params
+
+        if (!slug) {
+            return NextResponse.json(
+                { error: 'Slug is required' },
+                { status: 400 },
+            )
+        }
+
+        // Case-insensitive slug search
+        const blog = await Blog.findOne({ slug: { $regex: `^${slug.trim()}$`, $options: 'i' } })
+        console.log({ blog });
+
+        if (!blog) {
+            return NextResponse.json(
+                { error: 'Blog not found' },
+                { status: 404 },
+            )
+        }
+
+        return NextResponse.json(blog)
+    } catch (err: unknown) {
+        console.error('[GET /api/blogs/:slug]', err)
+        return NextResponse.json(
+            { error: 'Failed to fetch blog' },
+            { status: 500 },
+        )
+    }
+}
+
 export async function PATCH(
     req: Request,
     { params }: { params: Promise<{ slug: string }> }
@@ -19,8 +56,8 @@ export async function PATCH(
             return NextResponse.json({ error: 'No payload' }, { status: 400 })
         }
 
-        // Get the existing blog to check if image is being updated
-        const existingBlog = await Blog.findOne({ slug })
+        // Get the existing blog to check if image is being updated (case-insensitive)
+        const existingBlog = await Blog.findOne({ slug: { $regex: `^${slug.trim()}$`, $options: 'i' } })
         if (!existingBlog) {
             return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
         }
@@ -36,7 +73,7 @@ export async function PATCH(
         }
 
         const updated = await Blog.findOneAndUpdate(
-            { slug },
+            { slug: { $regex: `^${slug.trim()}$`, $options: 'i' } },
             { ...body, updatedAt: new Date() },
             { new: true, runValidators: true },
         )
@@ -63,8 +100,8 @@ export async function DELETE(
         await connectDB()
         const { slug } = await params
 
-        // Get the blog before deleting to access the cover image
-        const blog = await Blog.findOne({ slug })
+        // Get the blog before deleting to access the cover image (case-insensitive)
+        const blog = await Blog.findOne({ slug: { $regex: `^${slug.trim()}$`, $options: 'i' } })
         if (!blog) {
             return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
         }
@@ -79,7 +116,7 @@ export async function DELETE(
             }
         }
 
-        const deleted = await Blog.findOneAndDelete({ slug })
+        const deleted = await Blog.findOneAndDelete({ slug: { $regex: `^${slug.trim()}$`, $options: 'i' } })
         if (!deleted) {
             return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
         }

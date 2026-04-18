@@ -1,68 +1,70 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import FadeUp from '../ui/FadeUp'
+import { IBlog } from '@/src/types/blog.interface'
 
-const filters = ['all', 'frontend', 'backend', 'tools', 'career']
-
-const articles = [
-	{
-		category: 'frontend',
-		gradient: 'from-blue-500 to-purple-600',
-		icon: 'fa fa-react',
-		readTime: '5 min read',
-		title: 'Building Interactive React Components',
-		desc: 'Learn best practices for creating reusable, performant React components with hooks and modern patterns.',
-	},
-	{
-		category: 'backend',
-		gradient: 'from-green-500 to-teal-600',
-		icon: 'fa fa-server',
-		readTime: '8 min read',
-		title: 'Scaling Node.js Applications',
-		desc: 'Strategies for building scalable Node.js APIs with clustering, load balancing, and caching techniques.',
-	},
-	{
-		category: 'tools',
-		gradient: 'from-orange-500 to-red-600',
-		icon: 'fa fa-hammer',
-		readTime: '6 min read',
-		title: 'Modern Development Tools 2024',
-		desc: 'Explore the latest development tools, from TypeScript to Vite that accelerate your workflow.',
-	},
-	{
-		category: 'career',
-		gradient: 'from-pink-500 to-rose-600',
-		icon: 'fa fa-briefcase',
-		readTime: '7 min read',
-		title: 'Landing Your First Developer Job',
-		desc: 'Complete guide to preparing your portfolio, resume, and interview skills for landing your first role.',
-	},
-	{
-		category: 'frontend',
-		gradient: 'from-cyan-500 to-blue-600',
-		icon: 'fa fa-css3-alt',
-		readTime: '4 min read',
-		title: 'CSS Grid and Flexbox Mastery',
-		desc: 'Deep dive into modern CSS layout techniques with practical examples and common pitfalls to avoid.',
-	},
-	{
-		category: 'backend',
-		gradient: 'from-indigo-500 to-purple-600',
-		icon: 'fa fa-database',
-		readTime: '9 min read',
-		title: 'Database Design & Optimization',
-		desc: 'Learn MongoDB and PostgreSQL best practices, indexing strategies, and query optimization techniques.',
-	},
+const filters = [
+	'all',
+	'technology',
+	'lifestyle',
+	'travel',
+	'finance',
+	'learning',
+	'other',
 ]
 
 export default function BlogSection() {
 	const [activeFilter, setActiveFilter] = useState('all')
+	const [blogs, setBlogs] = useState<IBlog[]>([])
+	const [loading, setLoading] = useState(true)
+
+	useEffect(() => {
+		const fetchBlogs = async () => {
+			try {
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`)
+				const data = await response.json()
+				// Filter only published blogs
+				const publishedBlogs = (data.blogs || []).filter(
+					(blog: IBlog) => blog.status === 'published',
+				)
+				setBlogs(publishedBlogs)
+			} catch (error) {
+				console.error('Failed to fetch blogs:', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		fetchBlogs()
+	}, [])
 
 	const filtered =
 		activeFilter === 'all'
-			? articles
-			: articles.filter((a) => a.category === activeFilter)
+			? blogs
+			: blogs.filter(
+					(blog) => blog.category.toLowerCase() === activeFilter.toLowerCase(),
+				)
+
+	const getCategoryColor = (category: string) => {
+		const colors: Record<string, string> = {
+			technology: 'from-blue-500 to-purple-600',
+			lifestyle: 'from-green-500 to-teal-600',
+			travel: 'from-orange-500 to-red-600',
+			finance: 'from-pink-500 to-rose-600',
+			learning: 'from-cyan-500 to-blue-600',
+			other: 'from-indigo-500 to-purple-600',
+		}
+		return colors[category.toLowerCase()] || 'from-gray-500 to-gray-600'
+	}
+
+	const getReadTime = (content: string) => {
+		const wordsPerMinute = 200
+		const words = content.split(/\s+/).length
+		const minutes = Math.ceil(words / wordsPerMinute)
+		return `${minutes} min read`
+	}
 
 	return (
 		<section id='blog'>
@@ -92,54 +94,77 @@ export default function BlogSection() {
 					</FadeUp>
 				</div>
 
-				<div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
-					{filtered.map((article, i) => (
-						<FadeUp key={article.title} delay={i * 80}>
-							<article
-								className='h-full rounded-2xl overflow-hidden transition-all flex flex-col'
-								style={{
-									border: '1px solid var(--border)',
-									background: 'var(--blog-card)',
-								}}
-							>
-								<div
-									className={`bg-linear-to-br ${article.gradient} h-48 flex items-center justify-center overflow-hidden`}
+				{loading ? (
+					<div className='text-center py-12'>
+						<p className='text-muted-foreground'>Loading articles...</p>
+					</div>
+				) : filtered.length === 0 ? (
+					<div className='text-center py-12'>
+						<p className='text-muted-foreground'>
+							No articles found in this category.
+						</p>
+					</div>
+				) : (
+					<div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+						{filtered.map((blog, i) => (
+							<FadeUp key={blog.slug} delay={i * 80}>
+								<article
+									className='h-full rounded-2xl overflow-hidden transition-all flex flex-col'
+									style={{
+										border: '1px solid var(--border)',
+										background: 'var(--blog-card)',
+									}}
 								>
-									<i
-										className={`${article.icon} text-white opacity-40`}
-										style={{ fontSize: '64px' }}
-									/>
-								</div>
-								<div className='p-6 flex flex-col flex-1'>
-									<div className='flex items-center gap-2 mb-3'>
-										<span className={`blog-category-badge ${article.category}`}>
-											{article.category}
-										</span>
-										<span className='text-muted-foreground text-xs'>
-											{article.readTime}
-										</span>
+									{blog.coverImage ? (
+										<div className='relative h-48 w-full overflow-hidden bg-muted'>
+											<Image
+												src={blog.coverImage}
+												alt={blog.title}
+												fill
+												className='object-cover'
+											/>
+										</div>
+									) : (
+										<div
+											className={`bg-linear-to-br ${getCategoryColor(blog.category)} h-48 flex items-center justify-center overflow-hidden`}
+										>
+											<div className='text-white opacity-40 text-4xl'>📝</div>
+										</div>
+									)}
+									<div className='p-6 flex flex-col flex-1'>
+										<div className='flex items-center gap-2 mb-3'>
+											<span
+												className={`blog-category-badge ${blog.category.toLowerCase()}`}
+											>
+												{blog.category}
+											</span>
+											<span className='text-muted-foreground text-xs'>
+												{getReadTime(blog.content)}
+											</span>
+										</div>
+										<h3 className='font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors line-clamp-2'>
+											{blog.title}
+										</h3>
+										<p className='text-muted-foreground text-sm mb-4 flex-1 line-clamp-3'>
+											{blog.content.replace(/<[^>]*>/g, '').substring(0, 100)}
+											...
+										</p>
+										<a
+											href={`/blogs/${blog.slug}`}
+											className='text-accent text-sm font-medium hover:underline'
+										>
+											Read More →
+										</a>
 									</div>
-									<h3 className='font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors'>
-										{article.title}
-									</h3>
-									<p className='text-muted-foreground text-sm mb-4 flex-1'>
-										{article.desc}
-									</p>
-									<a
-										href='#'
-										className='text-accent text-sm font-medium hover:underline'
-									>
-										Read More →
-									</a>
-								</div>
-							</article>
-						</FadeUp>
-					))}
-				</div>
+								</article>
+							</FadeUp>
+						))}
+					</div>
+				)}
 
 				<FadeUp delay={200}>
 					<div className='text-center mt-12'>
-						<a href='#' className='btn-outline'>
+						<a href='/blogs' className='btn-outline'>
 							View All Articles →
 						</a>
 					</div>

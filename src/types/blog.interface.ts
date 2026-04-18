@@ -14,7 +14,7 @@ export interface IBlog {
 
 	title: string
 	category: string
-	coverImage: string
+	coverImage?: string
 	coverImagePreview?: string
 	tags: string[]
 	content: string

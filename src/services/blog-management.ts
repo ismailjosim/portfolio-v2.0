@@ -89,10 +89,11 @@ export async function deleteBlog(slug: string) {
 	}
 }
 
-export async function getBlogById(id: string) {
+export async function getSingleBlogBySlug(slug: string) {
 	try {
+		console.log({ slug });
 		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(id)}`,
+			`${process.env.NEXT_PUBLIC_API_URL}/blogs/${slug}`,
 			{
 				method: 'GET',
 			},
@@ -106,7 +107,7 @@ export async function getBlogById(id: string) {
 		const blog = (await res.json()) as IBlog
 		return { success: true, data: blog }
 	} catch (error) {
-		console.error('getBlogById', error)
+		console.error('getSingleBlogBySlug', error)
 		return { success: false, message: 'Failed to fetch blog' }
 	}
 }
