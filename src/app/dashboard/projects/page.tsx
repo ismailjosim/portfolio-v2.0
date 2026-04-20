@@ -1,10 +1,30 @@
+import ProjectFilter from '@/src/components/modules/projectsManagement/ProjectFilter'
+import ProjectManagementHeader from '@/src/components/modules/projectsManagement/ProjectManagementHeader'
+import ProjectsTable from '@/src/components/modules/projectsManagement/ProjectsTable'
+import TablePagination from '@/src/components/shared/TablePagination'
+import { TableSkeleton } from '@/src/components/shared/TableSkeleton'
+import { queryStringFormatter } from '@/src/lib/formatters.ts'
+import { Suspense } from 'react'
 
-const page = () => {
-    return (
-        <div>
+const ProjectsPage = async ({
+	searchParams,
+}: {
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) => {
+	const searchParamsObj = await searchParams
+	const queryString = queryStringFormatter(searchParamsObj)
 
-        </div>
-    );
-};
+	return (
+		<div className='space-y-6'>
+			<ProjectManagementHeader />
+			<ProjectFilter />
 
-export default page;
+			<Suspense fallback={<TableSkeleton columns={8} rows={10} />}>
+				<ProjectsTable projects={[]} />
+				<TablePagination currentPage={1} totalPages={1} />
+			</Suspense>
+		</div>
+	)
+}
+
+export default ProjectsPage
