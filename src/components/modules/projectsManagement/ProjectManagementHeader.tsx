@@ -1,7 +1,7 @@
 'use client'
 import { Plus } from 'lucide-react'
 import ManagementPageHeader from '../../shared/ManagementPageHeader'
-import AddBlogModal from './ProjectFormDialog'
+
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
@@ -30,7 +30,7 @@ const ProjectManagementHeader = () => {
 
 	return (
 		<>
-			<AddBlogModal
+			<Add
 				key={dialogKey}
 				open={isDialogOpen}
 				onClose={handleCloseDialog}

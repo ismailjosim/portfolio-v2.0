@@ -1,10 +1,11 @@
 'use client'
 
 import { Eye, Heart, MessageCircleMore } from 'lucide-react'
-import { IBlog } from '../../../types/blog.interface'
+
 import Image from 'next/image'
 
 import { DateCell } from '../../shared/DateCell'
+import { IProject } from '@/src/types/project.interface'
 
 export interface Column<T> {
 	header: string
@@ -12,7 +13,7 @@ export interface Column<T> {
 	sortKey?: keyof T
 }
 
-const projectColumns: Column<IBlog>[] = [
+const projectColumns: Column<IProject>[] = [
 	{
 		header: 'Blog',
 		accessor: (blog) => (
