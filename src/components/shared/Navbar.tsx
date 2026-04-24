@@ -12,11 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 const navItems = [
 	{ name: 'Home', href: '#home' },
 	{ name: 'About Me', href: '#about' },
+	{ name: 'Projects', href: '#projects' },
 	{ name: 'Technical Skills', href: '#skills' },
 	{ name: 'Experiences', href: '#experience' },
-	{ name: 'Projects', href: '#projects' },
-	{ name: 'Education', href: '#education' },
 	{ name: 'Blogs', href: '#blog' },
+	{ name: 'Education', href: '#education' },
 	{ name: 'Contact', href: '#contact' },
 ]
 

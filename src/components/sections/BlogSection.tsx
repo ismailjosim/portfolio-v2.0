@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import FadeUp from '../ui/FadeUp'
 import { IBlog } from '@/src/types/blog.interface'
+import Link from 'next/link'
 
 const filters = [
 	'all',
@@ -25,10 +26,11 @@ export default function BlogSection() {
 			try {
 				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`)
 				const data = await response.json()
-				// Filter only published blogs
+
 				const publishedBlogs = (data.blogs || []).filter(
 					(blog: IBlog) => blog.status === 'published',
 				)
+
 				setBlogs(publishedBlogs)
 			} catch (error) {
 				console.error('Failed to fetch blogs:', error)
@@ -46,6 +48,9 @@ export default function BlogSection() {
 			: blogs.filter(
 					(blog) => blog.category.toLowerCase() === activeFilter.toLowerCase(),
 				)
+
+	// show only 6 blogs
+	const displayBlogs = filtered.slice(0, 6)
 
 	const getCategoryColor = (category: string) => {
 		const colors: Record<string, string> = {
@@ -68,7 +73,7 @@ export default function BlogSection() {
 
 	return (
 		<section id='blog'>
-			<div className='container mx-auto '>
+			<div className='container mx-auto'>
 				<div className='text-center mb-12'>
 					<FadeUp>
 						<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>
@@ -98,7 +103,7 @@ export default function BlogSection() {
 					<div className='text-center py-12'>
 						<p className='text-muted-foreground'>Loading articles...</p>
 					</div>
-				) : filtered.length === 0 ? (
+				) : displayBlogs.length === 0 ? (
 					<div className='text-center py-12'>
 						<p className='text-muted-foreground'>
 							No articles found in this category.
@@ -106,7 +111,7 @@ export default function BlogSection() {
 					</div>
 				) : (
 					<div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
-						{filtered.map((blog, i) => (
+						{displayBlogs.map((blog, i) => (
 							<FadeUp key={blog.slug} delay={i * 80}>
 								<article
 									className='h-full rounded-2xl overflow-hidden transition-all flex flex-col'
@@ -126,11 +131,14 @@ export default function BlogSection() {
 										</div>
 									) : (
 										<div
-											className={`bg-linear-to-br ${getCategoryColor(blog.category)} h-48 flex items-center justify-center overflow-hidden`}
+											className={`bg-linear-to-br ${getCategoryColor(
+												blog.category,
+											)} h-48 flex items-center justify-center overflow-hidden`}
 										>
 											<div className='text-white opacity-40 text-4xl'>📝</div>
 										</div>
 									)}
+
 									<div className='p-6 flex flex-col flex-1'>
 										<div className='flex items-center gap-2 mb-3'>
 											<span
@@ -138,23 +146,27 @@ export default function BlogSection() {
 											>
 												{blog.category}
 											</span>
+
 											<span className='text-muted-foreground text-xs'>
 												{getReadTime(blog.content)}
 											</span>
 										</div>
+
 										<h3 className='font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors line-clamp-2'>
 											{blog.title}
 										</h3>
+
 										<p className='text-muted-foreground text-sm mb-4 flex-1 line-clamp-3'>
 											{blog.content.replace(/<[^>]*>/g, '').substring(0, 100)}
 											...
 										</p>
-										<a
+
+										<Link
 											href={`/blogs/${blog.slug}`}
 											className='text-accent text-sm font-medium hover:underline'
 										>
 											Read More →
-										</a>
+										</Link>
 									</div>
 								</article>
 							</FadeUp>
@@ -164,9 +176,9 @@ export default function BlogSection() {
 
 				<FadeUp delay={200}>
 					<div className='text-center mt-12'>
-						<a href='/blogs' className='btn-outline'>
+						<Link href='/blogs' className='btn-outline'>
 							View All Articles →
-						</a>
+						</Link>
 					</div>
 				</FadeUp>
 			</div>

@@ -24,6 +24,29 @@ const aboutInfo: AboutInfo[] = [
 	{ label: 'Languages', value: 'EN / BN / HI', icon: Languages },
 ]
 
+const aboutImages = [
+	'/slide01.jpeg',
+	'/slide02.jpeg',
+	'/slide03.jpeg',
+	'/slide04.jpeg',
+	'/slide05.jpeg',
+	'/slide06.jpeg',
+	'/slide07.jpeg',
+	'/slide08.jpeg',
+	'/slide09.jpeg',
+	'/slide10.jpeg',
+	'/slide11.jpg',
+	'/slide12.jpeg',
+	'/slide13.jpeg',
+	'/slide14.jpeg',
+	'/slide15.jpeg',
+	'/slide16.jpeg',
+	'/slide17.jpeg',
+	'/slide18.jpeg',
+	'/slide19.jpeg',
+	'/slide20.jpg',
+]
+
 // --------------------------
 // Component
 // --------------------------
@@ -121,10 +144,10 @@ export default function AboutSection() {
 							ref={swiperRef}
 							className='relative h-96 rounded-2xl overflow-hidden shadow-xl'
 						>
-							{['/about-slide-01.jpg', '/about-slide-02.jpg'].map((src, i) => (
+							{aboutImages.map((item, i) => (
 								<img
-									key={src}
-									src={src}
+									key={i}
+									src={item}
 									alt={`About slide ${i + 1}`}
 									className='slide-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000'
 								/>

@@ -3,10 +3,7 @@ import FadeUp from '../ui/FadeUp'
 
 export default function GitHubSection() {
 	return (
-		<section
-			id='contact'
-			className='bg-background flex justify-center items-center py-20'
-		>
+		<section className='bg-background flex justify-center items-center'>
 			<div className='container mx-auto'>
 				<FadeUp>
 					<div className='text-center mb-12'>

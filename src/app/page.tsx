@@ -20,13 +20,13 @@ export default function HomePage() {
 			<main className='min-h-screen transition-all duration-300'>
 				<HeroSection />
 				<AboutSection />
+				<ProjectsSection />
 				<SkillsSection />
 				<ExperienceSection />
-				<WorkingAreasSection />
-				<ProjectsSection />
-				<EducationSection />
 				<BlogSection />
 				<GitHubSection />
+				<EducationSection />
+				<WorkingAreasSection />
 				<ContactSection />
 			</main>
 			{/* <footer className='absolute'> */}
