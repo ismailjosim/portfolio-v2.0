@@ -1,6 +1,5 @@
 import { serverFetch } from '../lib/server-fetch'
 import { IBlog } from '../types/blog.interface'
-import { uploadImage } from './upload.action'
 
 export interface IBlogPayload {
 	title: string
@@ -91,7 +90,7 @@ export async function deleteBlog(slug: string) {
 
 export async function getSingleBlogBySlug(slug: string) {
 	try {
-		console.log({ slug });
+		console.log({ slug })
 		const res = await fetch(
 			`${process.env.NEXT_PUBLIC_API_URL}/blogs/${slug}`,
 			{

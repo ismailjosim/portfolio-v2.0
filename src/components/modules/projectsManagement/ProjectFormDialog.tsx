@@ -1,12 +1,14 @@
 'use client'
+
 import React, { useRef, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import MDEditor from '@uiw/react-md-editor'
-import { FileUp, Upload } from 'lucide-react'
-import { useTheme } from 'next-themes'
+import { Upload, Plus } from 'lucide-react'
+import CreatableSelect from 'react-select/creatable'
+import { toast } from 'sonner'
 
 // shadcn ui
 import { Input } from '../../ui/input'
+import { Textarea } from '../../ui/textarea'
 import {
 	Dialog,
 	DialogContent,
@@ -14,6 +16,7 @@ import {
 	DialogTitle,
 	DialogDescription,
 } from '../../ui/dialog'
+
 import {
 	Form,
 	FormControl,
@@ -22,153 +25,108 @@ import {
 	FormLabel,
 	FormMessage,
 } from '../../ui/form'
-import {
-	Select as SelectElement,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '../../ui/select'
+
 import { Button } from '../../ui/button'
-import CreatableSelect from 'react-select/creatable'
-import { toast } from 'sonner'
-import { BlogStatus, IBlog, IBlogTag } from '../../../types/blog.interface'
-import {
-	createBlog,
-	updateBlog,
-	IBlogPayload,
-} from '../../../services/blog-management'
+
 import { uploadImage } from '@/src/services/upload.action'
 
-// ─── Constants ─────────────────────────────────────────────
+import {
+	createProject,
+	updateProject,
+	IProjectPayload,
+} from '../../../services/project-management'
 
-const CATEGORIES = [
-	'Technology',
-	'Lifestyle',
-	'Travel',
-	'Finance',
-	'Learning',
-	'Other',
-]
+import { IProject } from '../../../types/project.interface'
 
-const TAG_OPTIONS = [
-	{ value: 'react', label: 'React' },
-	{ value: 'webdev', label: 'Web Dev' },
-	{ value: 'javascript', label: 'JavaScript' },
-	{ value: 'nextjs', label: 'Next.js' },
-]
-
-export const BLOG_STATUS_OPTIONS = [
-	{ value: 'draft', label: 'Draft' },
-	{ value: 'review', label: 'In Review' },
-	{ value: 'scheduled', label: 'Scheduled' },
-	{ value: 'published', label: 'Published' },
-	{ value: 'archived', label: 'Archived' },
-]
-// ─── Types ─────────────────────────────────────────────────
-
-interface BlogFormValues {
+interface ProjectFormValues {
+	name: string
+	subtitle: string
 	title: string
-	category: string
-	content: string
-	tags: IBlogTag[]
-	coverImage: string | null
-	coverImagePreview?: string
-	status: BlogStatus
+	type: string
+
+	image: string | null
+	imagePreview?: string
+
+	description: string
+
+	technologies: { label: string; value: string }[]
+	features: string
+
+	githubUrl: string
+	liveUrl: string
+	caseStudyUrl: string
 }
 
-interface IBlogDialogProps {
+interface IProjectDialogProps {
 	open: boolean
 	onClose: () => void
 	onSuccess: () => void
-	blog?: IBlog
+	project?: IProject
 }
-
-// ─── Component ─────────────────────────────────────────────
 
 const ProjectFormDialog = ({
 	open,
 	onClose,
 	onSuccess,
-	blog,
-}: IBlogDialogProps) => {
+	project,
+}: IProjectDialogProps) => {
 	const coverInputRef = useRef<HTMLInputElement>(null)
-	const mdFileInputRef = useRef<HTMLInputElement>(null)
 	const coverFileRef = useRef<File | null>(null)
 
-	const isEdit = !!blog?.slug
+	const isEdit = !!project?.slug
 
-	const { theme } = useTheme()
-
-	const form = useForm<BlogFormValues>({
+	const form = useForm<ProjectFormValues>({
 		defaultValues: {
+			name: '',
+			subtitle: '',
 			title: '',
-			category: '',
-			coverImage: null,
-			coverImagePreview: '',
-			tags: [],
-			content: '',
-			status: 'draft',
+			type: '',
+			image: null,
+			imagePreview: '',
+			description: '',
+			technologies: [],
+			features: '',
+			githubUrl: '',
+			liveUrl: '',
+			caseStudyUrl: '',
 		},
 	})
 
-	// Populate form when blog prop changes (edit mode)
 	useEffect(() => {
-		if (blog) {
+		if (project) {
 			form.reset({
-				title: blog.title,
-				category: blog.category,
-				coverImage: null,
-				coverImagePreview: blog.coverImage ?? '',
-				tags: (blog.tags || []).map((tag) =>
-					typeof tag === 'string' ? { value: tag, label: tag } : tag,
-				),
-				content: blog.content,
-				status: (blog.status as BlogStatus) || 'draft',
+				name: project.name,
+				subtitle: project.subtitle,
+				title: project.title,
+				type: project.type,
+				image: null,
+				imagePreview: project.image,
+				description: project.description || '',
+				technologies: project.technologies.map((item) => ({
+					label: item,
+					value: item,
+				})),
+				features: (project.features || []).join('\n'),
+				githubUrl: project.githubUrl || '',
+				liveUrl: project.liveUrl || '',
+				caseStudyUrl: project.caseStudyUrl || '',
 			})
 		} else {
-			form.reset({
-				title: '',
-				category: '',
-				coverImage: null,
-				coverImagePreview: '',
-				tags: [],
-				content: '',
-				status: 'draft',
-			})
+			form.reset()
 		}
-	}, [blog, form])
+	}, [project, form])
 
-	const coverPreview = form.watch('coverImagePreview')
+	const imagePreview = form.watch('imagePreview')
 
-	// ─── Handlers ──────────────────────────────────────────
-
-	const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0]
-		if (!file || !file.type.startsWith('image/')) return
-
-		// Store the file for later upload on submit
-		coverFileRef.current = file
-
-		// Show local preview immediately
-		const localPreview = URL.createObjectURL(file)
-		form.setValue('coverImagePreview', localPreview)
-		// Clear the coverImage so it won't use old URL
-		form.setValue('coverImage', null)
-	}
-
-	const handleMdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (!file) return
-		if (!file.name.endsWith('.md')) return
 
-		const reader = new FileReader()
-		reader.onload = (ev) => {
-			if (typeof ev.target?.result === 'string') {
-				form.setValue('content', ev.target.result)
-			}
-		}
-		reader.readAsText(file)
+		coverFileRef.current = file
+
+		const localPreview = URL.createObjectURL(file)
+		form.setValue('imagePreview', localPreview)
+		form.setValue('image', null)
 	}
 
 	const handleClose = () => {
@@ -177,11 +135,10 @@ const ProjectFormDialog = ({
 		onClose()
 	}
 
-	const onSubmit = async (data: BlogFormValues) => {
+	const onSubmit = async (data: ProjectFormValues) => {
 		try {
-			let coverImageUrl = data.coverImage
+			let imageUrl = data.image
 
-			// Upload cover image if a new file was selected
 			if (coverFileRef.current) {
 				const formData = new FormData()
 				formData.append('image', coverFileRef.current)
@@ -193,60 +150,62 @@ const ProjectFormDialog = ({
 					return
 				}
 
-				coverImageUrl = result.url!
-				// Update preview with the Cloudinary URL
-				form.setValue('coverImagePreview', coverImageUrl)
+				imageUrl = result.url!
 			}
 
-			const payload: IBlogPayload = {
+			const payload: IProjectPayload = {
+				name: data.name,
+				subtitle: data.subtitle,
 				title: data.title,
-				category: data.category,
-				content: data.content,
-				tags: data.tags.map((item) => item.value),
-				coverImage: coverImageUrl || undefined,
-				status: data.status,
+				type: data.type,
+				image: imageUrl || '',
+				description: data.description,
+				technologies: data.technologies.map((item) => item.value),
+				features: data.features
+					.split('\n')
+					.map((item) => item.trim())
+					.filter(Boolean),
+				githubUrl: data.githubUrl || undefined,
+				liveUrl: data.liveUrl || undefined,
+				caseStudyUrl: data.caseStudyUrl || undefined,
 			}
 
 			let result
-			if (isEdit && blog?.slug) {
-				result = await updateBlog(blog.slug, payload)
+
+			if (isEdit && project?.slug) {
+				result = await updateProject(project.slug, payload)
 			} else {
-				result = await createBlog(payload)
+				result = await createProject(payload)
 			}
 
 			if (!result.success) {
-				toast.error(result.message || 'Failed to save blog')
+				toast.error(result.message || 'Failed to save project')
 				return
 			}
 
 			toast.success(
-				isEdit ? 'Blog updated successfully' : 'Blog created successfully',
+				isEdit
+					? 'Project updated successfully'
+					: 'Project created successfully',
 			)
-
-			// Reset the file ref after successful upload
-			coverFileRef.current = null
 
 			onSuccess()
 			handleClose()
 		} catch (error) {
-			console.error('AddBlogModal submit', error)
-			toast.error('Something went wrong while saving blog')
+			toast.error('Something went wrong')
 		}
 	}
-
-	// ─── UI ────────────────────────────────────────────────
 
 	return (
 		<Dialog open={open} onOpenChange={handleClose}>
 			<DialogContent className='sm:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col'>
-				<DialogHeader className='px-6 pt-6 pb-4'>
+				<DialogHeader>
 					<DialogTitle>
-						{isEdit ? 'Edit Blog Post' : 'Create New Blog Post'}
+						{isEdit ? 'Edit Project' : 'Create New Project'}
 					</DialogTitle>
+
 					<DialogDescription>
-						{isEdit
-							? 'Update your blog post content below.'
-							: 'Write your content with markdown support.'}
+						Add your portfolio project details
 					</DialogDescription>
 				</DialogHeader>
 
@@ -255,236 +214,205 @@ const ProjectFormDialog = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 						className='flex flex-col flex-1 min-h-0'
 					>
-						<div className='flex-1 overflow-y-auto px-6 space-y-4 pb-4'>
-							{/* Title */}
+						<div className='flex-1 overflow-y-auto space-y-4 px-1'>
+							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+								<FormField
+									control={form.control}
+									name='name'
+									rules={{ required: 'Required' }}
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Name</FormLabel>
+											<FormControl>
+												<Input placeholder='TRAVELER' {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name='subtitle'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Subtitle</FormLabel>
+											<FormControl>
+												<Input placeholder='Tour Management' {...field} />
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							</div>
+
 							<FormField
 								control={form.control}
 								name='title'
-								rules={{ required: 'Title is required' }}
+								rules={{ required: 'Required' }}
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Title</FormLabel>
 										<FormControl>
-											<Input placeholder='My awesome blog post' {...field} />
+											<Input
+												placeholder='Traveler — Tour Management System'
+												{...field}
+											/>
 										</FormControl>
-										<FormMessage />
 									</FormItem>
 								)}
 							/>
 
-							{/* Category + Tags */}
-							<div className='grid grid-cols-1 md:grid-cols-3 gap-4 w-full'>
-								{/* Category */}
-								<FormField
-									control={form.control}
-									name='category'
-									rules={{ required: 'Category is required' }}
-									render={({ field }) => (
-										<FormItem className='w-full'>
-											<FormLabel>Category</FormLabel>
-											<SelectElement
-												onValueChange={field.onChange}
-												value={field.value}
-											>
-												<FormControl>
-													<SelectTrigger className='w-full'>
-														<SelectValue placeholder='Select category' />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent className='bg-secondary'>
-													{CATEGORIES.map((c) => (
-														<SelectItem key={c} value={c}>
-															{c}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</SelectElement>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								{/* status */}
-								<FormField
-									control={form.control}
-									name='status'
-									rules={{ required: 'Status is required' }}
-									render={({ field }) => (
-										<FormItem className='w-full'>
-											<FormLabel>Status</FormLabel>
-											<SelectElement
-												onValueChange={field.onChange}
-												value={field.value}
-											>
-												<FormControl>
-													<SelectTrigger className='w-full'>
-														<SelectValue placeholder='Select status' />
-													</SelectTrigger>
-												</FormControl>
-
-												<SelectContent className='bg-secondary'>
-													{BLOG_STATUS_OPTIONS.map((s) => (
-														<SelectItem key={s.value} value={s.value}>
-															{s.label}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</SelectElement>
-
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								{/* Tags */}
-								<FormItem>
-									<FormLabel>Tags</FormLabel>
-									<Controller
-										control={form.control}
-										name='tags'
-										render={({ field }) => (
-											<CreatableSelect
-												isClearable
-												isMulti
-												unstyled
-												options={TAG_OPTIONS}
-												classNames={{
-													control: ({ isFocused }) =>
-														`rounded-lg border px-2 py-1 bg-secondary transition-colors ${
-															isFocused
-																? 'border-blue-500'
-																: 'border-input hover:border-blue-500'
-														}`,
-													menu: () =>
-														'mt-1 rounded-lg border border-secondary bg-secondary shadow-lg',
-													menuList: () => 'py-1',
-													option: ({ isFocused, isSelected }) =>
-														`px-3 py-2 cursor-pointer text-secondary-foreground transition-colors ${
-															isSelected
-																? 'bg-blue-600 text-white'
-																: isFocused
-																	? 'bg-accent text-accent-foreground'
-																	: 'bg-transparent'
-														}`,
-													multiValue: () =>
-														'inline-flex items-center gap-1 bg-primary/10 border border-primary/30 rounded-sm mx-1 px-2 py-0.5',
-													multiValueLabel: () =>
-														'text-foreground text-sm font-medium leading-none',
-													multiValueRemove: ({ isFocused }) =>
-														`ml-0.5 rounded transition-all duration-150 text-muted-foreground hover:bg-destructive hover:text-white ${
-															isFocused ? 'bg-destructive text-white' : ''
-														}`,
-													placeholder: () => 'text-muted-foreground',
-													input: () => 'text-secondary-foreground',
-													indicatorsContainer: () => 'text-muted-foreground',
-													clearIndicator: ({ isFocused }) =>
-														`p-1 rounded transition-colors ${isFocused ? 'text-foreground' : ''}`,
-													dropdownIndicator: ({ isFocused }) =>
-														`p-1 transition-colors ${isFocused ? 'text-foreground' : ''}`,
-												}}
-												{...field}
-												onChange={field.onChange}
-											/>
-										)}
-									/>
-								</FormItem>
-							</div>
-
-							{/* Cover Image */}
-							<FormItem className='w-full grid grid-cols-2 justify-between items-center'>
-								<div>
-									<FormLabel>Cover Image</FormLabel>
-									<FormControl>
-										<Button
-											type='button'
-											variant='outline'
-											className='w-full justify-start gap-2 mt-3'
-											onClick={() => coverInputRef.current?.click()}
-										>
-											<Upload className='h-4 w-4' />
-											{coverPreview
-												? 'Change Cover Image'
-												: 'Upload Cover Image'}
-										</Button>
-									</FormControl>
-								</div>
-
-								<div>
-									{coverPreview && (
-										<img
-											src={coverPreview}
-											alt='Cover preview'
-											className='h-24 w-full rounded-sm object-cover border'
-										/>
-									)}
-									<input
-										ref={coverInputRef}
-										type='file'
-										hidden
-										accept='image/*'
-										onChange={handleCoverUpload}
-									/>
-								</div>
-							</FormItem>
-
-							{/* Markdown Upload */}
-							<div>
-								<div className='flex w-full justify-end'>
-									<Button
-										type='button'
-										variant='secondary'
-										size='sm'
-										className='cursor-pointer hover:bg-accent hover:text-accent-foreground'
-										onClick={() => mdFileInputRef.current?.click()}
-									>
-										<span>Upload .md</span>
-										<FileUp className='h-4 w-4' />
-									</Button>
-								</div>
-								<input
-									ref={mdFileInputRef}
-									type='file'
-									hidden
-									accept='.md'
-									onChange={handleMdUpload}
-								/>
-							</div>
-
-							{/* Content */}
 							<FormField
 								control={form.control}
-								name='content'
-								rules={{ required: 'Content is required' }}
+								name='type'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Content</FormLabel>
+										<FormLabel>Type</FormLabel>
 										<FormControl>
-											<div
-												data-color-mode={theme === 'dark' ? 'dark' : 'light'}
-											>
-												<MDEditor {...field} height={300} />
-											</div>
+											<Input
+												placeholder='Full Stack Web Application'
+												{...field}
+											/>
 										</FormControl>
-										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							{/* Image */}
+							<FormItem>
+								<FormLabel>Project Image</FormLabel>
+
+								<Button
+									type='button'
+									variant='outline'
+									onClick={() => coverInputRef.current?.click()}
+									className='w-full justify-start gap-2'
+								>
+									<Upload className='h-4 w-4' />
+									Upload Image
+								</Button>
+
+								<input
+									hidden
+									type='file'
+									accept='image/*'
+									ref={coverInputRef}
+									onChange={handleImageUpload}
+								/>
+
+								{imagePreview && (
+									<img
+										src={imagePreview}
+										className='h-36 w-full object-cover rounded-md border mt-3'
+									/>
+								)}
+							</FormItem>
+
+							{/* Description */}
+							<FormField
+								control={form.control}
+								name='description'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Description</FormLabel>
+										<FormControl>
+											<Textarea
+												rows={4}
+												placeholder='Short project summary...'
+												{...field}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+
+							{/* Technologies */}
+							<FormItem>
+								<FormLabel>Technologies</FormLabel>
+
+								<Controller
+									control={form.control}
+									name='technologies'
+									render={({ field }) => (
+										<CreatableSelect
+											isMulti
+											value={field.value}
+											onChange={field.onChange}
+											placeholder='React, Node.js...'
+										/>
+									)}
+								/>
+							</FormItem>
+
+							{/* Features */}
+							<FormField
+								control={form.control}
+								name='features'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Features</FormLabel>
+										<FormControl>
+											<Textarea
+												rows={6}
+												placeholder='One feature per line'
+												{...field}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+
+							{/* Links */}
+							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+								<FormField
+									control={form.control}
+									name='githubUrl'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>GitHub URL</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name='liveUrl'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Live URL</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<FormField
+								control={form.control}
+								name='caseStudyUrl'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Case Study URL</FormLabel>
+										<FormControl>
+											<Input {...field} />
+										</FormControl>
 									</FormItem>
 								)}
 							/>
 						</div>
 
-						{/* Form Actions */}
-						<div className='w-full flex justify-end gap-2 px-6 mt-4'>
-							<Button
-								type='button'
-								variant='outline'
-								onClick={handleClose}
-								disabled={form.formState.isSubmitting}
-							>
+						<div className='flex justify-end gap-2 pt-4'>
+							<Button type='button' variant='outline' onClick={handleClose}>
 								Cancel
 							</Button>
-							<Button type='submit' disabled={form.formState.isSubmitting}>
-								{form.formState.isSubmitting
-									? 'Saving...'
-									: isEdit
-										? 'Update Post'
-										: 'Publish Post'}
+
+							<Button type='submit'>
+								<Plus className='h-4 w-4 mr-2' />
+								{isEdit ? 'Update Project' : 'Create Project'}
 							</Button>
 						</div>
 					</form>

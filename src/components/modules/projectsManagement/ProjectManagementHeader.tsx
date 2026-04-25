@@ -4,6 +4,7 @@ import ManagementPageHeader from '../../shared/ManagementPageHeader'
 
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
+import ProjectFormDialog from './ProjectFormDialog'
 
 const ProjectManagementHeader = () => {
 	const router = useRouter()
@@ -30,7 +31,7 @@ const ProjectManagementHeader = () => {
 
 	return (
 		<>
-			<Add
+			<ProjectFormDialog
 				key={dialogKey}
 				open={isDialogOpen}
 				onClose={handleCloseDialog}
@@ -38,10 +39,10 @@ const ProjectManagementHeader = () => {
 			/>
 
 			<ManagementPageHeader
-				title='All Blogs'
-				description='Manage All Blogs'
+				title='All Projects'
+				description='Manage All Projects'
 				action={{
-					label: 'Add Blog',
+					label: 'Add Project',
 					icon: Plus,
 					onClick: handleOpenDialog,
 				}}
