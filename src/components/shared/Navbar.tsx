@@ -53,7 +53,7 @@ export default function Navbar() {
 		<header className='fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none'>
 			<nav
 				className={cn(
-					'pointer-events-auto container mx-auto flex items-center justify-between pr-2 rounded-2xl border transition-all duration-300',
+					'pointer-events-auto sm:w-fit container mx-auto flex items-center sm:justify-center justify-between gap-5 pr-2 rounded-2xl border transition-all duration-300 p-1',
 					isScrolled
 						? 'bg-background/80 backdrop-blur-md border-border shadow-sm'
 						: 'bg-background/50 backdrop-blur-sm border-transparent',
@@ -62,7 +62,7 @@ export default function Navbar() {
 				{/* ── Logo + availability badge ── */}
 				<div className='flex flex-col justify-center  border border-primary rounded-full'>
 					<Link href='/' style={{ fontFamily: 'Rajdhani, sans-serif' }}>
-						<Avatar className=' w-16 h-16'>
+						<Avatar className=' w-12 h-12'>
 							<AvatarImage className='object-contain' src='/sticker.png' />
 							<AvatarFallback>J.</AvatarFallback>
 						</Avatar>
