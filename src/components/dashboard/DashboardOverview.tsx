@@ -3,8 +3,8 @@
 
 import { StatsCard } from './StatsCard'
 import { BlogInsightsCard } from './BlogInsightsCard'
+import { SkillsInsightsCard } from './SkillsInsightsCard'
 import { ProjectsOverviewCard } from './ProjectsOverviewCard'
-import { SkillsOverviewCard } from './SkillsOverviewCard'
 import { RecentBlogsCard } from './RecentBlogsCard'
 
 import {
@@ -28,10 +28,14 @@ interface DashboardData {
 		totalComments: number
 		averageViews: number
 	}
+	skillsMetrics: {
+		totalSkills: number
+		skillsByCategory: Record<string, number>
+		proficiencyBreakdown: Record<string, number>
+	}
 	recentBlogs: any[]
 	projects: any[]
 	skills: any[]
-	skillsByCategory?: Record<string, number>
 }
 
 interface DashboardOverviewProps {
@@ -91,16 +95,19 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
 			</div>
 
 			{/* Projects and Skills */}
-			<div className='grid gap-4 lg:grid-cols-2'>
-				<ProjectsOverviewCard
-					projects={data.projects}
-					totalProjects={data.totalProjects}
-				/>
-				<SkillsOverviewCard
-					skills={data.skills}
-					totalSkills={data.totalSkills}
-					skillsByCategory={data.skillsByCategory}
-				/>
+			<div className='grid gap-4 lg:grid-cols-3'>
+				<div className='lg:col-span-2'>
+					<SkillsInsightsCard
+						metrics={data.skillsMetrics}
+						skills={data.skills}
+					/>
+				</div>
+				<div>
+					<ProjectsOverviewCard
+						projects={data.projects}
+						totalProjects={data.totalProjects}
+					/>
+				</div>
 			</div>
 		</div>
 	)
