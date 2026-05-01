@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from '../lib/server-fetch'
 
 export interface DashboardStats {
@@ -11,10 +12,14 @@ export interface DashboardStats {
 		totalComments: number
 		averageViews: number
 	}
+	skillsMetrics: {
+		totalSkills: number
+		skillsByCategory: Record<string, number>
+		proficiencyBreakdown: Record<string, number>
+	}
 	recentBlogs: any[]
 	projects: any[]
 	skills: any[]
-	skillsByCategory?: Record<string, number>
 }
 
 export async function getDashboardData(): Promise<DashboardStats> {
@@ -58,9 +63,15 @@ export async function getDashboardData(): Promise<DashboardStats> {
 
 		// Group skills by category
 		const skillsByCategory: Record<string, number> = {}
+		const proficiencyBreakdown: Record<string, number> = {}
+
 		skills.forEach((skill) => {
 			const category = skill.category || 'Uncategorized'
 			skillsByCategory[category] = (skillsByCategory[category] || 0) + 1
+
+			const proficiency = skill.proficiency || 'intermediate'
+			proficiencyBreakdown[proficiency] =
+				(proficiencyBreakdown[proficiency] || 0) + 1
 		})
 
 		// Sort blogs by creation date and get recent ones
@@ -81,10 +92,14 @@ export async function getDashboardData(): Promise<DashboardStats> {
 				totalComments,
 				averageViews,
 			},
+			skillsMetrics: {
+				totalSkills: skills.length,
+				skillsByCategory,
+				proficiencyBreakdown,
+			},
 			recentBlogs: sortedBlogs.slice(0, 4),
 			projects: projects.slice(0, 3),
-			skills: skills.slice(0, 6),
-			skillsByCategory,
+			skills: skills.slice(0, 12),
 		}
 	} catch (error) {
 		console.error('Error fetching dashboard data:', error)
@@ -99,10 +114,14 @@ export async function getDashboardData(): Promise<DashboardStats> {
 				totalComments: 0,
 				averageViews: 0,
 			},
+			skillsMetrics: {
+				totalSkills: 0,
+				skillsByCategory: {},
+				proficiencyBreakdown: {},
+			},
 			recentBlogs: [],
 			projects: [],
 			skills: [],
-			skillsByCategory: {},
 		}
 	}
 }
