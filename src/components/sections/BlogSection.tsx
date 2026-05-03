@@ -123,9 +123,11 @@ export default function BlogSection() {
 									{blog.coverImage ? (
 										<div className='relative h-48 w-full overflow-hidden bg-muted'>
 											<Image
+												loading='eager'
 												src={blog.coverImage}
 												alt={blog.title}
 												fill
+												sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
 												className='object-cover'
 											/>
 										</div>

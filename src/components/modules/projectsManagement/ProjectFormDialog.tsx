@@ -219,7 +219,7 @@ const ProjectFormDialog = ({
 								<FormField
 									control={form.control}
 									name='name'
-									rules={{ required: 'Required' }}
+									rules={{ required: 'Name is Required' }}
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Name</FormLabel>

@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server'
 import slugify from 'slugify'
 
-import Blog from '../../../models/Blog'
-import { parseMongooseError } from '../../../lib/parseMongooseError'
-import { connectDB } from '../../../lib/mongodb'
+import { parseMongooseError } from '@/src/lib/parseMongooseError'
+import { connectDB } from '@/src/lib/mongodb'
+import Project from '@/src/models/project.model'
 
-// GET /api/blogs
-// Supports: ?page=1&limit=10&category=nextjs&tag=react&search=hello
 export async function GET(req: Request) {
 	try {
 		await connectDB()
@@ -19,35 +17,39 @@ export async function GET(req: Request) {
 			Math.max(1, Number(searchParams.get('limit') ?? 10)),
 		)
 
-		const category = searchParams.get('category')
-		const tag = searchParams.get('tag')
+		const type = searchParams.get('type')
+		const technology = searchParams.get('technology')
 		const search = searchParams.get('search')
+		const featured = searchParams.get('featured')
 
 		const filter: Record<string, unknown> = {}
 
-		if (category) filter.category = category
-		if (tag) filter.tags = tag
+		if (type) filter.type = type
+		if (technology) filter.technologies = technology
+		if (featured === 'true') filter.featured = true
 
 		if (search) {
 			filter.$or = [
+				{ name: { $regex: search, $options: 'i' } },
 				{ title: { $regex: search, $options: 'i' } },
-				{ content: { $regex: search, $options: 'i' } },
+				{ subtitle: { $regex: search, $options: 'i' } },
+				{ description: { $regex: search, $options: 'i' } },
 			]
 		}
 
-		const [blogs, total] = await Promise.all([
-			Blog.find(filter)
+		const [projects, total] = await Promise.all([
+			Project.find(filter)
 				.select('-__v')
-				.sort({ createdAt: -1 })
+				.sort({ order: 1, createdAt: -1 })
 				.skip((page - 1) * limit)
 				.limit(limit)
 				.lean(),
 
-			Blog.countDocuments(filter),
+			Project.countDocuments(filter),
 		])
 
 		return NextResponse.json({
-			blogs,
+			projects,
 			pagination: {
 				total,
 				page,
@@ -58,33 +60,30 @@ export async function GET(req: Request) {
 			},
 		})
 	} catch (err) {
-		console.error('[GET /api/blogs]', err)
+		console.error('[GET /api/projects]', err)
 
 		return NextResponse.json(
-			{ error: 'Failed to fetch blogs' },
+			{ error: 'Failed to fetch projects' },
 			{ status: 500 },
 		)
 	}
 }
 
-// POST /api/blogs
 export async function POST(req: Request) {
 	try {
 		await connectDB()
 
 		const body = await req.json()
 
-		// Generate slug from title if not provided
 		let slug =
 			body.slug ||
-			slugify(body.title || '', {
+			slugify(body.name || body.title || '', {
 				lower: true,
 				strict: true,
 				trim: true,
 			})
 
-		// Ensure unique slug
-		const existing = await Blog.findOne({ slug })
+		const existing = await Project.findOne({ slug })
 
 		if (existing) {
 			slug = `${slug}-${Date.now()}`
@@ -92,9 +91,9 @@ export async function POST(req: Request) {
 
 		body.slug = slug
 
-		const blog = await Blog.create(body)
+		const project = await Project.create(body)
 
-		return NextResponse.json(blog, { status: 201 })
+		return NextResponse.json(project, { status: 201 })
 	} catch (err: unknown) {
 		const errors = parseMongooseError(err)
 
@@ -102,10 +101,10 @@ export async function POST(req: Request) {
 			return NextResponse.json({ errors }, { status: 422 })
 		}
 
-		console.error('[POST /api/blogs]', err)
+		console.error('[POST /api/projects]', err)
 
 		return NextResponse.json(
-			{ error: 'Failed to create blog' },
+			{ error: 'Failed to create project' },
 			{ status: 500 },
 		)
 	}

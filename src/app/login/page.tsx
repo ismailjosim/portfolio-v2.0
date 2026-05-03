@@ -1,11 +1,13 @@
 import LoginForm from '../../components/shared/LoginForm'
 
-export default function LoginPage({
+const LoginPage = async ({
 	searchParams,
 }: {
-	searchParams: { from?: string }
-}) {
-	const from = searchParams?.from || '/dashboard'
+	searchParams: Promise<{ from?: string }>
+}) => {
+	const resolvedParams = await searchParams
+	const from = resolvedParams?.from || '/dashboard'
+	console.log({ from })
 
 	return (
 		<main className='min-h-screen bg-background flex items-center justify-center px-4'>
@@ -46,3 +48,4 @@ export default function LoginPage({
 		</main>
 	)
 }
+export default LoginPage
