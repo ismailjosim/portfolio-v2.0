@@ -23,6 +23,8 @@ const TablePagination = ({ currentPage, totalPages }: TablePaginationProps) => {
 	const searchParams = useSearchParams()
 
 	const navigateToPage = (newPage: number) => {
+		if (newPage < 1 || newPage > totalPages) return
+
 		const params = new URLSearchParams(searchParams.toString())
 		params.set('page', newPage.toString())
 

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import FadeUp from '../ui/FadeUp'
 import { IBlog } from '@/src/types/blog.interface'
 import Link from 'next/link'
+import { Button } from '../ui/button'
 
 const filters = [
 	'all',
@@ -72,8 +73,8 @@ export default function BlogSection() {
 	}
 
 	return (
-		<section id='blog'>
-			<div className='container mx-auto'>
+		<section className='pb-20' id='blog'>
+			<div className='container mx-auto '>
 				<div className='text-center mb-12'>
 					<FadeUp>
 						<p className='text-xs font-semibold tracking-widest uppercase text-accent mb-2'>
@@ -177,10 +178,10 @@ export default function BlogSection() {
 				)}
 
 				<FadeUp delay={200}>
-					<div className='text-center mt-12'>
-						<Link href='/blogs' className='btn-outline'>
-							View All Articles →
-						</Link>
+					<div className='text-center py-16'>
+						<Button asChild variant='outline'>
+							<Link href='/blogs'>View All Articles →</Link>
+						</Button>
 					</div>
 				</FadeUp>
 			</div>

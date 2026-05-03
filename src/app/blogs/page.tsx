@@ -1,102 +1,143 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
 import { Search } from 'lucide-react'
 import { IBlog } from '@/src/types/blog.interface'
+
 import { Input } from '@/src/components/ui/input'
 import BlogCard from '@/src/components/blogs/BlogCard'
+import Navbar from '@/src/components/shared/Navbar'
+import ScrollToTop from '@/src/components/ui/ScrollToTop'
+import TablePagination from '@/src/components/shared/TablePagination'
 
 export const metadata: Metadata = {
 	title: 'Blog',
 	description: 'Read my latest articles and insights',
 }
 
-// const categories = [
-// 	'All',
-// 	'Technology',
-// 	'Lifestyle',
-// 	'Travel',
-// 	'Finance',
-// 	'Learning',
-// 	'Other',
-// ]
-
-async function fetchBlogs() {
+async function fetchBlogs(searchParams: {
+	page?: string
+	limit?: string
+	search?: string
+	category?: string
+	tag?: string
+}) {
 	try {
-		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`, {
-			method: 'GET',
-			headers: { 'Content-Type': 'application/json' },
-		})
+		const query = new URLSearchParams()
+
+		if (searchParams.page) query.set('page', searchParams.page)
+		if (searchParams.limit) query.set('limit', searchParams.limit)
+		if (searchParams.search) query.set('search', searchParams.search)
+		if (searchParams.category) query.set('category', searchParams.category)
+		if (searchParams.tag) query.set('tag', searchParams.tag)
+
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/blogs?${query.toString()}`,
+			{
+				method: 'GET',
+				cache: 'no-store',
+			},
+		)
 
 		if (!res.ok) {
-			return []
+			return { blogs: [], pagination: null }
 		}
 
 		const data = await res.json()
-		return (data.blogs || []).filter(
-			(blog: IBlog) => blog.status === 'published',
-		)
+
+		return {
+			blogs: (data.blogs || []).filter(
+				(blog: IBlog) => blog.status === 'published',
+			),
+			pagination: data.pagination,
+		}
 	} catch (error) {
 		console.error('Failed to fetch blogs:', error)
-		return []
+		return { blogs: [], pagination: null }
 	}
 }
 
-const getCategoryColor = (category: string) => {
-	const colors: Record<string, string> = {
-		technology: 'from-blue-500 to-purple-600',
-		lifestyle: 'from-green-500 to-teal-600',
-		travel: 'from-orange-500 to-red-600',
-		finance: 'from-pink-500 to-rose-600',
-		learning: 'from-cyan-500 to-blue-600',
-		other: 'from-indigo-500 to-purple-600',
-	}
-	return colors[category.toLowerCase()] || 'from-gray-500 to-gray-600'
-}
+export default async function BlogsPage(props: {
+	searchParams: Promise<{
+		page?: string
+		limit?: string
+		search?: string
+		category?: string
+		tag?: string
+	}>
+}) {
+	const searchParams = await props.searchParams
 
-export default async function BlogsPage() {
-	const blogs = await fetchBlogs()
+	const { blogs, pagination } = await fetchBlogs({
+		page: searchParams.page,
+		limit: searchParams.limit,
+		search: searchParams.search,
+		category: searchParams.category,
+		tag: searchParams.tag,
+	})
 
 	return (
-		<main className='min-h-screen'>
-			{/* Header Section */}
-			<section className='py-16 bg-linear-to-b from-background via-background to-background'>
-				<div className='container mx-auto px-4 max-w-4xl'>
-					<h1 className='text-4xl md:text-5xl font-bold mb-4'>Blog</h1>
-					<p className='text-lg text-muted-foreground mb-8'>
-						Explore my thoughts on technology, career, and more
-					</p>
+		<>
+			<header>
+				<Navbar />
+			</header>
 
-					{/* Search Bar */}
-					<div className='relative'>
-						<Search className='absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground' />
-						<Input
-							type='search'
-							placeholder='Search articles...'
-							className='pl-12 py-3 text-lg'
-						/>
+			<main className='min-h-screen'>
+				{/* HEADER */}
+				<section className='py-20 bg-linear-to-b from-background via-background to-background'>
+					<div className='container mx-auto px-4 max-w-4xl'>
+						<h1 className='text-4xl md:text-5xl font-bold mb-4'>Blog</h1>
+
+						<p className='text-lg text-muted-foreground mb-8'>
+							Explore my thoughts on technology, career, and more
+						</p>
+
+						{/* SEARCH (server-driven via URL) */}
+						<form className='relative'>
+							<Search className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground' />
+
+							<Input
+								name='search'
+								type='search'
+								defaultValue={searchParams.search || ''}
+								placeholder='Search articles...'
+								className='pl-12 py-3 text-lg'
+							/>
+						</form>
 					</div>
-				</div>
-			</section>
+				</section>
 
-			{/* Blog Content */}
-			<section className='py-12'>
-				<div className='container mx-auto  '>
-					{blogs.length === 0 ? (
-						<div className='text-center py-16'>
-							<p className='text-xl text-muted-foreground'>
-								No published articles yet. Check back soon!
-							</p>
-						</div>
-					) : (
-						<div className='space-y-8 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10'>
-							{blogs.map((blog: IBlog, index: number) => (
-								<BlogCard blog={blog} key={blog._id} index={index} />
-							))}
-						</div>
-					)}
-				</div>
-			</section>
-		</main>
+				{/* BLOG GRID */}
+				<section className='py-12'>
+					<div className='container mx-auto'>
+						{blogs.length === 0 ? (
+							<div className='text-center py-16'>
+								<p className='text-xl text-muted-foreground'>
+									No published articles yet. Check back soon!
+								</p>
+							</div>
+						) : (
+							<>
+								<div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10'>
+									{blogs.map((blog: IBlog, index: number) => (
+										<BlogCard blog={blog} key={blog._id} index={index} />
+									))}
+								</div>
+
+								{/* PAGINATION */}
+								{pagination && (
+									<div className='mt-12 py-20'>
+										<TablePagination
+											currentPage={pagination.page}
+											totalPages={pagination.totalPages}
+										/>
+									</div>
+								)}
+							</>
+						)}
+					</div>
+				</section>
+			</main>
+
+			<ScrollToTop />
+		</>
 	)
 }

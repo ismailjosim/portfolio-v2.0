@@ -10,6 +10,13 @@ export interface IBlogPayload {
 	tags: string[]
 	slug?: string
 }
+type GetBlogsParams = {
+	page?: number
+	limit?: number
+	category?: string
+	tag?: string
+	search?: string
+}
 
 export async function createBlog(payload: IBlogPayload) {
 	try {
@@ -51,13 +58,23 @@ export async function updateBlog(slug: string, payload: IBlogPayload) {
 	}
 }
 
-export async function getAllBlogs(queryStr?: string) {
+export async function getAllBlogs(params?: GetBlogsParams) {
 	try {
-		const url = `${process.env.NEXT_PUBLIC_API_URL}/blogs${queryStr ? `?${queryStr}` : ''}`
+		const query = new URLSearchParams()
+
+		if (params?.page) query.set('page', String(params.page))
+		if (params?.limit) query.set('limit', String(params.limit))
+		if (params?.category) query.set('category', params.category)
+		if (params?.tag) query.set('tag', params.tag)
+		if (params?.search) query.set('search', params.search)
+
+		const url = `${process.env.NEXT_PUBLIC_API_URL}/blogs${
+			query.toString() ? `?${query.toString()}` : ''
+		}`
 
 		const res = await fetch(url, {
 			method: 'GET',
-			headers: { 'Content-Type': 'application/json' },
+			cache: 'no-store',
 		})
 
 		if (!res.ok) {
@@ -65,7 +82,12 @@ export async function getAllBlogs(queryStr?: string) {
 		}
 
 		const result = await res.json()
-		return { success: true, data: result.blogs, pagination: result.pagination }
+
+		return {
+			success: true,
+			data: result.blogs,
+			pagination: result.pagination,
+		}
 	} catch (error) {
 		console.error('getAllBlogs', error)
 		return { success: false, message: 'Failed to fetch blogs' }
