@@ -90,11 +90,14 @@ export default async function BlogDetailsPage({
 				<article className='max-w-4xl mx-auto'>
 					{/* Cover Image */}
 					{/* {blog.coverImage && (	// )} */}
-					<div className='relative w-full h-105 rounded-2xl overflow-hidden mb-10'>
-						<img
+					<div className='relative w-full h-60 md:h-96 rounded-2xl overflow-hidden mb-10'>
+						<Image
 							src={blog.coverImage}
 							alt={blog.title}
-							className='object-fill w-full h-full rounded-2xl'
+							fill
+							className='object-cover'
+							sizes='100vw'
+							priority
 						/>
 					</div>
 
@@ -185,7 +188,8 @@ export default async function BlogDetailsPage({
 					{/* Comments */}
 					<BlogCommentsSection
 						blogId={blog._id!}
-						initialCount={blog.commentsCount}
+						initialCommentsCount={blog.commentsCount}
+						initialLikesCount={blog.likesCount}
 						slug={slug}
 					/>
 				</article>

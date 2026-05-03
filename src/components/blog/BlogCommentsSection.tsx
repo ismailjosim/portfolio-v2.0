@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MessageCircle, Send } from 'lucide-react'
+import { MessageCircle, Send, Heart } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDateTime } from '@/src/lib/formatters.ts'
 
@@ -9,23 +10,18 @@ interface Comment {
 	_id: string
 	name: string
 	content: string
-	isApproved: boolean
 	createdAt: string
-}
-
-interface BlogCommentsSectionProps {
-	blogId: string
-	initialCount: number
-	slug: string
 }
 
 export default function BlogCommentsSection({
 	blogId,
-	initialCount,
+	initialCommentsCount,
+	initialLikesCount,
 	slug,
-}: BlogCommentsSectionProps) {
+}: any) {
 	const [comments, setComments] = useState<Comment[]>([])
-	const [count, setCount] = useState(initialCount)
+	const [count, setCount] = useState(initialCommentsCount)
+	const [likesCount, setLikesCount] = useState(initialLikesCount)
 	const [loading, setLoading] = useState(true)
 	const [name, setName] = useState('')
 	const [content, setContent] = useState('')
@@ -37,18 +33,14 @@ export default function BlogCommentsSection({
 
 	const fetchComments = async () => {
 		try {
-			const response = await fetch(
+			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`,
 			)
 
-			if (!response.ok) {
-				throw new Error('Failed to fetch comments')
-			}
-
-			const data = await response.json()
+			const data = await res.json()
 			setComments(data.comments || [])
-		} catch (error) {
-			console.error('Failed to fetch comments:', error)
+		} catch (err) {
+			console.error(err)
 		} finally {
 			setLoading(false)
 		}
@@ -58,137 +50,125 @@ export default function BlogCommentsSection({
 		e.preventDefault()
 
 		if (!name.trim() || !content.trim()) {
-			toast.error('Please fill in all fields')
+			toast.error('Fill all fields')
 			return
 		}
 
 		setIsSubmitting(true)
+
 		try {
-			const response = await fetch(
+			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`,
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						name: name.trim(),
-						content: content.trim(),
-					}),
+					body: JSON.stringify({ name, content }),
 				},
 			)
 
-			if (!response.ok) {
-				throw new Error('Failed to post comment')
-			}
+			const newComment = await res.json()
 
-			const newComment = await response.json()
 			setComments([newComment, ...comments])
-			setCount(count + 1)
+			setCount((c: any) => c + 1)
+
 			setName('')
 			setContent('')
-			toast.success('Comment posted! (pending approval)')
-		} catch (error) {
-			console.error('Failed to post comment:', error)
-			toast.error('Failed to post comment')
+
+			toast.success('Comment posted')
+		} catch (err) {
+			toast.error('Failed')
 		} finally {
 			setIsSubmitting(false)
 		}
 	}
 
 	return (
-		<section className='max-w-4xl mx-auto'>
-			<div className='flex items-center gap-3 mb-8'>
-				<MessageCircle className='w-6 h-6' />
-				<h2 className='text-2xl font-bold'>Comments ({count})</h2>
+		<section className='max-w-3xl mx-auto mt-12'>
+			{/* Header */}
+			<div className='flex items-center justify-between mb-6'>
+				<h2 className='text-xl font-bold flex items-center gap-2'>
+					<MessageCircle className='w-5 h-5' />
+					Comments
+				</h2>
+
+				<div className='flex items-center gap-4 text-sm text-muted-foreground'>
+					<span className='flex items-center gap-1'>
+						<Heart className='w-4 h-4 text-red-500' />
+						{likesCount}
+					</span>
+					<span>{count} comments</span>
+				</div>
 			</div>
 
-			{/* Comment Form */}
-			<form
-				onSubmit={handleSubmitComment}
-				className='mb-12 p-6 rounded-lg bg-muted/50 border'
-			>
-				<h3 className='font-semibold mb-4'>Leave a Comment</h3>
+			{/* Input box (Facebook style) */}
+			<form onSubmit={handleSubmitComment} className='flex gap-3 mb-8'>
+				<div className='w-10 h-10 rounded-full bg-muted flex items-center justify-center font-semibold'>
+					{name?.[0]?.toUpperCase() || 'U'}
+				</div>
 
-				<div className='space-y-4'>
-					<div>
-						<label htmlFor='name' className='block text-sm font-medium mb-2'>
-							Your Name
-						</label>
-						<input
-							id='name'
-							type='text'
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							placeholder='John Doe'
-							className='w-full px-4 py-2 rounded-lg bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent'
+				<div className='flex-1'>
+					<input
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						placeholder='Your name'
+						className='w-full mb-2 px-3 py-2 rounded-md border bg-background'
+					/>
+
+					<textarea
+						value={content}
+						onChange={(e) => setContent(e.target.value)}
+						placeholder='Write a comment...'
+						rows={2}
+						className='w-full px-3 py-2 rounded-md border bg-background resize-none'
+					/>
+
+					<div className='flex justify-end mt-2'>
+						<button
+							type='submit'
 							disabled={isSubmitting}
-							required
-						/>
+							className='px-4 py-2 text-sm rounded-md bg-primary text-primary-foreground hover:opacity-90'
+						>
+							{isSubmitting ? 'Posting...' : 'Comment'}
+						</button>
 					</div>
-
-					<div>
-						<label htmlFor='content' className='block text-sm font-medium mb-2'>
-							Your Comment
-						</label>
-						<textarea
-							id='content'
-							value={content}
-							onChange={(e) => setContent(e.target.value)}
-							placeholder='Share your thoughts...'
-							rows={4}
-							className='w-full px-4 py-2 rounded-lg bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent resize-none'
-							disabled={isSubmitting}
-							required
-						/>
-					</div>
-
-					<button
-						type='submit'
-						disabled={isSubmitting}
-						className='inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-accent text-accent-foreground font-medium hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-					>
-						<Send className='w-4 h-4' />
-						{isSubmitting ? 'Posting...' : 'Post Comment'}
-					</button>
-					<p className='text-xs text-muted-foreground'>
-						Comments are moderated and will appear after approval.
-					</p>
 				</div>
 			</form>
 
-			{/* Comments List */}
-			<div className='space-y-6'>
+			{/* Comments list */}
+			<div className='space-y-4'>
 				{loading ? (
-					<div className='text-center py-8'>
-						<p className='text-muted-foreground'>Loading comments...</p>
-					</div>
+					<p className='text-sm text-muted-foreground'>Loading comments...</p>
 				) : comments.length === 0 ? (
-					<div className='text-center py-8'>
-						<p className='text-muted-foreground'>
-							No comments yet. Be the first to comment!
-						</p>
-					</div>
+					<p className='text-sm text-muted-foreground'>No comments yet</p>
 				) : (
-					comments.map((comment) => (
-						<div
-							key={comment._id}
-							className='p-4 rounded-lg bg-muted/30 border'
-						>
-							<div className='flex items-start justify-between mb-2'>
-								<div>
-									<p className='font-semibold'>{comment.name}</p>
-									<p className='text-xs text-muted-foreground'>
-										{formatDateTime(comment.createdAt)}
+					comments.map((c) => (
+						<div key={c._id} className='flex gap-3'>
+							{/* Avatar */}
+							<div className='w-10 h-10 rounded-full bg-muted flex items-center justify-center font-semibold'>
+								{c.name[0]?.toUpperCase()}
+							</div>
+
+							{/* Bubble */}
+							<div className='flex-1'>
+								<div className='bg-muted/50 rounded-xl px-4 py-2'>
+									<div className='flex justify-between items-center'>
+										<p className='font-semibold text-sm'>{c.name}</p>
+										<span className='text-xs text-muted-foreground'>
+											{formatDateTime(c.createdAt)}
+										</span>
+									</div>
+
+									<p className='text-sm mt-1 whitespace-pre-wrap'>
+										{c.content}
 									</p>
 								</div>
-								{!comment.isApproved && (
-									<span className='text-xs px-2 py-1 rounded bg-yellow-500/20 text-yellow-600'>
-										Pending Approval
-									</span>
-								)}
+
+								{/* Actions (optional Facebook style) */}
+								<div className='flex gap-4 text-xs text-muted-foreground mt-1 px-2'>
+									<button className='hover:underline'>Like</button>
+									<button className='hover:underline'>Reply</button>
+								</div>
 							</div>
-							<p className='text-sm text-foreground whitespace-pre-wrap'>
-								{comment.content}
-							</p>
 						</div>
 					))
 				)}

@@ -17,7 +17,7 @@ interface BlogTableProps {
 	blogs: IBlog[]
 }
 
-const BlogTable = ({ blogs }: BlogTableProps) => {
+const BlogsTable = ({ blogs }: BlogTableProps) => {
 	const router = useRouter()
 	const [, startTransition] = useTransition()
 
@@ -105,4 +105,4 @@ const BlogTable = ({ blogs }: BlogTableProps) => {
 	)
 }
 
-export default BlogTable
+export default BlogsTable

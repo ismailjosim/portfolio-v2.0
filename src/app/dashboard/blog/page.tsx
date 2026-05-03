@@ -1,5 +1,4 @@
 import { getAllBlogs } from '../../../services/blog-management'
-import { queryStringFormatter } from '../../../lib/formatters.ts'
 import { Suspense } from 'react'
 import { TableSkeleton } from '../../../components/shared/TableSkeleton'
 import TablePagination from '../../../components/shared/TablePagination'
@@ -13,8 +12,20 @@ const DashboardBlogPage = async ({
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) => {
 	const searchParamsObj = await searchParams
-	const queryString = queryStringFormatter(searchParamsObj)
-	const blogsResult = await getAllBlogs(queryString)
+	const blogsResult = await getAllBlogs({
+		page: searchParamsObj.page ? Number(searchParamsObj.page) : undefined,
+		limit: searchParamsObj.limit ? Number(searchParamsObj.limit) : undefined,
+		category:
+			typeof searchParamsObj.category === 'string'
+				? searchParamsObj.category
+				: undefined,
+		tag:
+			typeof searchParamsObj.tag === 'string' ? searchParamsObj.tag : undefined,
+		search:
+			typeof searchParamsObj.searchTerm === 'string'
+				? searchParamsObj.searchTerm
+				: undefined,
+	})
 
 	const totalPages = Math.ceil(
 		(blogsResult?.pagination?.total || 1) /

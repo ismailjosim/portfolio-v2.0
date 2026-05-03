@@ -14,6 +14,7 @@ export function SidebarProfile() {
 					alt='Jasim'
 					width={500}
 					height={500}
+					loading='eager'
 					className='w-full h-full object-cover'
 				/>
 			</div>

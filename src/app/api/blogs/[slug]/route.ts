@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import Blog from '../../../../models/Blog'
+import BlogComment from '../../../../models/BlogComment'
 import { parseMongooseError } from '../../../../lib/parseMongooseError'
 import { connectDB } from '../../../../lib/mongodb'
 import { deleteCloudinaryImage } from '../../../../lib/cloudinary'
@@ -28,7 +29,18 @@ export async function GET(
 			return NextResponse.json({ error: 'Blog not found' }, { status: 404 })
 		}
 
-		return NextResponse.json(blog)
+		// Fetch comments for this blog
+		const comments = await BlogComment.find({
+			blogId: blog._id,
+		})
+			.select('-__v')
+			.sort({ createdAt: -1 })
+			.lean()
+
+		return NextResponse.json({
+			...blog.toObject(),
+			comments: comments || [],
+		})
 	} catch (err: unknown) {
 		console.error('[GET /api/blogs/:slug]', err)
 		return NextResponse.json({ error: 'Failed to fetch blog' }, { status: 500 })
