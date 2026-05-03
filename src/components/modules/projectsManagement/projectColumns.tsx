@@ -1,7 +1,5 @@
 'use client'
 
-import { Eye, Heart, MessageCircleMore } from 'lucide-react'
-
 import Image from 'next/image'
 
 import { DateCell } from '../../shared/DateCell'
@@ -15,25 +13,25 @@ export interface Column<T> {
 
 const projectColumns: Column<IProject>[] = [
 	{
-		header: 'Blog',
-		accessor: (blog) => (
+		header: 'Project',
+		accessor: (project) => (
 			<div className='flex items-center gap-3'>
 				<div className='relative w-10 h-10 shrink-0'>
 					<Image
 						src={
-							blog.coverImage?.startsWith('blob')
+							project.image?.startsWith('blob')
 								? '/placeholder.jpg'
-								: blog.coverImage || '/placeholder.jpg'
+								: project.image || '/placeholder.jpg'
 						}
-						alt={blog.title}
+						alt={project.title}
 						fill
 						className='rounded-md object-cover'
 						sizes='40px'
 					/>
 				</div>
 				<div className='flex flex-col'>
-					<span className='font-medium text-sm'>{blog.title}</span>
-					<span className='text-xs text-gray-500'>{blog.slug}</span>
+					<span className='font-medium text-sm'>{project.title}</span>
+					<span className='text-xs text-gray-500'>{project.type}</span>
 				</div>
 			</div>
 		),
@@ -41,66 +39,66 @@ const projectColumns: Column<IProject>[] = [
 	},
 
 	{
-		header: 'Category',
-		accessor: (blog) => (
+		header: 'Description',
+		accessor: (project) => (
 			<div className='flex flex-col'>
-				<span className='text-sm'>{blog.category}</span>
-				<span className='text-xs text-gray-500'>{blog.tags?.join(', ')}</span>
+				<span className='text-sm'>{project.subtitle}</span>
+				<span className='text-xs text-gray-500'>
+					{project.description?.substring(0, 50)}...
+				</span>
 			</div>
 		),
 	},
 
 	{
-		header: 'Engagement',
-		accessor: (blog) => (
-			<div className='text-sm flex items-center gap-3'>
-				<p className='flex items-center gap-1 text-muted-foreground'>
-					<Eye size={18} />
-					<span>{blog.views}</span>
-				</p>
-
-				<p className='flex items-center gap-1 text-destructive'>
-					<Heart fill='currentColor' size={18} />
-					<span>{blog.likesCount}</span>
-				</p>
-
-				<p className='flex items-center gap-1 text-accent'>
-					<MessageCircleMore size={18} />
-					<span>{blog.commentsCount}</span>
-				</p>
+		header: 'Technologies',
+		accessor: (project) => (
+			<div className='text-sm flex flex-wrap gap-1'>
+				{project.technologies?.slice(0, 3).map((tech, idx) => (
+					<span
+						key={idx}
+						className='bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs'
+					>
+						{tech}
+					</span>
+				))}
+				{project.technologies && project.technologies.length > 3 && (
+					<span className='text-gray-500 text-xs'>
+						+{project.technologies.length - 3}
+					</span>
+				)}
 			</div>
 		),
-		sortKey: 'views',
+	},
+
+	{
+		header: 'Featured',
+		accessor: (project) => (
+			<span
+				className={`px-2 py-1 text-xs rounded-full ${project.featured ? 'bg-green-500/20 text-green-600' : 'bg-gray-500/20 text-gray-500'}`}
+			>
+				{project.featured ? 'Yes' : 'No'}
+			</span>
+		),
+		sortKey: 'featured',
+	},
+
+	{
+		header: 'Published',
+		accessor: (project) => (
+			<span
+				className={`px-2 py-1 text-xs rounded-full ${project.isPublished ? 'bg-green-500/20 text-green-600' : 'bg-gray-500/20 text-gray-500'}`}
+			>
+				{project.isPublished ? 'Published' : 'Draft'}
+			</span>
+		),
+		sortKey: 'isPublished',
 	},
 
 	{
 		header: 'Created',
-		accessor: (blog) => <DateCell date={blog.createdAt} />,
+		accessor: (project) => <DateCell date={project.createdAt} />,
 		sortKey: 'createdAt',
-	},
-
-	{
-		header: 'Status',
-		accessor: (blog) => {
-			const statusStyles: Record<string, string> = {
-				review: 'bg-blue-500/20 text-blue-600',
-				scheduled: 'bg-purple-500/20 text-purple-600',
-				published: 'bg-green-500/20 text-green-600',
-				draft: 'bg-yellow-500/20 text-yellow-600',
-				archived: 'bg-gray-500/20 text-gray-500',
-			}
-
-			return (
-				<span
-					className={`px-2 py-1 text-xs rounded-full capitalize ${
-						statusStyles[blog.status] || 'bg-gray-500/20 text-gray-500'
-					}`}
-				>
-					{blog.status}
-				</span>
-			)
-		},
-		sortKey: 'status',
 	},
 ]
 export default projectColumns

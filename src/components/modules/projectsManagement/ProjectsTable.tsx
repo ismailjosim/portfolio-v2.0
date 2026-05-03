@@ -12,6 +12,7 @@ import ProjectViewDetailDialog from './ProjectViewDetailDialog'
 
 import { IProject } from '@/src/types/project.interface'
 import projectColumns from './projectColumns'
+import { deleteProject } from '@/src/services/project-management'
 
 interface ProjectsTableProps {
 	projects: IProject[]

@@ -1,10 +1,10 @@
 import { Suspense } from 'react'
-import SkillManagementHeader from '../../../components/dashboard/skill/SkillManagementHeader'
+
 import RefreshButton from '../../../components/shared/RefreshButton'
 import { TableSkeleton } from '../../../components/shared/TableSkeleton'
-import SkillTable from '../../../components/dashboard/skill/SkillTable'
+
 import TablePagination from '../../../components/shared/TablePagination'
-import { queryStringFormatter } from '../../../lib/formatters.ts'
+// import { queryStringFormatter } from '../../../lib/formatters.ts'
 
 const page = async ({
 	searchParams,
@@ -20,12 +20,12 @@ const page = async ({
 
 	return (
 		<div className='space-y-6'>
-			<SkillManagementHeader />
+			{/* <SkillManagementHeader /> */}
 			<div className='flex'>
 				<RefreshButton />
 			</div>
 			<Suspense fallback={<TableSkeleton columns={2} />}>
-				<SkillTable />
+				{/* <SkillTable /> */}
 				<TablePagination currentPage={1} totalPages={50} />
 			</Suspense>
 		</div>
