@@ -54,6 +54,8 @@ export default function ContactSection() {
 		message: '',
 	})
 
+	const [loading, setLoading] = useState(false)
+
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) => {
@@ -61,7 +63,7 @@ export default function ContactSection() {
 		setFormData((prev) => ({ ...prev, [id]: value }))
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 
 		const { name, email, subject, message } = formData
@@ -71,17 +73,35 @@ export default function ContactSection() {
 			return
 		}
 
-		// console.log('Form Data:', formData)
+		try {
+			setLoading(true)
 
-		toast.success("Thank you for reaching out! 🎉 I'll get back to you soon.")
+			const res = await fetch('/api/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			})
 
-		setFormData({
-			name: '',
-			email: '',
-			phone: '',
-			subject: '',
-			message: '',
-		})
+			if (!res.ok) {
+				throw new Error('Failed to send message')
+			}
+
+			toast.success("Message sent successfully 🚀 I'll get back to you soon!")
+
+			setFormData({
+				name: '',
+				email: '',
+				phone: '',
+				subject: '',
+				message: '',
+			})
+		} catch (error) {
+			toast.error('Something went wrong. Please try again.')
+		} finally {
+			setLoading(false)
+		}
 	}
 
 	return (
@@ -110,7 +130,7 @@ export default function ContactSection() {
 						</p>
 
 						<div className='space-y-6'>
-							{contactInfo.map((item: IContactInfoItem) => (
+							{contactInfo.map((item) => (
 								<ContactItem key={item.label} {...item} />
 							))}
 						</div>
@@ -181,9 +201,9 @@ export default function ContactSection() {
 								/>
 							</div>
 
-							<Button type='submit' className='w-full group'>
+							<Button type='submit' className='w-full group' disabled={loading}>
 								<Send className='mr-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-								Send Message
+								{loading ? 'Sending...' : 'Send Message'}
 							</Button>
 						</form>
 					</FadeUp>

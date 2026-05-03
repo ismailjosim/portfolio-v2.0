@@ -27,6 +27,7 @@
 		"react-hook-form": "^7.71.2",
 		"react-select": "^5.10.2",
 		"react-typed": "^2.0.12",
+		"resend": "^6.12.2",
 		"slugify": "^1.6.9",
 		"sonner": "^2.0.7",
 		"swiper": "^12.1.2",

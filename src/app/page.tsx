@@ -10,6 +10,7 @@ import GitHubSection from '../components/sections/GitHubSection'
 import ContactSection from '../components/sections/ContactSection'
 import ScrollToTop from '../components/ui/ScrollToTop'
 import Navbar from '../components/shared/Navbar'
+import Footer from '../components/shared/Footer'
 
 export default function HomePage() {
 	return (
@@ -31,6 +32,7 @@ export default function HomePage() {
 			</main>
 			{/* <footer className='absolute'> */}
 			<ScrollToTop />
+			<Footer />
 			{/* </footer> */}
 		</>
 	)
