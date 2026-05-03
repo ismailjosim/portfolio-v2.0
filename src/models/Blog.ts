@@ -6,6 +6,7 @@ export interface IBlog extends Document {
 	coverImage?: string
 	tags: string[]
 	content: string
+	summary?: string
 	slug: string
 	status: string
 	views: number
@@ -44,6 +45,11 @@ const BlogSchema = new Schema<IBlog>(
 			type: String,
 			required: [true, 'Content is required'],
 			minlength: [10, 'Content must be at least 10 characters'],
+		},
+		summary: {
+			type: String,
+			trim: true,
+			maxlength: [500, 'Summary cannot exceed 500 characters'],
 		},
 		slug: {
 			type: String,

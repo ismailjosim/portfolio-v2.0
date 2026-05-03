@@ -75,6 +75,7 @@ interface BlogFormValues {
 	coverImage: string | null
 	coverImagePreview?: string
 	status: BlogStatus
+	summary?: string
 }
 
 interface IBlogDialogProps {
@@ -109,6 +110,7 @@ const BlogFormDialog = ({
 			tags: [],
 			content: '',
 			status: 'draft',
+			summary: '',
 		},
 	})
 
@@ -125,6 +127,7 @@ const BlogFormDialog = ({
 				),
 				content: blog.content,
 				status: (blog.status as BlogStatus) || 'draft',
+				summary: blog.summary ?? '',
 			})
 		} else {
 			form.reset({
@@ -135,6 +138,7 @@ const BlogFormDialog = ({
 				tags: [],
 				content: '',
 				status: 'draft',
+				summary: '',
 			})
 		}
 	}, [blog, form])
@@ -205,6 +209,7 @@ const BlogFormDialog = ({
 				tags: data.tags.map((item) => item.value),
 				coverImage: coverImageUrl || undefined,
 				status: data.status,
+				summary: data.summary || undefined,
 			}
 
 			let result
@@ -266,6 +271,24 @@ const BlogFormDialog = ({
 										<FormLabel>Title</FormLabel>
 										<FormControl>
 											<Input placeholder='My awesome blog post' {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							{/* Summary */}
+							<FormField
+								control={form.control}
+								name='summary'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Summary (Optional)</FormLabel>
+										<FormControl>
+											<Input
+												placeholder='Brief description of your blog post (max 500 characters)'
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>

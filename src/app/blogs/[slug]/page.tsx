@@ -86,20 +86,17 @@ export default async function BlogDetailsPage({
 				</div>
 			</div>
 
-			<main className='container mx-auto px-4 py-12'>
+			<main className='container mx-auto px-4 py-16'>
 				<article className='max-w-4xl mx-auto'>
 					{/* Cover Image */}
-					{blog.coverImage && (
-						<div className='relative w-full h-105 rounded-2xl overflow-hidden shadow-xl mb-10'>
-							<Image
-								src={blog.coverImage}
-								alt={blog.title}
-								fill
-								priority
-								className='object-cover'
-							/>
-						</div>
-					)}
+					{/* {blog.coverImage && (	// )} */}
+					<div className='relative w-full h-105 rounded-2xl overflow-hidden mb-10'>
+						<img
+							src={blog.coverImage}
+							alt={blog.title}
+							className='object-fill w-full h-full rounded-2xl'
+						/>
+					</div>
 
 					{/* Category + Tags */}
 					<div className='mb-6'>
@@ -164,10 +161,7 @@ export default async function BlogDetailsPage({
 									<BookOpen className='h-5 w-5 text-blue-600' />
 									<h3 className='font-semibold text-lg'>Content</h3>
 								</div>
-								<div
-									className='bg-muted/50 p-4 rounded-lg'
-									data-color-mode='dark'
-								>
+								<div className='prose prose-neutral dark:prose-invert max-w-none'>
 									<MarkdownPreview content={blog.content} />
 								</div>
 							</div>

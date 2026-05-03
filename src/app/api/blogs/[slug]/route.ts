@@ -22,7 +22,7 @@ export async function GET(
 		const blog = await Blog.findOne({
 			slug: { $regex: `^${slug.trim()}$`, $options: 'i' },
 		})
-		console.log({ blog })
+		// console.log({ blog })
 
 		if (!blog) {
 			return NextResponse.json({ error: 'Blog not found' }, { status: 404 })

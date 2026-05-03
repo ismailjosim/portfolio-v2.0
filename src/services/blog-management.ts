@@ -8,6 +8,7 @@ export interface IBlogPayload {
 	coverImage?: string
 	status: string
 	tags: string[]
+	summary?: string
 	slug?: string
 }
 type GetBlogsParams = {
@@ -112,7 +113,7 @@ export async function deleteBlog(slug: string) {
 
 export async function getSingleBlogBySlug(slug: string) {
 	try {
-		console.log({ slug })
+		// console.log({ slug })
 		const res = await fetch(
 			`${process.env.NEXT_PUBLIC_API_URL}/blogs/${slug}`,
 			{

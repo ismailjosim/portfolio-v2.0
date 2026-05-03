@@ -3,11 +3,11 @@ export interface IBlogTag {
 	label: string
 }
 export type BlogStatus =
-	| "draft"
-	| "review"
-	| "scheduled"
-	| "published"
-	| "archived"
+	| 'draft'
+	| 'review'
+	| 'scheduled'
+	| 'published'
+	| 'archived'
 
 export interface IBlog {
 	_id?: string
@@ -18,6 +18,7 @@ export interface IBlog {
 	coverImagePreview?: string
 	tags: string[]
 	content: string
+	summary?: string
 	slug?: string
 	createdAt?: string | Date
 	updatedAt?: string | Date
