@@ -155,13 +155,16 @@ export default function BlogSection() {
 											</span>
 										</div>
 
-										<h3 className='font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors line-clamp-2'>
+										<Link
+											href={`/blogs/${blog.slug}`}
+											className='font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors line-clamp-2'
+										>
 											{blog.title}
-										</h3>
+										</Link>
 
 										<p className='text-muted-foreground text-sm mb-4 flex-1 line-clamp-3'>
-											{blog.content.replace(/<[^>]*>/g, '').substring(0, 100)}
-											...
+											{blog?.summary}
+											<span className='font-medium text-primary'>...</span>
 										</p>
 
 										<Link

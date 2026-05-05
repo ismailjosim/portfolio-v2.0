@@ -72,7 +72,7 @@ export default function AboutSection() {
 
 			slides[current].classList.remove('opacity-0')
 			slides[current].classList.add('opacity-100')
-		}, 3500)
+		}, 10000)
 
 		return () => clearInterval(interval)
 	}, [])
