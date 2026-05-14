@@ -69,7 +69,7 @@ export async function getAllBlogs(params?: GetBlogsParams) {
 		if (params?.tag) query.set('tag', params.tag)
 		if (params?.search) query.set('search', params.search)
 
-		const url = `${process.env.NEXT_PUBLIC_API_URL}/blogs${
+		const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/blogs${
 			query.toString() ? `?${query.toString()}` : ''
 		}`
 
@@ -97,9 +97,7 @@ export async function getAllBlogs(params?: GetBlogsParams) {
 
 export async function deleteBlog(slug: string) {
 	try {
-		const res = await serverFetch.delete(`/blogs/${slug}`)
-
-		if (!res.ok) {
+			const res = await serverFetch.delete(`/api/blogs/${slug}`)
 			const result = await res.json()
 			return { success: false, ...result }
 		}
@@ -115,7 +113,7 @@ export async function getSingleBlogBySlug(slug: string) {
 	try {
 		// console.log({ slug })
 		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/blogs/${slug}`,
+			`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/blogs/${slug}`,
 			{
 				method: 'GET',
 			},

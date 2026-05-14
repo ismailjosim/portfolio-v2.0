@@ -24,7 +24,8 @@ type GetSkillsParams = {
 
 export async function createSkill(payload: ISkillPayload) {
 	try {
-		const res = await serverFetch.post('/skills', {
+		console.log({ payload })
+		const res = await serverFetch.post('/api/skills', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(payload),
@@ -44,7 +45,7 @@ export async function createSkill(payload: ISkillPayload) {
 
 export async function updateSkill(id: string, payload: ISkillPayload) {
 	try {
-		const res = await serverFetch.patch(`/skills/${id}`, {
+		const res = await serverFetch.patch(`/api/skills/${id}`, {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(payload),
 		})
@@ -74,7 +75,7 @@ export async function getAllSkills(params?: GetSkillsParams) {
 		if (params?.isPublished !== undefined)
 			query.set('isPublished', String(params.isPublished))
 
-		const url = `${process.env.NEXT_PUBLIC_API_URL}/skills${
+		const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/skills${
 			query.toString() ? `?${query.toString()}` : ''
 		}`
 
@@ -102,7 +103,7 @@ export async function getAllSkills(params?: GetSkillsParams) {
 
 export async function deleteSkill(id: string) {
 	try {
-		const res = await serverFetch.delete(`/skills/${id}`)
+		const res = await serverFetch.delete(`/api/skills/${id}`)
 
 		if (!res.ok) {
 			const result = await res.json()
@@ -118,7 +119,7 @@ export async function deleteSkill(id: string) {
 
 export async function getSingleSkill(id: string) {
 	try {
-		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skills/${id}`, {
+		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/skills/${id}`, {
 			method: 'GET',
 			cache: 'no-store',
 		})

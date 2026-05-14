@@ -14,7 +14,13 @@ export function SidebarCollapsedLogo() {
         group-data-[collapsible=icon]:pointer-events-auto
       '
 		>
-			<Image src='/person.jpeg' alt='logo' width={32} height={32} />
+			<Image
+				src='/person.jpeg'
+				alt='logo'
+				width={32}
+				height={32}
+				style={{ width: 'auto', height: 'auto' }}
+			/>
 		</div>
 	)
 }

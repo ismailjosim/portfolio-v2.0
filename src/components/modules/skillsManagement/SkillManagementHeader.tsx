@@ -4,6 +4,7 @@ import ManagementPageHeader from '../../shared/ManagementPageHeader'
 import SkillFormDialog from './SkillFormDialog'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
+import { SKILL_CATEGORIES } from '@/src/constants/skillCategories'
 
 const SkillManagementHeader = () => {
 	const router = useRouter()
@@ -35,6 +36,7 @@ const SkillManagementHeader = () => {
 				open={isDialogOpen}
 				onClose={handleCloseDialog}
 				onSuccess={handleSuccess}
+				categories={SKILL_CATEGORIES}
 			/>
 
 			<ManagementPageHeader

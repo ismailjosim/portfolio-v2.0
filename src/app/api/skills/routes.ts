@@ -73,6 +73,7 @@ export async function POST(req: Request) {
 		await connectDB()
 
 		const body = await req.json()
+		console.log({ body })
 
 		// Get max order for the category or start at 0
 		const maxOrder = await Skill.findOne({ category: body.category })
