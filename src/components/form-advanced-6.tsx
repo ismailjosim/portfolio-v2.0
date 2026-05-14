@@ -1,45 +1,43 @@
+'use client';
 
-"use client";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/src/components/ui/button";
+import { Button } from '@/src/components/ui/button';
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/src/components/ui/field";
-import { Input } from "@/src/components/ui/input";
+} from '@/src/components/ui/field';
+import { Input } from '@/src/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select";
+} from '@/src/components/ui/select';
 
-export const title = "Form with Multiple Selects";
+export const title = 'Form with Multiple Selects';
 
 const formSchema = z.object({
   title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
+    message: 'Title must be at least 2 characters.',
   }),
   details: z.string().min(2, {
-    message: "details must be at least 2 characters.",
+    message: 'details must be at least 2 characters.',
   }),
-
 });
 
 const Example = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     // resolver: zodResolver(),
     defaultValues: {
-      title: "",
-      details: ""
+      title: '',
+      details: '',
     },
   });
 
@@ -64,9 +62,7 @@ const Example = () => {
                   className="bg-background"
                   placeholder="John Doe"
                 />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
@@ -91,13 +87,10 @@ const Example = () => {
                     <SelectItem value="au">Australia</SelectItem>
                   </SelectContent>
                 </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
           />
-
         </FieldGroup>
         <Button type="submit">Save Settings</Button>
       </form>

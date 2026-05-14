@@ -1,37 +1,37 @@
-import { LucideIcon } from 'lucide-react'
+import { LucideIcon } from 'lucide-react';
 
 export interface Project {
-	emoji: string
-	name: string
-	subtitle: string
-	gradient: string
-	tags: string[]
-	title: string
-	type: string
-	bullets: string[]
-	badges: string[]
-	reverse?: boolean
-	githubUrl?: string
+  emoji: string;
+  name: string;
+  subtitle: string;
+  gradient: string;
+  tags: string[];
+  title: string;
+  type: string;
+  bullets: string[];
+  badges: string[];
+  reverse?: boolean;
+  githubUrl?: string;
 }
 
 export interface IWorkArea {
-	Icon: LucideIcon
-	iconColor: string
-	iconBg: string
-	title: string
-	desc: string
+  Icon: LucideIcon;
+  iconColor: string;
+  iconBg: string;
+  title: string;
+  desc: string;
 }
 
 // --------------------------
 // Interfaces
 // --------------------------
 export interface Skill {
-	name: string
-	icon: LucideIcon
+  name: string;
+  icon: LucideIcon;
 }
 
 export interface SkillGroup {
-	label: string
-	icon: LucideIcon
-	skills: Skill[]
+  label: string;
+  icon: LucideIcon;
+  skills: Skill[];
 }

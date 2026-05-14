@@ -1,55 +1,55 @@
-'use client'
-import { Plus } from 'lucide-react'
-import ManagementPageHeader from '../../shared/ManagementPageHeader'
-import SkillFormDialog from './SkillFormDialog'
-import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
-import { SKILL_CATEGORIES } from '@/src/constants/skillCategories'
+'use client';
+import { Plus } from 'lucide-react';
+import ManagementPageHeader from '../../shared/ManagementPageHeader';
+import SkillFormDialog from './SkillFormDialog';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { SKILL_CATEGORIES } from '@/src/constants/skillCategories';
 
 const SkillManagementHeader = () => {
-	const router = useRouter()
-	const [, startTransition] = useTransition()
-	const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-	//force remount to reset state of form
-	const [dialogKey, setDialogKey] = useState(0)
+  //force remount to reset state of form
+  const [dialogKey, setDialogKey] = useState(0);
 
-	const handleOpenDialog = () => {
-		setDialogKey((prev) => prev + 1)
-		setIsDialogOpen(true)
-	}
+  const handleOpenDialog = () => {
+    setDialogKey((prev) => prev + 1);
+    setIsDialogOpen(true);
+  };
 
-	const handleCloseDialog = () => {
-		setIsDialogOpen(false)
-	}
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
-	const handleSuccess = () => {
-		startTransition(() => {
-			router.refresh()
-		})
-	}
+  const handleSuccess = () => {
+    startTransition(() => {
+      router.refresh();
+    });
+  };
 
-	return (
-		<>
-			<SkillFormDialog
-				key={dialogKey}
-				open={isDialogOpen}
-				onClose={handleCloseDialog}
-				onSuccess={handleSuccess}
-				categories={SKILL_CATEGORIES}
-			/>
+  return (
+    <>
+      <SkillFormDialog
+        key={dialogKey}
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        onSuccess={handleSuccess}
+        categories={SKILL_CATEGORIES}
+      />
 
-			<ManagementPageHeader
-				title='All Skills'
-				description='Manage Your Skills'
-				action={{
-					label: 'Add Skill',
-					icon: Plus,
-					onClick: handleOpenDialog,
-				}}
-			/>
-		</>
-	)
-}
+      <ManagementPageHeader
+        title="All Skills"
+        description="Manage Your Skills"
+        action={{
+          label: 'Add Skill',
+          icon: Plus,
+          onClick: handleOpenDialog,
+        }}
+      />
+    </>
+  );
+};
 
-export default SkillManagementHeader
+export default SkillManagementHeader;

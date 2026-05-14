@@ -1,15 +1,15 @@
-import ClearFiltersButton from '../../shared/ClearFiltersButton'
-import RefreshButton from '../../shared/RefreshButton'
-import SearchFilter from '../../shared/SearchFilter'
+import ClearFiltersButton from '../../shared/ClearFiltersButton';
+import RefreshButton from '../../shared/RefreshButton';
+import SearchFilter from '../../shared/SearchFilter';
 
 const ProjectFilter = () => {
-	return (
-		<div className='space-y-3 flex justify-end gap-4'>
-			<SearchFilter paramName='searchTerm' placeholder='Search projects...' />
-			<ClearFiltersButton />
-			<RefreshButton />
-		</div>
-	)
-}
+  return (
+    <div className="space-y-3 flex justify-end gap-4">
+      <SearchFilter paramName="searchTerm" placeholder="Search projects..." />
+      <ClearFiltersButton />
+      <RefreshButton />
+    </div>
+  );
+};
 
-export default ProjectFilter
+export default ProjectFilter;

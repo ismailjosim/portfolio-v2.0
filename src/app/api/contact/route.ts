@@ -1,16 +1,16 @@
-import { resend } from '@/src/lib/resend'
-import { NextResponse } from 'next/server'
+import { resend } from '@/src/lib/resend';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-	try {
-		const { name, email, phone, subject, message } = await req.json()
+  try {
+    const { name, email, phone, subject, message } = await req.json();
 
-		await resend.emails.send({
-			from: 'Portfolio <onboarding@resend.dev>',
-			to: 'ismailjosim99@gmail.com',
-			subject: `🚀 ${subject || 'New Contact Message'}`,
-			replyTo: email,
-			html: `
+    await resend.emails.send({
+      from: 'Portfolio <onboarding@resend.dev>',
+      to: 'ismailjosim99@gmail.com',
+      subject: `🚀 ${subject || 'New Contact Message'}`,
+      replyTo: email,
+      html: `
             <!DOCTYPE html>
                 <html>
                 <head>
@@ -140,11 +140,11 @@ export async function POST(req: Request) {
                 </body>
                 </html>
             `,
-		})
+    });
 
-		return NextResponse.json({ success: true })
-	} catch (error) {
-		console.error('Resend Error:', error)
-		return NextResponse.json({ error: 'Email failed to send' }, { status: 500 })
-	}
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Resend Error:', error);
+    return NextResponse.json({ error: 'Email failed to send' }, { status: 500 });
+  }
 }

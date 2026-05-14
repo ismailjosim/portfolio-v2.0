@@ -1,11 +1,11 @@
-import NotFound from '../components/shared/NotFound'
+import NotFound from '../components/shared/NotFound';
 
 const NotFoundPage = () => {
-	return (
-		<>
-			<NotFound />
-		</>
-	)
-}
+  return (
+    <>
+      <NotFound />
+    </>
+  );
+};
 
-export default NotFoundPage
+export default NotFoundPage;

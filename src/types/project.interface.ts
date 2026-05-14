@@ -1,31 +1,31 @@
 export interface IProject {
-	_id?: string
+  _id?: string;
 
-	// Basic identity
-	name: string
-	subtitle: string
-	title: string
-	type: string
+  // Basic identity
+  name: string;
+  subtitle: string;
+  title: string;
+  type: string;
 
-	// Media
-	image: string
-	demoImages?: string[]
+  // Media
+  image: string;
+  demoImages?: string[];
 
-	// Content
-	description?: string
-	technologies: string[]
-	features: string[]
+  // Content
+  description?: string;
+  technologies: string[];
+  features: string[];
 
-	// Links
-	githubUrl?: string
-	liveUrl?: string
+  // Links
+  githubUrl?: string;
+  liveUrl?: string;
 
-	// Controls
-	featured?: boolean
-	isPublished?: boolean
-	slug?: string
+  // Controls
+  featured?: boolean;
+  isPublished?: boolean;
+  slug?: string;
 
-	// timestamps
-	createdAt?: string
-	updatedAt?: string
+  // timestamps
+  createdAt?: string;
+  updatedAt?: string;
 }
