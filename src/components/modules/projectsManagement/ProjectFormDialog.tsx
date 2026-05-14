@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Upload, Plus } from 'lucide-react';
+import { Upload, Plus, X } from 'lucide-react';
 import CreatableSelect from 'react-select/creatable';
 import { toast } from 'sonner';
 
@@ -40,6 +40,9 @@ interface ProjectFormValues {
   image: string | null;
   imagePreview?: string;
 
+  demoImages: string[];
+  demoImagesPreview?: string[];
+
   description: string;
 
   technologies: { label: string; value: string }[];
@@ -49,6 +52,8 @@ interface ProjectFormValues {
   liveUrl: string;
   caseStudyUrl: string;
 }
+
+const MAX_DEMO_IMAGES = 10;
 
 interface IProjectDialogProps {
   open: boolean;
@@ -107,7 +112,11 @@ const TECHNOLOGY_OPTIONS = [
 
 const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialogProps) => {
   const coverInputRef = useRef<HTMLInputElement>(null);
+  const demoImagesInputRef = useRef<HTMLInputElement>(null);
   const coverFileRef = useRef<File | null>(null);
+  const demoFilesRef = useRef<File[]>([]);
+
+  const [demoImagesPreview, setDemoImagesPreview] = useState<string[]>([]);
 
   const isEdit = !!project?.slug;
 
@@ -119,6 +128,8 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
       type: '',
       image: null,
       imagePreview: '',
+      demoImages: [],
+      demoImagesPreview: [],
       description: '',
       technologies: [],
       features: '',
@@ -137,6 +148,8 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
         type: project.type,
         image: null,
         imagePreview: project.image,
+        demoImages: project.demoImages || [],
+        demoImagesPreview: project.demoImages || [],
         description: project.description || '',
         technologies: project.technologies.map((item) => ({
           label: item,
@@ -147,8 +160,12 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
         liveUrl: project.liveUrl || '',
         caseStudyUrl: project.caseStudyUrl || '',
       });
+      setDemoImagesPreview(project.demoImages || []);
+      demoFilesRef.current = [];
     } else {
       form.reset();
+      setDemoImagesPreview([]);
+      demoFilesRef.current = [];
     }
   }, [project, form]);
 
@@ -165,8 +182,42 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
     form.setValue('image', null);
   };
 
+  const handleDemoImagesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFiles = Array.from(files);
+    const totalImages = demoImagesPreview.length + newFiles.length;
+
+    if (totalImages > MAX_DEMO_IMAGES) {
+      toast.error(`Maximum ${MAX_DEMO_IMAGES} images allowed`);
+      return;
+    }
+
+    demoFilesRef.current = [...demoFilesRef.current, ...newFiles];
+
+    const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+    const updatedPreviews = [...demoImagesPreview, ...newPreviews];
+
+    setDemoImagesPreview(updatedPreviews);
+    form.setValue('demoImagesPreview', updatedPreviews);
+  };
+
+  const handleRemoveDemoImage = (index: number) => {
+    const updatedPreviews = demoImagesPreview.filter((_, i) => i !== index);
+    setDemoImagesPreview(updatedPreviews);
+    form.setValue('demoImagesPreview', updatedPreviews);
+
+    // Remove from files array if it's a newly uploaded file
+    if (index < demoFilesRef.current.length) {
+      demoFilesRef.current = demoFilesRef.current.filter((_, i) => i !== index);
+    }
+  };
+
   const handleClose = () => {
     coverFileRef.current = null;
+    demoFilesRef.current = [];
+    setDemoImagesPreview([]);
     form.reset();
     onClose();
   };
@@ -189,12 +240,38 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
         imageUrl = result.url!;
       }
 
+      // Handle demo images upload
+      let demoImagesUrls: string[] = [];
+
+      // If we're editing, keep existing URLs that weren't removed
+      if (isEdit && project?.demoImages) {
+        demoImagesUrls = data.demoImages || [];
+      }
+
+      // Upload new demo image files
+      if (demoFilesRef.current.length > 0) {
+        for (const file of demoFilesRef.current) {
+          const formData = new FormData();
+          formData.append('image', file);
+
+          const result = await uploadImage(formData);
+
+          if (!result.success) {
+            toast.error(`Failed to upload image: ${file.name}`);
+            return;
+          }
+
+          demoImagesUrls.push(result.url!);
+        }
+      }
+
       const payload: IProjectPayload = {
         name: data.name,
         subtitle: data.subtitle,
         title: data.title,
         type: data.type,
         image: imageUrl || '',
+        demoImages: demoImagesUrls.length > 0 ? demoImagesUrls : undefined,
         description: data.description,
         technologies: data.technologies.map((item) => item.value),
         features: data.features
@@ -241,10 +318,11 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
             <div className="flex-1 overflow-y-auto space-y-4 px-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Project Name */}
                 <FormField
                   control={form.control}
                   name="name"
-                  rules={{ required: 'Name is Required' }}
+                  rules={{ required: 'Project Name is Required' }}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Name</FormLabel>
@@ -256,6 +334,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   )}
                 />
 
+                {/* subtitle */}
                 <FormField
                   control={form.control}
                   name="subtitle"
@@ -269,34 +348,168 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   )}
                 />
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* title */}
+                <FormField
+                  control={form.control}
+                  name="title"
+                  rules={{ required: 'Required' }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Traveler — Tour Management System" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {/* type */}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Full Stack Web Application" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* Technologies */}
+              <FormItem>
+                <FormLabel>Technologies</FormLabel>
 
+                <Controller
+                  control={form.control}
+                  name="technologies"
+                  render={({ field }) => (
+                    <CreatableSelect
+                      isMulti
+                      unstyled
+                      options={TECHNOLOGY_OPTIONS}
+                      placeholder="React, Node.js..."
+                      value={field.value}
+                      onChange={field.onChange}
+                      classNames={{
+                        control: ({ isFocused }) =>
+                          `rounded-lg border px-2 py-1 bg-secondary transition-colors ${
+                            isFocused ? 'border-blue-500' : 'border-input hover:border-blue-500'
+                          }`,
+                        menu: () =>
+                          'mt-1 rounded-lg border border-secondary bg-secondary shadow-lg',
+                        menuList: () => 'py-1',
+                        option: ({ isFocused, isSelected }) =>
+                          `px-3 py-2 cursor-pointer text-secondary-foreground transition-colors ${
+                            isSelected
+                              ? 'bg-blue-600 text-white'
+                              : isFocused
+                                ? 'bg-accent text-accent-foreground'
+                                : 'bg-transparent'
+                          }`,
+                        multiValue: () =>
+                          'inline-flex items-center gap-1 bg-primary/10 border border-primary/30 rounded-sm mx-1 px-2 py-0.5',
+                        multiValueLabel: () => 'text-foreground text-sm font-medium leading-none',
+                        multiValueRemove: ({ isFocused }) =>
+                          `ml-0.5 rounded transition-all duration-150 text-muted-foreground hover:bg-destructive hover:text-white ${
+                            isFocused ? 'bg-destructive text-white' : ''
+                          }`,
+                        placeholder: () => 'text-muted-foreground',
+                        input: () => 'text-secondary-foreground',
+                        indicatorsContainer: () => 'text-muted-foreground',
+                        clearIndicator: ({ isFocused }) =>
+                          `p-1 rounded transition-colors ${isFocused ? 'text-foreground' : ''}`,
+                        dropdownIndicator: ({ isFocused }) =>
+                          `p-1 transition-colors ${isFocused ? 'text-foreground' : ''}`,
+                      }}
+                    />
+                  )}
+                />
+              </FormItem>
+
+              {/* Description */}
               <FormField
                 control={form.control}
-                name="title"
-                rules={{ required: 'Required' }}
+                name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder="Traveler — Tour Management System" {...field} />
+                      <Textarea rows={4} placeholder="Short project summary..." {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
 
+              {/* Features */}
               <FormField
                 control={form.control}
-                name="type"
+                name="features"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type</FormLabel>
+                    <FormLabel>Features</FormLabel>
                     <FormControl>
-                      <Input placeholder="Full Stack Web Application" {...field} />
+                      <Textarea rows={6} placeholder="One feature per line" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
+              {/* Links */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                <FormField
+                  control={form.control}
+                  name="githubUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>GitHub URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="https://github.com/your-rep-link" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {/* Todo: IF repo is more then one */}
+                {/* <FormField
+                  control={form.control}
+                  name="githubUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>GitHub URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="https://github.com/your-rep-link" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                /> */}
 
+                <FormField
+                  control={form.control}
+                  name="liveUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Live URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="http://localhost:3000" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="caseStudyUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Case Study URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="http://localhost:3000" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-5">
               {/* Image */}
               <FormItem>
                 <FormLabel>Project Image</FormLabel>
@@ -326,140 +539,54 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   />
                 )}
               </FormItem>
-
-              {/* Description */}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea rows={4} placeholder="Short project summary..." {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {/* Technologies */}
+              {/* Demo Images */}
               <FormItem>
-                <FormLabel>Technologies</FormLabel>
+                <FormLabel>
+                  Demo Images ({demoImagesPreview.length}/{MAX_DEMO_IMAGES})
+                </FormLabel>
 
-                <Controller
-                  control={form.control}
-                  name="technologies"
-                  render={({ field }) => (
-                    <CreatableSelect
-                      isMulti
-                      unstyled
-                      options={TECHNOLOGY_OPTIONS}
-                      placeholder="React, Node.js..."
-                      value={field.value}
-                      onChange={field.onChange}
-                      classNames={{
-                        container: () => 'w-full',
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => demoImagesInputRef.current?.click()}
+                  disabled={demoImagesPreview.length >= MAX_DEMO_IMAGES}
+                  className="w-full justify-start gap-2"
+                >
+                  <Upload className="h-4 w-4" />
+                  Upload Demo Images
+                </Button>
 
-                        control: ({ isFocused }) =>
-                          `flex min-h-10 w-full items-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background ${
-                            isFocused ? 'border-ring ring-2 ring-ring' : 'border-input'
-                          }`,
-
-                        valueContainer: () => 'flex flex-wrap gap-1 bg-background',
-
-                        input: () => 'bg-background text-foreground',
-
-                        placeholder: () => 'text-muted-foreground',
-
-                        menu: () =>
-                          'mt-2 rounded-md border bg-popover text-popover-foreground shadow-md z-50',
-
-                        menuList: () => 'p-1 bg-popover',
-
-                        option: ({ isFocused, isSelected }) =>
-                          `cursor-pointer rounded-sm px-3 py-2 text-sm ${
-                            isSelected
-                              ? 'bg-accent text-accent-foreground'
-                              : isFocused
-                                ? 'bg-muted text-foreground'
-                                : 'bg-popover text-popover-foreground'
-                          }`,
-
-                        multiValue: () =>
-                          'flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5',
-
-                        multiValueLabel: () => 'text-sm text-secondary-foreground',
-
-                        multiValueRemove: ({ isFocused }) =>
-                          `ml-1 rounded-sm cursor-pointer transition-colors ${
-                            isFocused
-                              ? 'bg-destructive text-destructive-foreground'
-                              : 'bg-secondary-foreground/20 text-secondary-foreground hover:bg-destructive hover:text-destructive-foreground'
-                          }`,
-
-                        indicatorsContainer: () => 'text-muted-foreground',
-                      }}
-                    />
-                  )}
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  ref={demoImagesInputRef}
+                  onChange={handleDemoImagesUpload}
                 />
+
+                {demoImagesPreview.length > 0 && (
+                  <div className="grid grid-cols-3 gap-3 mt-3">
+                    {demoImagesPreview.map((preview, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={preview}
+                          alt={`Demo ${index + 1}`}
+                          className="h-24 w-full object-cover rounded-md border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDemoImage(index)}
+                          className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </FormItem>
-
-              {/* Features */}
-              <FormField
-                control={form.control}
-                name="features"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Features</FormLabel>
-                    <FormControl>
-                      <Textarea rows={6} placeholder="One feature per line" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {/* Links */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="githubUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>GitHub URL</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="liveUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Live URL</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="caseStudyUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Case Study URL</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
             </div>
-
             <div className="flex justify-end gap-2 pt-4">
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancel

@@ -393,11 +393,11 @@ const SkillFormDialog = ({ open, onClose, onSuccess, skill, categories }: ISkill
                       <FormLabel>Category</FormLabel>
                       <SelectElement value={field.value || ''} onValueChange={field.onChange}>
                         <FormControl>
-                          <SelectTrigger className="w-full bg-background">
+                          <SelectTrigger className="w-full bg-background!">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent position="popper">
+                        <SelectContent position="popper" className="bg-popover!">
                           {!categories || categories.length === 0 ? (
                             <div className="p-2 text-sm text-muted-foreground">
                               No categories available
@@ -428,11 +428,11 @@ const SkillFormDialog = ({ open, onClose, onSuccess, skill, categories }: ISkill
                       <FormLabel>Proficiency Level</FormLabel>
                       <SelectElement value={field.value} onValueChange={field.onChange}>
                         <FormControl>
-                          <SelectTrigger className="w-full bg-background">
+                          <SelectTrigger className="w-full bg-background!">
                             <SelectValue placeholder="Select proficiency" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent position="popper" side="bottom">
+                        <SelectContent position="popper" side="bottom" className="bg-popover!">
                           {PROFICIENCY_LEVELS.map((level) => (
                             <SelectItem key={level.value} value={level.value}>
                               {level.label}
