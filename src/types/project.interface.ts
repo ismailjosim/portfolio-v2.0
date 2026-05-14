@@ -19,14 +19,10 @@ export interface IProject {
 	// Links
 	githubUrl?: string
 	liveUrl?: string
-	caseStudyUrl?: string
 
 	// Controls
 	featured?: boolean
-	order?: number
 	isPublished?: boolean
-
-	// SEO / optional
 	slug?: string
 
 	// timestamps

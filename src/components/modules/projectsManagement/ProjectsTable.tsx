@@ -66,7 +66,7 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
 
 	return (
 		<>
-			{/* <ManagementTable
+			<ManagementTable
 				data={projects}
 				columns={projectColumns}
 				onView={handleView}
@@ -74,9 +74,10 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
 				onDelete={handleDelete}
 				getRowKey={(Project) => Project._id!}
 				emptyMessage='No Projects found'
-			/> */}
+			/>
+
 			{/* Edit Project Form Dialog */}
-			{/* <AddProjectModal
+			<AddProjectModal
 				open={!!editingProject}
 				onClose={() => setEditingProject(null)}
 				project={editingProject!}
@@ -84,24 +85,24 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
 					setEditingProject(null)
 					handleRefresh()
 				}}
-			/> */}
+			/>
 
 			{/* view Project details dialog */}
-			{/* <ProjectViewDetailDialog
+			<ProjectViewDetailDialog
 				open={!!viewingProject}
 				onClose={() => setViewingProject(null)}
 				project={viewingProject}
-			/> */}
+			/>
 
 			{/* Delete Confirmation Dialog */}
-			{/* <DeleteConfirmationDialog
+			<DeleteConfirmationDialog
 				open={!!deletingProject}
 				onOpenChange={(open) => !open && setDeletingProject(null)}
 				onConfirm={confirmDelete}
 				title='Delete Project'
 				description={`Are you sure you want to delete "${deletingProject?.title}"? This action cannot be undone.`}
 				isDeleting={isDeleting}
-			/> */}
+			/>
 		</>
 	)
 }

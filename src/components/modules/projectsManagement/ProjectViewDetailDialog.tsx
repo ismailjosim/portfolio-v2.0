@@ -1,14 +1,13 @@
 import {
-	BarChart2,
-	BookOpen,
-	Calendar,
-	Heart,
+	Code2,
+	Zap,
 	Link,
-	MessageCircle,
+	Github,
+	ExternalLink,
+	Calendar,
 	Tag,
 } from 'lucide-react'
-import dynamic from 'next/dynamic'
-import { IBlog } from '../../../types/blog.interface'
+import { IProject } from '../../../types/project.interface'
 import {
 	Dialog,
 	DialogContent,
@@ -20,56 +19,55 @@ import InfoRow from '../../shared/InfoRow'
 import { Separator } from '../../ui/separator'
 import { formatDateTime } from '../../../lib/formatters.ts'
 
-// Dynamically import MDEditor preview to avoid SSR issues
-const MDPreview = dynamic(
-	() => import('@uiw/react-md-editor').then((mod) => mod.default.Markdown),
-	{ ssr: false },
-)
-
-interface IBlogViewDialogProps {
+interface IProjectViewDialogProps {
 	open: boolean
 	onClose: () => void
-	blog: IBlog | null
+	project: IProject | null
 }
 
 const ProjectViewDetailDialog = ({
 	open,
 	onClose,
-	blog,
-}: IBlogViewDialogProps) => {
-	if (!blog) return null
+	project,
+}: IProjectViewDialogProps) => {
+	if (!project) return null
 
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
 			<DialogContent className='max-w-7xl w-full max-h-[90vh] flex flex-col px-px py-5 overflow-hidden'>
 				<DialogHeader className='px-6 pt-6 pb-4 shrink-0'>
-					<DialogTitle>Blog Details</DialogTitle>
+					<DialogTitle>Project Details</DialogTitle>
 				</DialogHeader>
 
 				{/* Scrollable body */}
 				<div className='flex-1 overflow-y-auto px-2 pb-6'>
-					{/* Blog Header */}
-					<div className='flex flex-col gap-4 p-5 bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 rounded-lg mb-6'>
-						{blog.coverImage && (
+					{/* Project Header */}
+					<div className='flex flex-col gap-4 p-5 bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-lg mb-6'>
+						{project.image && (
 							<img
-								src={blog.coverImage}
-								alt={blog.title}
+								src={project.image}
+								alt={project.title}
 								className='w-full h-48 rounded-lg object-cover border-4 border-white shadow-lg'
 							/>
 						)}
 						<div className='flex-1 min-w-0'>
 							<h2 className='text-xl font-bold mb-2 wrap-break-word'>
-								{blog.title}
+								{project.title}
 							</h2>
 							<p className='text-muted-foreground mb-3 flex items-center gap-2 text-sm'>
-								<BookOpen className='h-4 w-4 shrink-0' />
-								<span>{blog.category}</span>
+								<Code2 className='h-4 w-4 shrink-0' />
+								<span>{project.type}</span>
 							</p>
+							{project.subtitle && (
+								<p className='text-sm text-muted-foreground mb-3'>
+									{project.subtitle}
+								</p>
+							)}
 							<div className='flex flex-wrap gap-2'>
-								{blog.tags.map((tag) => (
-									<Badge key={tag} variant='secondary' className='text-xs'>
+								{project.technologies?.map((tech, idx) => (
+									<Badge key={idx} variant='secondary' className='text-xs'>
 										<Tag className='h-3 w-3 mr-1' />
-										{tag}
+										{tech}
 									</Badge>
 								))}
 							</div>
@@ -77,26 +75,47 @@ const ProjectViewDetailDialog = ({
 					</div>
 
 					<div className='space-y-6'>
-						{/* Engagement Stats */}
+						{/* Project Information */}
 						<div>
 							<div className='flex items-center gap-2 mb-4'>
-								<BarChart2 className='h-5 w-5 text-emerald-600' />
-								<h3 className='font-semibold text-lg'>Engagement</h3>
+								<Code2 className='h-5 w-5 text-blue-600' />
+								<h3 className='font-semibold text-lg'>Project Information</h3>
 							</div>
-							<div className='grid grid-cols-1 md:grid-cols-3 gap-4 bg-muted/50 p-4 rounded-lg'>
+							<div className='grid grid-cols-1 md:grid-cols-2 gap-4 bg-muted/50 p-4 rounded-lg'>
 								<div className='flex items-start gap-3'>
-									<BarChart2 className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
-									<InfoRow label='Views' value={String(blog.views)} />
+									<Code2 className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
+									<InfoRow label='Name' value={project.name} />
 								</div>
 								<div className='flex items-start gap-3'>
-									<Heart className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
-									<InfoRow label='Likes' value={String(blog.likesCount)} />
+									<Tag className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
+									<InfoRow label='Type' value={project.type} />
 								</div>
 								<div className='flex items-start gap-3'>
-									<MessageCircle className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
+									<Calendar className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
 									<InfoRow
-										label='Comments'
-										value={String(blog.commentsCount)}
+										label='Created On'
+										value={formatDateTime(project.createdAt as string)}
+									/>
+								</div>
+								<div className='flex items-start gap-3'>
+									<Calendar className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
+									<InfoRow
+										label='Last Updated'
+										value={formatDateTime(project.updatedAt as string)}
+									/>
+								</div>
+								<div className='flex items-start gap-3'>
+									<Tag className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
+									<InfoRow
+										label='Featured'
+										value={project.featured ? 'Yes' : 'No'}
+									/>
+								</div>
+								<div className='flex items-start gap-3'>
+									<Tag className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
+									<InfoRow
+										label='Published'
+										value={project.isPublished ? 'Yes' : 'No'}
 									/>
 								</div>
 							</div>
@@ -104,63 +123,107 @@ const ProjectViewDetailDialog = ({
 
 						<Separator />
 
-						{/* Post Information */}
-						<div>
-							<div className='flex items-center gap-2 mb-4'>
-								<Calendar className='h-5 w-5 text-orange-600' />
-								<h3 className='font-semibold text-lg'>Post Information</h3>
-							</div>
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-4 bg-muted/50 p-4 rounded-lg'>
-								<div className='flex items-start gap-3'>
-									<Link className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
-									<InfoRow label='Slug' value={blog.slug} />
-								</div>
-								<div className='flex items-start gap-3'>
-									<BookOpen className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
-									<InfoRow label='Category' value={blog.category} />
-								</div>
-								<div className='flex items-start gap-3'>
-									<Calendar className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
-									<InfoRow
-										label='Created On'
-										value={formatDateTime(blog.createdAt as string)}
-									/>
-								</div>
-								<div className='flex items-start gap-3'>
-									<Calendar className='h-4 w-4 mt-1 text-muted-foreground shrink-0' />
-									<InfoRow
-										label='Last Updated'
-										value={formatDateTime(blog.updatedAt as string)}
-									/>
-								</div>
-							</div>
-						</div>
-
-						{/* Content */}
-						{blog.content && (
+						{/* Description */}
+						{project.description && (
 							<>
-								<Separator />
 								<div>
 									<div className='flex items-center gap-2 mb-4'>
-										<BookOpen className='h-5 w-5 text-blue-600' />
-										<h3 className='font-semibold text-lg'>Content</h3>
+										<Tag className='h-5 w-5 text-purple-600' />
+										<h3 className='font-semibold text-lg'>Description</h3>
 									</div>
-									<div
-										className='bg-muted/50 p-4 rounded-lg'
-										data-color-mode='dark'
-									>
-										<MDPreview
-											source={blog.content}
-											style={{
-												background: 'transparent',
-												color: 'inherit',
-												fontSize: '0.9rem',
-											}}
-										/>
+									<div className='bg-muted/50 p-4 rounded-lg text-sm'>
+										<p className='text-muted-foreground'>
+											{project.description}
+										</p>
 									</div>
 								</div>
+
+								<Separator />
 							</>
 						)}
+
+						{/* Technologies */}
+						{project.technologies && project.technologies.length > 0 && (
+							<>
+								<div>
+									<div className='flex items-center gap-2 mb-4'>
+										<Zap className='h-5 w-5 text-yellow-600' />
+										<h3 className='font-semibold text-lg'>Technologies</h3>
+									</div>
+									<div className='flex flex-wrap gap-2 bg-muted/50 p-4 rounded-lg'>
+										{project.technologies.map((tech, idx) => (
+											<Badge key={idx} variant='outline' className='text-xs'>
+												<Code2 className='h-3 w-3 mr-1' />
+												{tech}
+											</Badge>
+										))}
+									</div>
+								</div>
+
+								<Separator />
+							</>
+						)}
+
+						{/* Features */}
+						{project.features && project.features.length > 0 && (
+							<>
+								<div>
+									<div className='flex items-center gap-2 mb-4'>
+										<Zap className='h-5 w-5 text-emerald-600' />
+										<h3 className='font-semibold text-lg'>Features</h3>
+									</div>
+									<ul className='space-y-2 bg-muted/50 p-4 rounded-lg'>
+										{project.features.map((feature, idx) => (
+											<li key={idx} className='flex items-start gap-3'>
+												<Zap className='h-4 w-4 mt-0.5 text-emerald-600 shrink-0' />
+												<span className='text-sm'>{feature}</span>
+											</li>
+										))}
+									</ul>
+								</div>
+
+								<Separator />
+							</>
+						)}
+
+						{/* Links */}
+						<div>
+							<div className='flex items-center gap-2 mb-4'>
+								<Link className='h-5 w-5 text-indigo-600' />
+								<h3 className='font-semibold text-lg'>Links</h3>
+							</div>
+							<div className='grid grid-cols-1 md:grid-cols-2 gap-4 bg-muted/50 p-4 rounded-lg'>
+								{project.githubUrl && (
+									<a
+										href={project.githubUrl}
+										target='_blank'
+										rel='noopener noreferrer'
+										className='flex items-center gap-3 p-2 rounded hover:bg-muted transition-colors'
+									>
+										<Github className='h-4 w-4 text-muted-foreground shrink-0' />
+										<span className='text-sm truncate'>GitHub Repository</span>
+										<ExternalLink className='h-3 w-3 text-muted-foreground' />
+									</a>
+								)}
+								{project.liveUrl && (
+									<a
+										href={project.liveUrl}
+										target='_blank'
+										rel='noopener noreferrer'
+										className='flex items-center gap-3 p-2 rounded hover:bg-muted transition-colors'
+									>
+										<ExternalLink className='h-4 w-4 text-muted-foreground shrink-0' />
+										<span className='text-sm truncate'>Live Demo</span>
+										<ExternalLink className='h-3 w-3 text-muted-foreground' />
+									</a>
+								)}
+								{!project.githubUrl && !project.liveUrl && (
+									<p className='text-sm text-muted-foreground'>
+										No links available
+									</p>
+								)}
+							</div>
+						</div>
 					</div>
 				</div>
 			</DialogContent>

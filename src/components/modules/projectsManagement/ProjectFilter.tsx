@@ -5,7 +5,7 @@ import SearchFilter from '../../shared/SearchFilter'
 const ProjectFilter = () => {
 	return (
 		<div className='space-y-3 flex justify-end gap-4'>
-			<SearchFilter paramName='searchTerm' placeholder='Search blogs...' />
+			<SearchFilter paramName='searchTerm' placeholder='Search projects...' />
 			<ClearFiltersButton />
 			<RefreshButton />
 		</div>
