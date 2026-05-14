@@ -78,7 +78,7 @@ export async function updateProject(slug: string, payload: IProjectPayload) {
 ========================= */
 export async function getAllProjects(queryStr?: string) {
 	try {
-		const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/projects${
+		const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/projects${
 			queryStr ? `?${queryStr}` : ''
 		}`
 
@@ -109,7 +109,9 @@ export async function getAllProjects(queryStr?: string) {
 ========================= */
 export async function deleteProject(slug: string) {
 	try {
-			const res = await serverFetch.delete(`/api/projects/${slug}`)
+		const res = await serverFetch.delete(`/projects/${slug}`)
+
+		if (!res.ok) {
 			const result = await res.json()
 			return { success: false, ...result }
 		}
@@ -127,7 +129,7 @@ export async function deleteProject(slug: string) {
 export async function getSingleProjectBySlug(slug: string) {
 	try {
 		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/projects/${slug}`,
+			`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/projects/${slug}`,
 			{
 				method: 'GET',
 			},
