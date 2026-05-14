@@ -57,6 +57,54 @@ interface IProjectDialogProps {
   project?: IProject;
 }
 
+// technologies
+const TECHNOLOGY_OPTIONS = [
+  // Frontend
+  { label: 'React.js', value: 'React.js' },
+  { label: 'Next.js', value: 'Next.js' },
+  { label: 'TypeScript', value: 'TypeScript' },
+  { label: 'Redux Toolkit', value: 'Redux Toolkit' },
+  { label: 'TanStack Query', value: 'TanStack Query' },
+  { label: 'React Router', value: 'React Router' },
+  { label: 'React Hook Form', value: 'React Hook Form' },
+  { label: 'Tailwind CSS', value: 'Tailwind CSS' },
+  { label: 'Material UI', value: 'Material UI' },
+  { label: 'Shadcn UI', value: 'Shadcn UI' },
+  { label: 'Ant Design', value: 'Ant Design' },
+
+  // Backend
+  { label: 'Node.js', value: 'Node.js' },
+  { label: 'Express.js', value: 'Express.js' },
+  { label: 'REST API', value: 'REST API' },
+  { label: 'JWT', value: 'JWT' },
+  { label: 'OAuth', value: 'OAuth' },
+  { label: 'RBAC', value: 'RBAC' },
+  { label: 'Stripe', value: 'Stripe' },
+  { label: 'SSLCommerz', value: 'SSLCommerz' },
+  { label: 'Nodemailer', value: 'Nodemailer' },
+  { label: 'Cloudinary', value: 'Cloudinary' },
+  { label: 'Multer', value: 'Multer' },
+  { label: 'Redis', value: 'Redis' },
+  { label: 'Node-Cron', value: 'Node-Cron' },
+
+  // Database
+  { label: 'MongoDB', value: 'MongoDB' },
+  { label: 'Mongoose', value: 'Mongoose' },
+  { label: 'PostgreSQL', value: 'PostgreSQL' },
+  { label: 'Prisma', value: 'Prisma' },
+
+  // Tools
+  { label: 'Git', value: 'Git' },
+  { label: 'GitHub', value: 'GitHub' },
+  { label: 'Linux', value: 'Linux' },
+  { label: 'VS Code', value: 'VS Code' },
+  { label: 'ESLint', value: 'ESLint' },
+  { label: 'Prettier', value: 'Prettier' },
+  { label: 'Firebase', value: 'Firebase' },
+  { label: 'Vercel', value: 'Vercel' },
+  { label: 'Netlify', value: 'Netlify' },
+];
+
 const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialogProps) => {
   const coverInputRef = useRef<HTMLInputElement>(null);
   const coverFileRef = useRef<File | null>(null);
@@ -303,9 +351,53 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   render={({ field }) => (
                     <CreatableSelect
                       isMulti
+                      unstyled
+                      options={TECHNOLOGY_OPTIONS}
+                      placeholder="React, Node.js..."
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="React, Node.js..."
+                      classNames={{
+                        container: () => 'w-full',
+
+                        control: ({ isFocused }) =>
+                          `flex min-h-10 w-full items-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background ${
+                            isFocused ? 'border-ring ring-2 ring-ring' : 'border-input'
+                          }`,
+
+                        valueContainer: () => 'flex flex-wrap gap-1 bg-background',
+
+                        input: () => 'bg-background text-foreground',
+
+                        placeholder: () => 'text-muted-foreground',
+
+                        menu: () =>
+                          'mt-2 rounded-md border bg-popover text-popover-foreground shadow-md z-50',
+
+                        menuList: () => 'p-1 bg-popover',
+
+                        option: ({ isFocused, isSelected }) =>
+                          `cursor-pointer rounded-sm px-3 py-2 text-sm ${
+                            isSelected
+                              ? 'bg-accent text-accent-foreground'
+                              : isFocused
+                                ? 'bg-muted text-foreground'
+                                : 'bg-popover text-popover-foreground'
+                          }`,
+
+                        multiValue: () =>
+                          'flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5',
+
+                        multiValueLabel: () => 'text-sm text-secondary-foreground',
+
+                        multiValueRemove: ({ isFocused }) =>
+                          `ml-1 rounded-sm cursor-pointer transition-colors ${
+                            isFocused
+                              ? 'bg-destructive text-destructive-foreground'
+                              : 'bg-secondary-foreground/20 text-secondary-foreground hover:bg-destructive hover:text-destructive-foreground'
+                          }`,
+
+                        indicatorsContainer: () => 'text-muted-foreground',
+                      }}
                     />
                   )}
                 />

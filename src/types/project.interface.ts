@@ -19,6 +19,7 @@ export interface IProject {
   // Links
   githubUrl?: string;
   liveUrl?: string;
+  caseStudyUrl?: string;
 
   // Controls
   featured?: boolean;

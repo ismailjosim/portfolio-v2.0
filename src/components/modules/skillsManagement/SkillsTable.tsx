@@ -13,6 +13,7 @@ import SkillViewDetailDialog from './SkillViewDetailDialog';
 import { ISkill } from '@/src/models/Skill';
 import skillColumns from './skillColumns';
 import { deleteSkill } from '@/src/services/skill-management';
+import { SKILL_CATEGORIES } from '@/src/constants/skillCategories';
 
 interface SkillsTableProps {
   skills: ISkill[];
@@ -81,6 +82,7 @@ const SkillsTable = ({ skills }: SkillsTableProps) => {
         open={!!editingSkill}
         onClose={() => setEditingSkill(null)}
         skill={editingSkill!}
+        categories={SKILL_CATEGORIES}
         onSuccess={() => {
           setEditingSkill(null);
           handleRefresh();

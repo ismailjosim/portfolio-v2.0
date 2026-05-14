@@ -71,9 +71,9 @@ function extractArray<T>(data: unknown, key: string): T[] {
 export async function getDashboardData(): Promise<DashboardStats> {
   try {
     const [blogsRes, projectsRes, skillsRes] = await Promise.all([
-      serverFetch.get('/api/blogs?limit=100'),
-      serverFetch.get('/api/projects?limit=100'),
-      serverFetch.get('/api/skills?limit=100').catch(() => null),
+      serverFetch.get('/blogs?limit=100'),
+      serverFetch.get('/projects?limit=100'),
+      serverFetch.get('/skills?limit=100').catch(() => null),
     ]);
 
     const blogsData = blogsRes.ok ? await blogsRes.json() : [];

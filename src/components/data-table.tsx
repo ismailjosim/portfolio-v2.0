@@ -8,7 +8,8 @@ import { Button } from './ui/button';
 
 export interface Column<T> {
   header: string;
-  accessor: keyof T;
+  accessor: keyof T | ((row: T) => React.ReactNode);
+  sortKey?: keyof T;
   render?: (row: T) => React.ReactNode;
 }
 
@@ -35,7 +36,11 @@ export function DataTable<T extends { id: string }>({ columns, data }: DataTable
             <TableRow key={row.id}>
               {columns.map((col, i) => (
                 <TableCell key={i}>
-                  {col.render ? col.render(row) : (row[col.accessor] as React.ReactNode)}
+                  {col.render
+                    ? col.render(row)
+                    : typeof col.accessor === 'function'
+                      ? col.accessor(row)
+                      : (row[col.accessor] as React.ReactNode)}
                 </TableCell>
               ))}
 

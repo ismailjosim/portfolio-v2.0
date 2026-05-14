@@ -117,11 +117,14 @@ const SkillViewDetailDialog = ({ open, onClose, skill }: ISkillViewDialogProps) 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-muted/50 p-4 rounded-lg">
                 <div className="flex items-start gap-3">
                   <Calendar className="h-4 w-4 mt-1 text-muted-foreground shrink-0" />
-                  <InfoRow label="Created" value={formatDateTime(skill.createdAt as string)} />
+                  <InfoRow label="Created" value={formatDateTime(skill.createdAt)} />
                 </div>
                 <div className="flex items-start gap-3">
                   <Calendar className="h-4 w-4 mt-1 text-muted-foreground shrink-0" />
-                  <InfoRow label="Updated" value={formatDateTime(skill.updatedAt as string)} />
+                  <InfoRow
+                    label="Updated"
+                    value={formatDateTime(skill.updatedAt || skill.createdAt)}
+                  />
                 </div>
               </div>
             </div>

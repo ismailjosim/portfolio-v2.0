@@ -178,9 +178,9 @@ function IconPicker({ value, onChange }: IconPickerProps) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-80 p-0" align="start" side="bottom">
+      <PopoverContent className="w-80 p-0 bg-background" align="start" side="bottom">
         {/* Search */}
-        <div className="flex items-center gap-2 border-b px-3 py-2">
+        <div className="flex items-center gap-2 border-b px-3 py-2 bg-background">
           <Search size={14} className="text-muted-foreground shrink-0" />
           <input
             type="text"
@@ -192,7 +192,7 @@ function IconPicker({ value, onChange }: IconPickerProps) {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-7 gap-1 p-2 max-h-56 overflow-y-auto">
+        <div className="grid grid-cols-7 gap-1 p-2 max-h-80 overflow-y-auto scroll-smooth scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
           {filtered.length === 0 && (
             <p className="col-span-7 text-center text-xs text-muted-foreground py-4">
               No icons found
@@ -432,7 +432,7 @@ const SkillFormDialog = ({ open, onClose, onSuccess, skill, categories }: ISkill
                             <SelectValue placeholder="Select proficiency" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent position="popper" side="bottom">
                           {PROFICIENCY_LEVELS.map((level) => (
                             <SelectItem key={level.value} value={level.value}>
                               {level.label}
@@ -469,41 +469,42 @@ const SkillFormDialog = ({ open, onClose, onSuccess, skill, categories }: ISkill
                 />
               </div>
 
-              {/* ── Icon Picker ── */}
-              <FormField
-                control={form.control}
-                name="icon"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Icon</FormLabel>
-                    <FormControl>
-                      <IconPicker value={field.value ?? ''} onChange={field.onChange} />
-                    </FormControl>
-                    <p className="text-xs text-muted-foreground">
-                      Pick a Lucide icon from the palette above.
-                    </p>
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* ── Icon Picker ── */}
+                <FormField
+                  control={form.control}
+                  name="icon"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Icon</FormLabel>
+                      <FormControl className="bg-background border rounded-md p-2">
+                        <IconPicker value={field.value ?? ''} onChange={field.onChange} />
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground">
+                        Pick a Lucide icon from the palette above.
+                      </p>
+                    </FormItem>
+                  )}
+                />
 
-              {/* ── Description ── */}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        rows={3}
-                        placeholder="Brief description of your experience with this skill…"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
+                {/* ── Description ── */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={3}
+                          placeholder="Brief description of your experience with this skill…"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
               {/* ── Publish toggle ── */}
               <FormField
                 control={form.control}

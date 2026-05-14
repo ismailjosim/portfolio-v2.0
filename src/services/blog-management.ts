@@ -11,6 +11,7 @@ export interface IBlogPayload {
   summary?: string;
   slug?: string;
 }
+
 type GetBlogsParams = {
   page?: number;
   limit?: number;
@@ -22,20 +23,32 @@ type GetBlogsParams = {
 export async function createBlog(payload: IBlogPayload) {
   try {
     const res = await serverFetch.post('/blogs', {
-      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
       const result = await res.json();
-      return { success: false, ...result };
+
+      return {
+        success: false,
+        ...result,
+      };
     }
 
-    const blog = await res.json();
-    return { success: true, data: blog };
+    const blog = (await res.json()) as IBlog;
+
+    return {
+      success: true,
+      data: blog,
+    };
   } catch (error) {
-    return { success: false, message: 'Failed to create blog' };
+    console.error('createBlog', error);
+
+    return {
+      success: false,
+      message: 'Failed to create blog',
+    };
   }
 }
 
@@ -48,14 +61,26 @@ export async function updateBlog(slug: string, payload: IBlogPayload) {
 
     if (!res.ok) {
       const result = await res.json();
-      return { success: false, ...result };
+
+      return {
+        success: false,
+        ...result,
+      };
     }
 
     const blog = (await res.json()) as IBlog;
-    return { success: true, data: blog };
+
+    return {
+      success: true,
+      data: blog,
+    };
   } catch (error) {
     console.error('updateBlog', error);
-    return { success: false, message: 'Failed to update blog' };
+
+    return {
+      success: false,
+      message: 'Failed to update blog',
+    };
   }
 }
 
@@ -64,22 +89,26 @@ export async function getAllBlogs(params?: GetBlogsParams) {
     const query = new URLSearchParams();
 
     if (params?.page) query.set('page', String(params.page));
+
     if (params?.limit) query.set('limit', String(params.limit));
+
     if (params?.category) query.set('category', params.category);
+
     if (params?.tag) query.set('tag', params.tag);
+
     if (params?.search) query.set('search', params.search);
 
-    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/blogs${
-      query.toString() ? `?${query.toString()}` : ''
-    }`;
+    const endpoint = `/blogs${query.toString() ? `?${query.toString()}` : ''}`;
 
-    const res = await fetch(url, {
-      method: 'GET',
+    const res = await serverFetch.get(endpoint, {
       cache: 'no-store',
     });
 
     if (!res.ok) {
-      return { success: false, message: 'Failed to fetch blogs' };
+      return {
+        success: false,
+        message: 'Failed to fetch blogs',
+      };
     }
 
     const result = await res.json();
@@ -91,13 +120,18 @@ export async function getAllBlogs(params?: GetBlogsParams) {
     };
   } catch (error) {
     console.error('getAllBlogs', error);
-    return { success: false, message: 'Failed to fetch blogs' };
+
+    return {
+      success: false,
+      message: 'Failed to fetch blogs',
+    };
   }
 }
 
 export async function deleteBlog(slug: string) {
   try {
-    const res = await serverFetch.delete(`/api/blogs/${slug}`);
+    const res = await serverFetch.delete(`/blogs/${slug}`);
+
     const result = await res.json();
 
     if (!res.ok) {
@@ -123,23 +157,29 @@ export async function deleteBlog(slug: string) {
 
 export async function getSingleBlogBySlug(slug: string) {
   try {
-    // console.log({ slug })
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/blogs/${slug}`,
-      {
-        method: 'GET',
-      }
-    );
+    const res = await serverFetch.get(`/blogs/${slug}`);
 
     if (!res.ok) {
       const result = await res.json();
-      return { success: false, ...result };
+
+      return {
+        success: false,
+        ...result,
+      };
     }
 
     const blog = (await res.json()) as IBlog;
-    return { success: true, data: blog };
+
+    return {
+      success: true,
+      data: blog,
+    };
   } catch (error) {
     console.error('getSingleBlogBySlug', error);
-    return { success: false, message: 'Failed to fetch blog' };
+
+    return {
+      success: false,
+      message: 'Failed to fetch blog',
+    };
   }
 }

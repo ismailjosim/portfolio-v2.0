@@ -13,4 +13,5 @@ interface ISkill {
   groupId: string;
   order: number;
   createdAt: Date;
+  updatedAt?: Date;
 }
