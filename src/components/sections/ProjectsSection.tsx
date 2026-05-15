@@ -1,122 +1,198 @@
 'use client';
-import { Github } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ExternalLink, Github } from 'lucide-react';
 import FadeUp from '../ui/FadeUp';
 import { Button } from '../ui/button';
-import { projectsSectionData } from '../../dummyData/dummyData';
-import { TechTag } from '../../utils/TechTag';
-import { TechBadge } from '../../utils/TechBadge';
+import { Badge } from '../ui/badge';
+
+interface IProject {
+  _id: string;
+  name: string;
+  subtitle: string;
+  title: string;
+  type: string;
+  image: string;
+  technologies: string[];
+  features: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  featured?: boolean;
+  createdAt?: string;
+}
+
+interface ProjectDisplay extends IProject {
+  reverse?: boolean;
+  bullets: string[];
+}
 
 const ProjectsSection = () => {
+  const [projects, setProjects] = useState<ProjectDisplay[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const response = await fetch('/api/projects?limit=3');
+        const data = await response.json();
+
+        if (data.projects && data.projects.length > 0) {
+          const displayProjects: ProjectDisplay[] = data.projects.map(
+            (project: IProject, index: number) => ({
+              ...project,
+              reverse: index % 2 !== 0,
+              bullets: project.features.slice(0, 3),
+            })
+          );
+
+          setProjects(displayProjects);
+        }
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="projects" className="bg-background py-20 px-6">
+        <div className="container mx-auto">
+          <div className="flex items-center justify-center min-h-96">
+            <p className="text-muted-foreground">Loading projects...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section id="projects" className="bg-card py-20">
-      <div className="container mx-auto px-6">
+    <section id="projects" className="bg-background py-20 px-6">
+      <div className="container mx-auto">
+        {/* Header */}
         <FadeUp>
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
             Things I&apos;ve built
           </p>
-          <h2 className="text-4xl font-bold mb-12 text-foreground">Featured Projects</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
+            Featured Projects
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mb-12 leading-relaxed">
+            A selection of projects I&apos;ve worked on, showcasing modern engineering principles
+            and user-centric solutions.
+          </p>
         </FadeUp>
 
+        {/* Projects Grid */}
         <div className="space-y-12">
-          {projectsSectionData.map((project, i) => (
-            <FadeUp key={project.name} delay={i * 100}>
+          {projects.map((project, i) => (
+            <FadeUp key={project._id} delay={i * 100}>
               <div
-                className="group grid overflow-hidden rounded-2xl border border-border transition-all lg:grid-cols-2"
-                style={{ background: 'var(--card)' }}
+                className={`group grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${project.reverse ? 'lg:[&>*:first-child]:order-2' : ''}`}
               >
-                {/* Visual Side */}
-                <div
-                  className={`relative flex min-h-80 items-center justify-center overflow-hidden bg-linear-to-br ${project.gradient} ${
-                    project.reverse ? 'order-2' : ''
-                  }`}
-                >
-                  <div className="relative z-10 flex h-64 flex-col items-center justify-center text-center">
-                    <div className="mb-4 text-6xl">{project.emoji}</div>
-                    <div
-                      className="text-4xl font-bold text-accent-foreground"
-                      style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}
-                    >
-                      {project.name}
-                    </div>
-                    <div className="mt-2 text-xs leading-3 text-muted-foreground uppercase">
-                      {project.subtitle}
-                    </div>
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-8 opacity-0 bg-linear-to-t from-black via-black/50 to-transparent transition-opacity duration-300 group-hover:opacity-100">
-                    <p className="text-sm text-white">{project.bullets[0]}</p>
-                  </div>
+                {/* Image Column */}
+                <div className="relative overflow-hidden rounded-xl aspect-video shadow-sm group/img">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                  />
                 </div>
 
-                {/* Content Side */}
-                <div
-                  className={`p-8 flex flex-col justify-between ${
-                    project.reverse ? 'order-1' : ''
-                  }`}
-                >
-                  <div>
-                    {/* Tags */}
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <TechTag key={tag} tag={tag} />
-                      ))}
+                {/* Content Column */}
+                <div className="flex flex-col justify-center p-6 lg:p-8">
+                  {/* Title and Links */}
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">
+                        {project.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">{project.type}</p>
                     </div>
-
-                    {/* Title & Type */}
-                    <h3 className="mb-2 text-2xl font-bold text-foreground">{project.title}</h3>
-                    <p className="mb-6 text-sm text-muted-foreground">{project.type}</p>
-
-                    {/* Bullets */}
-                    <ul className="mb-6 space-y-3">
-                      {project.bullets.map((b) => (
-                        <li key={b} className="flex gap-3 text-sm text-muted-foreground">
-                          <span className="mt-0.5 shrink-0 font-bold text-accent">✓</span>
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Badges */}
-                    <div className="mb-6 flex flex-wrap gap-2">
-                      {project.badges.map((b) => (
-                        <TechBadge key={b} badge={b} />
-                      ))}
+                    <div className="flex gap-3 text-muted-foreground">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:text-primary transition-colors"
+                        >
+                          <Github className="w-5 h-5" />
+                        </a>
+                      )}
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:text-primary transition-colors"
+                        >
+                          <ExternalLink className="w-5 h-5" />
+                        </a>
+                      )}
                     </div>
                   </div>
 
-                  {/* GitHub Button */}
-                  {project.githubUrl && (
-                    <Button
-                      asChild
-                      variant="default"
-                      className="inline-flex w-fit items-center gap-2"
-                    >
-                      <a href={project.githubUrl} target="_blank" rel="noreferrer">
-                        <Github className="w-4 h-4" />
-                        View on GitHub
-                      </a>
-                    </Button>
-                  )}
+                  {/* Description */}
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                    {project.subtitle || project.title}
+                  </p>
+
+                  {/* Features */}
+                  <ul className="mb-6 space-y-2">
+                    {project.bullets.map((bullet) => (
+                      <li key={bullet} className="text-sm text-foreground flex gap-3">
+                        <span className="text-accent font-bold shrink-0">✓</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Tech Badges */}
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {project.technologies.slice(0, 4).map((tech) => (
+                      <Badge key={tech} variant="secondary" className="font-mono text-xs">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="flex gap-3">
+                    {project.liveUrl && (
+                      <Button asChild className="flex-1">
+                        <a href={project.liveUrl} target="_blank" rel="noreferrer">
+                          View Live
+                        </a>
+                      </Button>
+                    )}
+                    {project.githubUrl && (
+                      <Button asChild variant="outline">
+                        <a href={project.githubUrl} target="_blank" rel="noreferrer">
+                          <Github className="w-4 h-4" />
+                          Code
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </FadeUp>
           ))}
         </div>
 
-        {/* Footer Note */}
-        <FadeUp delay={200}>
-          <p className="mt-12 text-center text-sm text-muted-foreground">
-            More projects coming soon — follow me on{' '}
-            <a
-              href="https://github.com/ismailjosim"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold hover:underline text-accent"
-            >
-              GitHub
-            </a>
-          </p>
+        {/* Footer CTA */}
+        <FadeUp delay={300}>
+          <div className="mt-16 flex flex-col items-center gap-6">
+            <Button asChild size="lg">
+              <a href="/all-projects">View All Projects</a>
+            </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Explore more projects and solutions I&apos;ve built
+            </p>
+          </div>
         </FadeUp>
       </div>
     </section>

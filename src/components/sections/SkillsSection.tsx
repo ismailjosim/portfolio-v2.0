@@ -1,12 +1,107 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { skillGroups } from '../../dummyData/dummyData';
+import { useEffect, useState } from 'react';
+import { getIcon } from '../../lib/iconMapper';
 import FadeUp from '../ui/FadeUp';
+import { SkillGroup } from '../../interface/content.interface';
+
+interface Skill {
+  _id: string;
+  name: string;
+  category: string;
+  icon?: string;
+  proficiency: string;
+  description?: string;
+  order?: number;
+}
+
+interface SkillGroupData extends SkillGroup {
+  skills: (Omit<Skill, 'icon'> & { icon: any })[];
+}
 
 // --------------------------
 // Component
 // --------------------------
 export default function SkillsSection() {
+  const [skillGroups, setSkillGroups] = useState<SkillGroupData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchSkills() {
+      try {
+        const response = await fetch('/api/skills?limit=100&isPublished=true');
+        const data = await response.json();
+
+        if (data.skills) {
+          // Group skills by category
+          const groupedByCategory = data.skills.reduce(
+            (acc: Record<string, Skill[]>, skill: Skill) => {
+              if (!acc[skill.category]) {
+                acc[skill.category] = [];
+              }
+              acc[skill.category].push(skill);
+              return acc;
+            },
+            {}
+          );
+
+          // Transform to SkillGroup format
+          const groups: SkillGroupData[] = Object.entries(groupedByCategory).map(
+            ([category, skills]) => ({
+              label: category,
+              icon: getIcon(
+                category === 'Languages'
+                  ? 'Code2'
+                  : category === 'Frontend'
+                    ? 'Globe'
+                    : category === 'Styling & UI'
+                      ? 'Palette'
+                      : category === 'Backend'
+                        ? 'Server'
+                        : category === 'Database'
+                          ? 'Database'
+                          : 'Wrench'
+              ),
+              skills: (skills as Skill[]).map((skill) => ({
+                ...skill,
+                icon: getIcon(skill.icon),
+              })),
+            })
+          );
+
+          setSkillGroups(groups);
+        }
+      } catch (error) {
+        console.error('Failed to fetch skills:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSkills();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="skills" className="py-24 bg-background">
+        <div className="container mx-auto px-6">
+          <FadeUp>
+            <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
+              What I work with
+            </p>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-16">
+              Technical Skills
+            </h2>
+          </FadeUp>
+          <div className="flex items-center justify-center min-h-96">
+            <p className="text-muted-foreground">Loading skills...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="skills" className="py-24 bg-background">
       <div className="container mx-auto px-6">
@@ -38,9 +133,9 @@ export default function SkillsSection() {
 
                 {/* Skills */}
                 <div className="flex flex-wrap gap-3">
-                  {skills.map(({ name, icon: SkillIcon }) => (
+                  {skills.map(({ _id, name, icon: SkillIcon }) => (
                     <div
-                      key={name}
+                      key={_id}
                       className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-muted text-muted-foreground hover:bg-primary hover:text-white transition group cursor-default"
                     >
                       <SkillIcon
