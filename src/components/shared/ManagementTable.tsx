@@ -55,6 +55,14 @@ function ManagementTable<T>({
 
   const currentSortBy = searchParams.get('sortBy') || '';
   const currentOrderBy = searchParams.get('orderBy') || 'desc';
+  const ascendingFirstSortKeys = new Set([
+    'category',
+    'name',
+    'proficiency',
+    'status',
+    'title',
+    'type',
+  ]);
 
   const handleSort = (sortKey: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -64,9 +72,9 @@ function ManagementTable<T>({
       const newOrder = currentOrderBy === 'asc' ? 'desc' : 'asc';
       params.set('orderBy', newOrder);
     } else {
-      // New column, default to descending
+      const defaultOrder = ascendingFirstSortKeys.has(sortKey) ? 'asc' : 'desc';
       params.set('sortBy', sortKey);
-      params.set('orderBy', 'desc');
+      params.set('orderBy', defaultOrder);
     }
 
     params.set('page', '1'); // Reset to first page
@@ -151,7 +159,7 @@ function ManagementTable<T>({
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="bg-background border">
                           {onView && (
                             <DropdownMenuItem onClick={() => onView(item)}>
                               <Eye className="mr-2 h-4 w-4" />

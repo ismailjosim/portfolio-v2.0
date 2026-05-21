@@ -5,7 +5,6 @@ import SkillManagementHeader from '@/src/components/modules/skillsManagement/Ski
 import SkillsTable from '@/src/components/modules/skillsManagement/SkillsTable';
 import SkillFilter from '@/src/components/modules/skillsManagement/SkillFilter';
 import { getAllSkills } from '@/src/services/skill-management';
-import { queryStringFormatter } from '@/src/lib/formatters.ts';
 
 const SkillsPage = async ({
   searchParams,
@@ -13,7 +12,6 @@ const SkillsPage = async ({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const searchParamsObj = await searchParams;
-  const queryString = queryStringFormatter(searchParamsObj);
   const skillsResult = await getAllSkills({
     page: searchParamsObj.page ? Number(searchParamsObj.page) : undefined,
     limit: searchParamsObj.limit ? Number(searchParamsObj.limit) : undefined,
@@ -21,6 +19,8 @@ const SkillsPage = async ({
     proficiency:
       typeof searchParamsObj.proficiency === 'string' ? searchParamsObj.proficiency : undefined,
     search: typeof searchParamsObj.searchTerm === 'string' ? searchParamsObj.searchTerm : undefined,
+    sortBy: typeof searchParamsObj.sortBy === 'string' ? searchParamsObj.sortBy : undefined,
+    orderBy: typeof searchParamsObj.orderBy === 'string' ? searchParamsObj.orderBy : undefined,
   });
 
   const totalPages = Math.ceil(

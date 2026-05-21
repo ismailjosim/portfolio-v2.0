@@ -2,9 +2,53 @@
 
 import FadeUp from '../ui/FadeUp';
 import { Code2, ServerCog, Database, Layers, Users, Rocket } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { Card } from '../ui/card';
-import { areas } from '../../dummyData/dummyData';
+import type { IWorkArea } from '@/src/interface/content.interface';
+
+const areas: IWorkArea[] = [
+  {
+    Icon: Code2,
+    iconColor: 'text-orange-500',
+    iconBg: 'bg-orange-100 dark:bg-orange-500/20',
+    title: 'Frontend Development',
+    desc: 'Pixel-perfect, responsive UIs with React, Next.js, TypeScript, Tailwind CSS, and modern animation libraries.',
+  },
+  {
+    Icon: ServerCog,
+    iconColor: 'text-blue-500',
+    iconBg: 'bg-blue-100 dark:bg-blue-500/20',
+    title: 'Backend & API Development',
+    desc: 'Scalable RESTful APIs with Node.js, Express.js, JWT auth, Redis caching, and cloud integrations.',
+  },
+  {
+    Icon: Database,
+    iconColor: 'text-purple-500',
+    iconBg: 'bg-purple-100 dark:bg-purple-500/20',
+    title: 'Database Design',
+    desc: 'Efficient schema design with MongoDB, Mongoose ODM, and PostgreSQL for performant data access.',
+  },
+  {
+    Icon: Layers,
+    iconColor: 'text-pink-500',
+    iconBg: 'bg-pink-100 dark:bg-pink-500/20',
+    title: 'Full Stack MERN Apps',
+    desc: 'End-to-end application development with auth, payments (Stripe/SSLCommerz), real-time features, and deployment.',
+  },
+  {
+    Icon: Users,
+    iconColor: 'text-yellow-500',
+    iconBg: 'bg-yellow-100 dark:bg-yellow-500/20',
+    title: 'Web Mentoring',
+    desc: '1-on-1 or group mentoring for aspiring developers on React, Node.js, JavaScript, and career guidance.',
+  },
+  {
+    Icon: Rocket,
+    iconColor: 'text-green-500',
+    iconBg: 'bg-green-100 dark:bg-green-500/20',
+    title: 'Deployment & DevOps',
+    desc: 'Production-ready deployments on Vercel, Netlify, and Firebase with CI/CD and performance optimization.',
+  },
+];
 
 export default function WorkingAreasSection() {
   return (

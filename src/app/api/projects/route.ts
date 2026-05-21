@@ -16,8 +16,20 @@ export async function GET(req: Request) {
 
     const type = searchParams.get('type');
     const technology = searchParams.get('technology');
-    const search = searchParams.get('search');
+    const search = searchParams.get('search') ?? searchParams.get('searchTerm');
     const featured = searchParams.get('featured');
+    const sortBy = searchParams.get('sortBy') ?? 'order';
+    const sortOrder = searchParams.get('orderBy') === 'asc' ? 1 : -1;
+
+    const sortOptions: Record<string, Record<string, 1 | -1>> = {
+      title: { title: sortOrder, createdAt: -1 },
+      featured: { featured: sortOrder, order: 1, createdAt: -1 },
+      isPublished: { isPublished: sortOrder, order: 1, createdAt: -1 },
+      createdAt: { createdAt: sortOrder },
+      order: { order: sortOrder, createdAt: -1 },
+    };
+
+    const sort = sortOptions[sortBy] ?? sortOptions.order;
 
     const filter: Record<string, unknown> = {};
 
@@ -37,7 +49,7 @@ export async function GET(req: Request) {
     const [projects, total] = await Promise.all([
       Project.find(filter)
         .select('-__v')
-        .sort({ order: 1, createdAt: -1 })
+        .sort(sort)
         .skip((page - 1) * limit)
         .limit(limit)
         .lean(),

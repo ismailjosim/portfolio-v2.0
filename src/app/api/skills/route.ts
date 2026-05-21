@@ -14,8 +14,22 @@ export async function GET(req: Request) {
 
     const category = searchParams.get('category');
     const proficiency = searchParams.get('proficiency');
-    const search = searchParams.get('search');
+    const search = searchParams.get('search') ?? searchParams.get('searchTerm');
     const isPublished = searchParams.get('isPublished');
+    const sortBy = searchParams.get('sortBy') ?? 'order';
+    const sortOrder = searchParams.get('orderBy') === 'asc' ? 1 : -1;
+
+    const sortOptions: Record<string, Record<string, 1 | -1>> = {
+      name: { name: sortOrder, category: 1 },
+      proficiency: { proficiency: sortOrder, category: 1, name: 1 },
+      category: { category: sortOrder, name: 1 },
+      yearsOfExperience: { yearsOfExperience: sortOrder, name: 1 },
+      isPublished: { isPublished: sortOrder, category: 1, name: 1 },
+      createdAt: { createdAt: sortOrder },
+      order: { order: sortOrder, category: 1, name: 1 },
+    };
+
+    const sort = sortOptions[sortBy] ?? sortOptions.order;
 
     const filter: Record<string, unknown> = {};
 
@@ -36,7 +50,7 @@ export async function GET(req: Request) {
     const [skills, total] = await Promise.all([
       Skill.find(filter)
         .select('-__v')
-        .sort({ order: 1, category: 1, name: 1 })
+        .sort(sort)
         .skip((page - 1) * limit)
         .limit(limit)
         .lean(),

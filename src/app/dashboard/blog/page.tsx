@@ -18,6 +18,8 @@ const DashboardBlogPage = async ({
     category: typeof searchParamsObj.category === 'string' ? searchParamsObj.category : undefined,
     tag: typeof searchParamsObj.tag === 'string' ? searchParamsObj.tag : undefined,
     search: typeof searchParamsObj.searchTerm === 'string' ? searchParamsObj.searchTerm : undefined,
+    sortBy: typeof searchParamsObj.sortBy === 'string' ? searchParamsObj.sortBy : undefined,
+    orderBy: typeof searchParamsObj.orderBy === 'string' ? searchParamsObj.orderBy : undefined,
   });
 
   const totalPages = Math.ceil(

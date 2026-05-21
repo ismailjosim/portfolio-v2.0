@@ -18,6 +18,8 @@ type GetBlogsParams = {
   category?: string;
   tag?: string;
   search?: string;
+  sortBy?: string;
+  orderBy?: string;
 };
 
 export async function createBlog(payload: IBlogPayload) {
@@ -97,6 +99,10 @@ export async function getAllBlogs(params?: GetBlogsParams) {
     if (params?.tag) query.set('tag', params.tag);
 
     if (params?.search) query.set('search', params.search);
+
+    if (params?.sortBy) query.set('sortBy', params.sortBy);
+
+    if (params?.orderBy) query.set('orderBy', params.orderBy);
 
     const endpoint = `/blogs${query.toString() ? `?${query.toString()}` : ''}`;
 

@@ -9,7 +9,7 @@ import { DateCell } from '../../shared/DateCell';
 export interface Column<T> {
   header: string;
   accessor: keyof T | ((row: T) => React.ReactNode);
-  sortKey?: keyof T;
+  sortKey?: string;
 }
 
 export const blogColumns: Column<IBlog>[] = [
@@ -31,7 +31,9 @@ export const blogColumns: Column<IBlog>[] = [
           />
         </div>
         <div className="flex flex-col">
-          <span className="font-medium text-sm">{blog.title}</span>
+          <span className="font-medium text-sm">
+            {blog.title.length > 40 ? `${blog.title.substring(0, 40)}...` : blog.title}
+          </span>
           <span className="text-xs text-gray-500">{blog.slug}</span>
         </div>
       </div>
@@ -44,9 +46,15 @@ export const blogColumns: Column<IBlog>[] = [
     accessor: (blog) => (
       <div className="flex flex-col">
         <span className="text-sm">{blog.category}</span>
-        <span className="text-xs text-gray-500">{blog.tags?.join(', ')}</span>
+        <span className="text-xs text-gray-500">
+          {blog.tags && blog.tags.length > 0
+            ? blog.tags.slice(0, 3).join(', ') +
+              (blog.tags.length > 3 ? `, +${blog.tags.length - 4} more` : '')
+            : 'No tags'}
+        </span>
       </div>
     ),
+    sortKey: 'category',
   },
 
   {
@@ -69,7 +77,7 @@ export const blogColumns: Column<IBlog>[] = [
         </p>
       </div>
     ),
-    sortKey: 'views',
+    sortKey: 'engagement',
   },
 
   {

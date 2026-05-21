@@ -18,7 +18,27 @@ export async function GET(req: Request) {
 
     const category = searchParams.get('category');
     const tag = searchParams.get('tag');
-    const search = searchParams.get('search');
+    const search = searchParams.get('search') ?? searchParams.get('searchTerm');
+    const sortBy = searchParams.get('sortBy') ?? 'createdAt';
+    const sortOrder = searchParams.get('orderBy') === 'asc' ? 1 : -1;
+
+    const sortOptions: Record<string, Record<string, 1 | -1>> = {
+      title: { title: sortOrder, createdAt: -1 },
+      category: { category: sortOrder, title: 1 },
+      engagement: {
+        views: sortOrder,
+        likesCount: sortOrder,
+        commentsCount: sortOrder,
+        createdAt: -1,
+      },
+      views: { views: sortOrder, likesCount: sortOrder, commentsCount: sortOrder, createdAt: -1 },
+      likesCount: { likesCount: sortOrder, views: sortOrder, createdAt: -1 },
+      commentsCount: { commentsCount: sortOrder, views: sortOrder, createdAt: -1 },
+      createdAt: { createdAt: sortOrder },
+      status: { status: sortOrder, createdAt: -1 },
+    };
+
+    const sort = sortOptions[sortBy] ?? sortOptions.createdAt;
 
     const filter: Record<string, unknown> = {};
 
@@ -35,7 +55,7 @@ export async function GET(req: Request) {
     const [blogs, total] = await Promise.all([
       Blog.find(filter)
         .select('-__v')
-        .sort({ createdAt: -1 })
+        .sort(sort)
         .skip((page - 1) * limit)
         .limit(limit)
         .lean(),

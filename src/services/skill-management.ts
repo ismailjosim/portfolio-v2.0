@@ -20,6 +20,8 @@ type GetSkillsParams = {
   proficiency?: string;
   search?: string;
   isPublished?: boolean;
+  sortBy?: string;
+  orderBy?: string;
 };
 
 export async function createSkill(payload: ISkillPayload) {
@@ -38,7 +40,7 @@ export async function createSkill(payload: ISkillPayload) {
 
     const skill = await res.json();
     return { success: true, data: skill };
-  } catch (error) {
+  } catch {
     return { success: false, message: 'Failed to create skill' };
   }
 }
@@ -73,6 +75,8 @@ export async function getAllSkills(params?: GetSkillsParams) {
     if (params?.proficiency) query.set('proficiency', params.proficiency);
     if (params?.search) query.set('search', params.search);
     if (params?.isPublished !== undefined) query.set('isPublished', String(params.isPublished));
+    if (params?.sortBy) query.set('sortBy', params.sortBy);
+    if (params?.orderBy) query.set('orderBy', params.orderBy);
 
     const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/skills${
       query.toString() ? `?${query.toString()}` : ''

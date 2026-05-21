@@ -24,7 +24,7 @@ const BlogViewDetailDialog = ({ open, onClose, blog }: IBlogViewDialogProps) => 
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl w-full max-h-[90vh] flex flex-col px-px py-5 overflow-hidden">
+      <DialogContent className="max-w-none! w-2/3 max-h-[90vh] flex flex-col px-px py-5 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
           <DialogTitle>Blog Details</DialogTitle>
         </DialogHeader>

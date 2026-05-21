@@ -39,16 +39,6 @@ const projectColumns: Column<IProject>[] = [
   },
 
   {
-    header: 'Description',
-    accessor: (project) => (
-      <div className="flex flex-col">
-        <span className="text-sm">{project.subtitle}</span>
-        <span className="text-xs text-gray-500">{project.description?.substring(0, 50)}...</span>
-      </div>
-    ),
-  },
-
-  {
     header: 'Technologies',
     accessor: (project) => (
       <div className="text-sm flex flex-wrap gap-1">
