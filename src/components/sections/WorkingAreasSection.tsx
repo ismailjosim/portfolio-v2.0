@@ -52,10 +52,7 @@ const areas: IWorkArea[] = [
 
 export default function WorkingAreasSection() {
   return (
-    <section
-      id="workings"
-      className="flex justify-center items-center"
-    >
+    <section id="workings" className="flex justify-center items-center">
       <div className="container mx-auto w-full px-6">
         <FadeUp>
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
