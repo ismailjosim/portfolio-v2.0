@@ -71,11 +71,8 @@ const certifications = [
 
 export default function EducationSection() {
   return (
-    <section
-      id="education"
-      className="container mx-auto flex justify-center items-center py-20 lg:min-h-screen"
-    >
-      <div className="w-full px-4">
+    <section id="education" className="flex justify-center items-center">
+      <div className="container mx-auto w-full px-6">
         <FadeUp>
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
             Learning Path

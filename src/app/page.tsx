@@ -18,7 +18,7 @@ export default function HomePage() {
       <header>
         <Navbar />
       </header>
-      <main className="min-h-screen transition-all duration-300">
+      <main className="homepage-sections min-h-screen transition-all duration-300">
         <HeroSection />
         <AboutSection />
         <ProjectsSection />

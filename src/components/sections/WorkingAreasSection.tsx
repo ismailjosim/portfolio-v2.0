@@ -54,9 +54,9 @@ export default function WorkingAreasSection() {
   return (
     <section
       id="workings"
-      className="container mx-auto flex justify-center items-center lg:min-h-screen px-6 py-16"
+      className="flex justify-center items-center"
     >
-      <div className="w-full">
+      <div className="container mx-auto w-full px-6">
         <FadeUp>
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
             What I do

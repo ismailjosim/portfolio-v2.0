@@ -103,7 +103,7 @@ export default function SkillsSection() {
   }
 
   return (
-    <section id="skills" className="py-24 bg-background">
+    <section id="skills" className="py-24">
       <div className="container mx-auto px-6">
         {/* Header */}
         <FadeUp>

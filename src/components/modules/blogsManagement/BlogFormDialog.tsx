@@ -28,57 +28,16 @@ import { toast } from 'sonner';
 import { BlogStatus, IBlog, IBlogTag } from '../../../types/blog.interface';
 import { createBlog, updateBlog, IBlogPayload } from '../../../services/blog-management';
 import { uploadImage } from '@/src/services/upload.action';
+import { blogCategories, blogTags as TAG_OPTIONS_ARRAY } from '../../../constants/blogTaxonomy';
 
 // ─── Constants ─────────────────────────────────────────────
 
-const CATEGORIES = [
-  'Frontend',
-  'Backend',
-  'Full Stack',
-  'DevOps',
-  'Database',
-  'Authentication',
-  'Tutorial',
-  'Career',
-  'Case Study',
-];
+const CATEGORIES = Array.from(blogCategories);
 
-const TAG_OPTIONS = [
-  { value: 'HTML', label: 'HTML' },
-  { value: 'CSS', label: 'CSS' },
-  { value: 'JavaScript', label: 'JavaScript' },
-  { value: 'TypeScript', label: 'TypeScript' },
-  { value: 'React', label: 'React' },
-  { value: 'Next.js', label: 'Next.js' },
-  { value: 'Node.js', label: 'Node.js' },
-  { value: 'Express.js', label: 'Express.js' },
-  { value: 'MongoDB', label: 'MongoDB' },
-  { value: 'Mongoose', label: 'Mongoose' },
-  { value: 'Prisma', label: 'Prisma' },
-  { value: 'REST API', label: 'REST API' },
-  { value: 'Authentication', label: 'Authentication' },
-  { value: 'JWT', label: 'JWT' },
-  { value: 'Better Auth', label: 'Better Auth' },
-  { value: 'OAuth', label: 'OAuth' },
-  { value: 'Google Login', label: 'Google Login' },
-  { value: 'Docker', label: 'Docker' },
-  { value: 'Vercel', label: 'Vercel' },
-  { value: 'Git', label: 'Git' },
-  { value: 'GitHub', label: 'GitHub' },
-  { value: 'Tailwind CSS', label: 'Tailwind CSS' },
-  { value: 'shadcn/ui', label: 'shadcn/ui' },
-  { value: 'Redux', label: 'Redux' },
-  { value: 'TanStack Query', label: 'TanStack Query' },
-  { value: 'React Hook Form', label: 'React Hook Form' },
-  { value: 'Zod', label: 'Zod' },
-  { value: 'Performance', label: 'Performance' },
-  { value: 'SEO', label: 'SEO' },
-  { value: 'Bug Fixing', label: 'Bug Fixing' },
-  { value: 'Deployment', label: 'Deployment' },
-  { value: 'Project Setup', label: 'Project Setup' },
-  { value: 'Clean Code', label: 'Clean Code' },
-  { value: 'System Design', label: 'System Design' },
-];
+const TAG_OPTIONS = Array.from(TAG_OPTIONS_ARRAY).map((tag) => ({
+  value: tag,
+  label: tag,
+}));
 
 export const BLOG_STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft' },

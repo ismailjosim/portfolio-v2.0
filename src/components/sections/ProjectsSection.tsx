@@ -58,7 +58,7 @@ const ProjectsSection = () => {
 
   if (loading) {
     return (
-      <section id="projects" className="bg-background py-20 px-6">
+      <section id="projects" className="py-20 px-6">
         <div className="container mx-auto">
           <div className="flex items-center justify-center min-h-96">
             <p className="text-muted-foreground">Loading projects...</p>
@@ -69,7 +69,7 @@ const ProjectsSection = () => {
   }
 
   return (
-    <section id="projects" className="bg-background py-20 px-6">
+    <section id="projects" className="py-20 px-6">
       <div className="container mx-auto">
         {/* Header */}
         <FadeUp>
