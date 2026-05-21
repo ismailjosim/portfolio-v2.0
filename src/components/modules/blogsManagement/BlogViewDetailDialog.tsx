@@ -1,5 +1,6 @@
 import { BarChart2, BookOpen, Calendar, Heart, Link, MessageCircle, Tag } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { IBlog } from '../../../types/blog.interface';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Badge } from '../../ui/badge';
@@ -34,9 +35,11 @@ const BlogViewDetailDialog = ({ open, onClose, blog }: IBlogViewDialogProps) => 
           {/* Blog Header */}
           <div className="flex flex-col gap-4 p-5 bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 rounded-lg mb-6">
             {blog.coverImage && (
-              <img
+              <Image
                 src={blog.coverImage}
                 alt={blog.title}
+                width={1200}
+                height={300}
                 className="w-full h-48 rounded-lg object-cover border-4 border-white shadow-lg"
               />
             )}

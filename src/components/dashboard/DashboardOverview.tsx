@@ -7,7 +7,7 @@ import { SkillsInsightsCard } from './SkillsInsightsCard';
 import { ProjectsOverviewCard } from './ProjectsOverviewCard';
 import { RecentBlogsCard } from './RecentBlogsCard';
 
-import { BookOpen, FolderOpen, Zap, Eye, ThumbsUp, MessageCircle } from 'lucide-react';
+import { BookOpen, FolderOpen, Zap, Eye } from 'lucide-react';
 import DashboardPageHeader from '../shared/DashboardPageHeader';
 
 interface DashboardData {

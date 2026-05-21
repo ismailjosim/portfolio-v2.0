@@ -5,13 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/src/components/ui/button';
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/src/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/src/components/ui/field';
 import { Input } from '@/src/components/ui/input';
 import {
   Select,
@@ -34,7 +28,7 @@ const formSchema = z.object({
 
 const Example = () => {
   const form = useForm<z.infer<typeof formSchema>>({
-    // resolver: zodResolver(),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
       details: '',

@@ -1,6 +1,7 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import Image from 'next/image';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import MDEditor from '@uiw/react-md-editor';
 import { FileUp, Upload } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -119,7 +120,10 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
     }
   }, [blog, form]);
 
-  const coverPreview = form.watch('coverImagePreview');
+  const coverPreview = useWatch({
+    control: form.control,
+    name: 'coverImagePreview',
+  });
 
   // ─── Handlers ──────────────────────────────────────────
 
@@ -228,6 +232,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         </DialogHeader>
 
         <Form {...form}>
+          {/* eslint-disable-next-line react-hooks/refs */}
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
             <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
               {/* Title */}
@@ -390,9 +395,12 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
 
                 <div>
                   {coverPreview && (
-                    <img
+                    <Image
                       src={coverPreview}
                       alt="Cover preview"
+                      width={400}
+                      height={96}
+                      unoptimized
                       className="h-24 w-full rounded-sm object-cover border"
                     />
                   )}

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useRef, useEffect } from 'react';
+import Image from 'next/image';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { Upload, Plus, X } from 'lucide-react';
 import CreatableSelect from 'react-select/creatable';
 import { toast } from 'sonner';
@@ -116,8 +117,6 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
   const coverFileRef = useRef<File | null>(null);
   const demoFilesRef = useRef<File[]>([]);
 
-  const [demoImagesPreview, setDemoImagesPreview] = useState<string[]>([]);
-
   const isEdit = !!project?.slug;
 
   const form = useForm<ProjectFormValues>({
@@ -160,16 +159,22 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
         liveUrl: project.liveUrl || '',
         caseStudyUrl: project.caseStudyUrl || '',
       });
-      setDemoImagesPreview(project.demoImages || []);
       demoFilesRef.current = [];
     } else {
       form.reset();
-      setDemoImagesPreview([]);
       demoFilesRef.current = [];
     }
   }, [project, form]);
 
-  const imagePreview = form.watch('imagePreview');
+  const imagePreview = useWatch({
+    control: form.control,
+    name: 'imagePreview',
+  });
+  const demoImagesPreview =
+    useWatch({
+      control: form.control,
+      name: 'demoImagesPreview',
+    }) || [];
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -199,13 +204,11 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
     const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
     const updatedPreviews = [...demoImagesPreview, ...newPreviews];
 
-    setDemoImagesPreview(updatedPreviews);
     form.setValue('demoImagesPreview', updatedPreviews);
   };
 
   const handleRemoveDemoImage = (index: number) => {
     const updatedPreviews = demoImagesPreview.filter((_, i) => i !== index);
-    setDemoImagesPreview(updatedPreviews);
     form.setValue('demoImagesPreview', updatedPreviews);
 
     // Remove from files array if it's a newly uploaded file
@@ -217,7 +220,6 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
   const handleClose = () => {
     coverFileRef.current = null;
     demoFilesRef.current = [];
-    setDemoImagesPreview([]);
     form.reset();
     onClose();
   };
@@ -300,7 +302,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
 
       onSuccess();
       handleClose();
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong');
     }
   };
@@ -315,6 +317,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
         </DialogHeader>
 
         <Form {...form}>
+          {/* eslint-disable-next-line react-hooks/refs */}
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
             <div className="flex-1 overflow-y-auto space-y-4 px-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -533,8 +536,12 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                 />
 
                 {imagePreview && (
-                  <img
+                  <Image
                     src={imagePreview}
+                    alt="Project preview"
+                    width={600}
+                    height={144}
+                    unoptimized
                     className="h-36 w-full object-cover rounded-md border mt-3"
                   />
                 )}
@@ -569,9 +576,12 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   <div className="grid grid-cols-3 gap-3 mt-3">
                     {demoImagesPreview.map((preview, index) => (
                       <div key={index} className="relative group">
-                        <img
+                        <Image
                           src={preview}
                           alt={`Demo ${index + 1}`}
+                          width={240}
+                          height={96}
+                          unoptimized
                           className="h-24 w-full object-cover rounded-md border"
                         />
                         <button

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import FadeUp from '../ui/FadeUp';
 import { Phone, MapPin, Mail, Languages } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -57,7 +58,7 @@ export default function AboutSection() {
   // Slideshow Logic
   // --------------------------
   useEffect(() => {
-    const slides = swiperRef.current?.querySelectorAll<HTMLImageElement>('.slide-image');
+    const slides = swiperRef.current?.querySelectorAll<HTMLElement>('.slide-image');
     if (!slides || slides.length === 0) return;
 
     let current = 0;
@@ -130,10 +131,12 @@ export default function AboutSection() {
           <FadeUp delay={200}>
             <div ref={swiperRef} className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
               {aboutImages.map((item, i) => (
-                <img
+                <Image
                   key={i}
                   src={item}
                   alt={`About slide ${i + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="slide-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
                 />
               ))}

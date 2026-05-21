@@ -16,13 +16,6 @@ interface SkillsOverviewCardProps {
   skillsByCategory?: Record<string, number>;
 }
 
-const proficiencyColors = {
-  beginner: 'bg-blue-100 text-blue-800',
-  intermediate: 'bg-green-100 text-green-800',
-  advanced: 'bg-orange-100 text-orange-800',
-  expert: 'bg-red-100 text-red-800',
-};
-
 export const SkillsOverviewCard = ({
   skills,
   totalSkills,

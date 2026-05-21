@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react';
+import { ExternalLink, Github, Info } from 'lucide-react';
 import FadeUp from '../ui/FadeUp';
 
 export default function GitHubSection() {
@@ -16,20 +16,23 @@ export default function GitHubSection() {
         <FadeUp delay={100}>
           <div className="bg-card border border-border rounded-2xl sm:p-10 p-4 flex flex-col items-center gap-6">
             {/* Description */}
-            <p className="text-muted-foreground text-sm">Here&apos;s my recent GitHub snapshot.</p>
+            <p className="text-muted-foreground text-sm flex items-center gap-2">
+              <Github className="h-4 w-4 text-accent" />
+              Here&apos;s my recent GitHub snapshot.
+            </p>
 
             {/* Contribution Graph */}
 
-            <div className="w-full overflow-x-auto flex justify-center">
+            <div className="w-full overflow-x-auto rounded-xl border border-border bg-background/40 p-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="GitHub Contribution Graph for ismailjosim"
+                width={800}
+                height={200}
                 loading="lazy"
-                width="800"
-                height="200"
                 decoding="async"
-                data-nimg="1"
-                className="w-full h-auto rounded-lg mb-4 opacity-75 text-primary"
-                src="https://ghchart.rshah.org/ismailjosim"
+                className="mx-auto h-auto min-w-[720px] max-w-full rounded-lg opacity-90"
+                src="https://ghchart.rshah.org/00c6d7/ismailjosim"
               />
             </div>
 
@@ -43,9 +46,10 @@ export default function GitHubSection() {
               href="https://github.com/ismailjosim"
               target="_blank"
               rel="noreferrer"
-              className="text-accent font-semibold hover:underline transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-accent font-semibold hover:underline transition-colors text-sm"
             >
-              View My GitHub Profile →
+              View My GitHub Profile
+              <ExternalLink className="h-4 w-4" />
             </a>
           </div>
         </FadeUp>

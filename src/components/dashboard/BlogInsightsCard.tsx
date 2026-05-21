@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { TrendingUp, Eye, Heart, MessageSquare } from 'lucide-react';
+import { Eye, Heart, MessageSquare } from 'lucide-react';
 
 interface BlogMetrics {
   totalBlogs: number;

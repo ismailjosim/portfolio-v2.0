@@ -45,7 +45,7 @@ export async function createProject(payload: IProjectPayload) {
 
     const project = await res.json();
     return { success: true, data: project };
-  } catch (error) {
+  } catch {
     return { success: false, message: 'Failed to create project' };
   }
 }

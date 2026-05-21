@@ -1,4 +1,5 @@
 import { Code2, Zap, Link, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
+import Image from 'next/image';
 import { IProject } from '../../../types/project.interface';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { Badge } from '../../ui/badge';
@@ -27,9 +28,11 @@ const ProjectViewDetailDialog = ({ open, onClose, project }: IProjectViewDialogP
           {/* Project Header */}
           <div className="flex flex-col gap-4 p-5 bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-lg mb-6">
             {project.image && (
-              <img
+              <Image
                 src={project.image}
                 alt={project.title}
+                width={1200}
+                height={300}
                 className="w-full h-48 rounded-lg object-cover border-4 border-white shadow-lg"
               />
             )}

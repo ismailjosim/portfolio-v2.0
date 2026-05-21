@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import { Column } from '../../data-table';
 import { IBlog } from '../../../types/blog.interface';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';

@@ -25,10 +25,10 @@ export async function deleteCloudinaryImage(imageUrl: string): Promise<void> {
     }
 
     const publicId = match[1];
-    const result = await cloudinary.uploader.destroy(publicId);
+    await cloudinary.uploader.destroy(publicId);
 
     if (process.env.NODE_ENV === 'development') {
-      // console.log(`✅ Cloudinary image deleted: ${publicId}`, result)
+      // Cloudinary image deleted.
     }
   } catch (error) {
     console.error('Error deleting Cloudinary image:', error);

@@ -3,7 +3,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 import { Eye, Pencil, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import { Button } from './ui/button';
 
 export interface Column<T> {

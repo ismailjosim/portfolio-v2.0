@@ -1,4 +1,4 @@
-interface ISkillGroup {
+export interface ISkillGroup {
   id: string;
   label: string; // "Languages", "Frontend", etc.
   icon: string; // store icon name as string: "Code2", "Globe"
@@ -6,7 +6,7 @@ interface ISkillGroup {
   createdAt: Date;
 }
 
-interface ISkill {
+export interface ISkill {
   _id: string;
   name: string;
   icon: string;
