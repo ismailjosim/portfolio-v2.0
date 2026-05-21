@@ -4,6 +4,7 @@ import { IBlog } from '@/src/types/blog.interface';
 
 import { Input } from '@/src/components/ui/input';
 import BlogCard from '@/src/components/blogs/BlogCard';
+import BlogFilters from '@/src/components/blogs/BlogFilters';
 import Navbar from '@/src/components/shared/Navbar';
 import ScrollToTop from '@/src/components/ui/ScrollToTop';
 import TablePagination from '@/src/components/shared/TablePagination';
@@ -97,6 +98,10 @@ export default async function BlogsPage(props: {
                 className="pl-12 py-3 text-lg"
               />
             </form>
+
+            <div className="mt-8">
+              <BlogFilters />
+            </div>
           </div>
         </section>
 
