@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MessageCircle, Send, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatDateTime } from '@/src/lib/formatters.ts';
+import { CommentsSkeleton, EmptyState } from '../shared/PublicDataSkeletons';
 
 interface Comment {
   _id: string;
@@ -14,20 +15,19 @@ interface Comment {
 }
 
 export default function BlogCommentsSection({
-  blogId,
   initialCommentsCount,
   initialLikesCount,
   slug,
 }: any) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [count, setCount] = useState(initialCommentsCount);
-  const [likesCount, setLikesCount] = useState(initialLikesCount);
+  const [likesCount] = useState(initialLikesCount);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`
@@ -40,14 +40,14 @@ export default function BlogCommentsSection({
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
 
   useEffect(() => {
     const load = async () => {
       await fetchComments();
     };
     load();
-  }, [slug]);
+  }, [fetchComments]);
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ export default function BlogCommentsSection({
       setContent('');
 
       toast.success('Comment posted');
-    } catch (err) {
+    } catch {
       toast.error('Failed');
     } finally {
       setIsSubmitting(false);
@@ -129,8 +129,9 @@ export default function BlogCommentsSection({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm rounded-md bg-primary text-primary-foreground hover:opacity-90"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-primary text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
+              <Send className="h-4 w-4" />
               {isSubmitting ? 'Posting...' : 'Comment'}
             </button>
           </div>
@@ -140,9 +141,13 @@ export default function BlogCommentsSection({
       {/* Comments list */}
       <div className="space-y-4">
         {loading ? (
-          <p className="text-sm text-muted-foreground">Loading comments...</p>
+          <CommentsSkeleton />
         ) : comments.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No comments yet</p>
+          <EmptyState
+            icon="comments"
+            title="No comments yet"
+            description="Be the first to share a thought on this article."
+          />
         ) : (
           comments.map((c) => (
             <div key={c._id} className="flex gap-3">

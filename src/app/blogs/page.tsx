@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Search } from 'lucide-react';
 import { IBlog } from '@/src/types/blog.interface';
 
@@ -8,6 +9,7 @@ import BlogFilters from '@/src/components/blogs/BlogFilters';
 import Navbar from '@/src/components/shared/Navbar';
 import ScrollToTop from '@/src/components/ui/ScrollToTop';
 import TablePagination from '@/src/components/shared/TablePagination';
+import { BlogFilterSkeleton } from '@/src/components/shared/PublicDataSkeletons';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -100,7 +102,9 @@ export default async function BlogsPage(props: {
             </form>
 
             <div className="mt-8">
-              <BlogFilters />
+              <Suspense fallback={<BlogFilterSkeleton />}>
+                <BlogFilters />
+              </Suspense>
             </div>
           </div>
         </section>

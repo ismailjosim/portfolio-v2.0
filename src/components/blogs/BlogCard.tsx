@@ -1,7 +1,7 @@
 import { IBlog } from '@/src/types/blog.interface';
 import FadeUp from '../ui/FadeUp';
 import Image from 'next/image';
-import { Eye, Heart, MessageCircle } from 'lucide-react';
+import { Eye, FileText, Heart, MessageCircle } from 'lucide-react';
 
 interface BlogCardPros {
   blog: IBlog;
@@ -60,7 +60,7 @@ const BlogCard = ({ blog, index }: BlogCardPros) => {
           <div
             className={`bg-linear-to-br ${getCategoryColor(blog.category)} h-48 flex items-center justify-center overflow-hidden`}
           >
-            <div className="text-white opacity-40 text-4xl">📝</div>
+            <FileText className="h-12 w-12 text-white/50" />
           </div>
         )}
         <div className="p-6 flex flex-col flex-1">

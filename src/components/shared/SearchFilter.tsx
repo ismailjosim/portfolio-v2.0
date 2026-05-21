@@ -18,13 +18,14 @@ const SearchFilter = ({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const searchParamsString = searchParams.toString();
   const [value, setValue] = useState(searchParams.get(paramName) || '');
   const debouncedValue = useDebounce(value, 500);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParamsString);
 
-    const initialValue = searchParams.get(paramName) || '';
+    const initialValue = params.get(paramName) || '';
 
     if (debouncedValue === initialValue) {
       return;
@@ -41,7 +42,7 @@ const SearchFilter = ({
     startTransition(() => {
       router.push(`?${params.toString()}`);
     });
-  }, [debouncedValue, paramName, router]);
+  }, [debouncedValue, paramName, router, searchParamsString]);
 
   return (
     <div className="relative">

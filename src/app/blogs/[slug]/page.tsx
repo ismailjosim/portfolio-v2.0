@@ -1,6 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, MessageCircle, Calendar, Tag, Eye, ChevronLeft, BookOpen } from 'lucide-react';
+import {
+  Heart,
+  MessageCircle,
+  Calendar,
+  Tag,
+  Eye,
+  ChevronLeft,
+  BookOpen,
+  FileText,
+} from 'lucide-react';
 
 import BlogLikeButton from '@/src/components/blog/BlogLikeButton';
 import BlogCommentsSection from '@/src/components/blog/BlogCommentsSection';
@@ -75,16 +84,21 @@ export default async function BlogDetailsPage({ params }: BlogDetailsPageProps) 
       <main className="container mx-auto px-4 py-16">
         <article className="max-w-4xl mx-auto">
           {/* Cover Image */}
-          {/* {blog.coverImage && (	// )} */}
           <div className="relative w-full h-60 md:h-96 rounded-2xl overflow-hidden mb-10">
-            <Image
-              src={blog.coverImage}
-              alt={blog.title}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority
-            />
+            {blog.coverImage ? (
+              <Image
+                src={blog.coverImage}
+                alt={blog.title}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-cyan-500 to-blue-600">
+                <FileText className="h-16 w-16 text-white/50" />
+              </div>
+            )}
           </div>
 
           {/* Category + Tags */}

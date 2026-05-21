@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Github, ExternalLink } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
@@ -8,6 +9,7 @@ import FadeUp from '@/src/components/ui/FadeUp';
 import Navbar from '@/src/components/shared/Navbar';
 import Footer from '@/src/components/shared/Footer';
 import ScrollToTop from '@/src/components/ui/ScrollToTop';
+import { EmptyState, ProjectListSkeleton } from '@/src/components/shared/PublicDataSkeletons';
 
 interface IProject {
   _id: string;
@@ -83,13 +85,13 @@ export default function AllProjectsPage() {
             </FadeUp>
 
             {loading ? (
-              <div className="flex items-center justify-center min-h-96">
-                <p className="text-muted-foreground text-lg">Loading projects...</p>
-              </div>
+              <ProjectListSkeleton count={4} />
             ) : projects.length === 0 ? (
-              <div className="flex items-center justify-center min-h-96">
-                <p className="text-muted-foreground text-lg">No projects found.</p>
-              </div>
+              <EmptyState
+                icon="projects"
+                title="No projects found"
+                description="Published projects will show up here as soon as they are available."
+              />
             ) : (
               <div className="space-y-12">
                 {projects.map((project, i) => (
@@ -99,10 +101,12 @@ export default function AllProjectsPage() {
                     >
                       {/* Image Column */}
                       <div className="relative overflow-hidden rounded-xl aspect-video shadow-sm group/img">
-                        <img
+                        <Image
                           src={project.image}
                           alt={project.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover transition-transform duration-500 group-hover/img:scale-105"
                         />
                       </div>
 

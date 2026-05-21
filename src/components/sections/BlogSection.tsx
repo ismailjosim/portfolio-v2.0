@@ -6,6 +6,7 @@ import { IBlog } from '@/src/types/blog.interface';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import BlogCard from '../blogs/BlogCard';
+import { BlogGridSkeleton, EmptyState } from '../shared/PublicDataSkeletons';
 
 export default function BlogSection() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
@@ -49,13 +50,13 @@ export default function BlogSection() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Loading articles...</p>
-          </div>
+          <BlogGridSkeleton count={6} />
         ) : displayBlogs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No articles found.</p>
-          </div>
+          <EmptyState
+            icon="articles"
+            title="No articles published yet"
+            description="New writing will appear here as soon as it is published."
+          />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayBlogs.map((blog, i) => (

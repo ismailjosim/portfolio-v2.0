@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { FileText } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IBlog } from '@/src/types/blog.interface';
+import { BlogGridSkeleton } from '../shared/PublicDataSkeletons';
 
 interface RelatedBlogsProps {
   currentBlogId: string;
@@ -42,7 +44,12 @@ export default function RelatedBlogs({ currentBlogId, category }: RelatedBlogsPr
   }, [currentBlogId, category]);
 
   if (loading) {
-    return <div className="text-center py-8 text-muted-foreground">Loading related blogs...</div>;
+    return (
+      <section className="max-w-4xl mx-auto">
+        <h2 className="text-2xl font-bold mb-8">Related Articles</h2>
+        <BlogGridSkeleton count={3} />
+      </section>
+    );
   }
 
   if (relatedBlogs.length === 0) {
@@ -83,7 +90,7 @@ export default function RelatedBlogs({ currentBlogId, category }: RelatedBlogsPr
                 <div
                   className={`h-48 bg-linear-to-br ${getCategoryColor(blog.category)} flex items-center justify-center`}
                 >
-                  <div className="text-white opacity-40 text-4xl">📝</div>
+                  <FileText className="h-12 w-12 text-white/50" />
                 </div>
               )}
 

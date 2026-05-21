@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BlogLikeButtonProps {
@@ -10,7 +10,7 @@ interface BlogLikeButtonProps {
   slug: string;
 }
 
-export default function BlogLikeButton({ blogId, initialCount, slug }: BlogLikeButtonProps) {
+export default function BlogLikeButton({ initialCount, slug }: BlogLikeButtonProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [count, setCount] = useState(initialCount);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +55,11 @@ export default function BlogLikeButton({ blogId, initialCount, slug }: BlogLikeB
           : 'hover:bg-accent/10 hover:border-accent'
       } disabled:opacity-50 disabled:cursor-not-allowed`}
     >
-      <Heart className={`w-5 h-5 transition-transform ${isLiked ? 'fill-current' : ''}`} />
+      {isLoading ? (
+        <Loader2 className="w-5 h-5 animate-spin" />
+      ) : (
+        <Heart className={`w-5 h-5 transition-transform ${isLiked ? 'fill-current' : ''}`} />
+      )}
       <span>
         {count} {count === 1 ? 'like' : 'likes'}
       </span>
