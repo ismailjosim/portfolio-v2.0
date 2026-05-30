@@ -1,0 +1,325 @@
+import Image from 'next/image';
+import {
+  Activity,
+  BadgeCheck,
+  ChevronDown,
+  CheckCircle2,
+  Code2,
+  Database,
+  Flame,
+  Github,
+  KeyRound,
+  Layers3,
+  Server,
+  Terminal,
+  Globe,
+  Compass,
+  type LucideIcon,
+} from 'lucide-react';
+import { cn } from '@/src/lib/utils';
+import { Button } from '../ui/button';
+
+export interface ProjectCardProject {
+  _id: string;
+  name: string;
+  subtitle?: string;
+  title?: string;
+  type?: string;
+  image?: string;
+  demoImages?: string[];
+  description?: string;
+  technologies: string[];
+  features: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  serverGithubUrl?: string;
+  caseStudyUrl?: string;
+  featured?: boolean;
+}
+
+interface ProjectShowcaseCardProps {
+  project: ProjectCardProject;
+  reverse?: boolean;
+  priority?: boolean;
+}
+
+const TECH_ICON_MAP: Record<string, LucideIcon> = {
+  react: Code2,
+  'react.js': Code2,
+  next: Code2,
+  'next.js': Code2,
+  node: Server,
+  'node.js': Server,
+  express: Terminal,
+  'express.js': Terminal,
+  mongodb: Database,
+  mongo: Database,
+  firebase: Flame,
+  stripe: BadgeCheck,
+  jwt: KeyRound,
+  tailwind: Code2,
+  'tailwind css': Code2,
+  daisyui: Layers3,
+  'react router': Compass,
+  axios: Globe,
+};
+
+function getTechIcon(tech: string) {
+  const normalized = tech.trim().toLowerCase();
+  return TECH_ICON_MAP[normalized] ?? Code2;
+}
+
+function getProjectLinks(project: ProjectCardProject) {
+  const allUrls = [
+    project.liveUrl,
+    project.githubUrl,
+    project.caseStudyUrl,
+    project.serverGithubUrl,
+  ].filter(Boolean) as string[];
+
+  const liveSiteUrl = allUrls.find((url) => !url.includes('github.com'));
+  const gitHubUrls = allUrls.filter((url) => url.includes('github.com'));
+
+  const clientRepoUrl =
+    gitHubUrls.find((url) => url.toLowerCase().includes('client')) ||
+    gitHubUrls.find((url) => !url.toLowerCase().includes('server'));
+
+  const serverRepoUrl =
+    project.serverGithubUrl ||
+    project.caseStudyUrl ||
+    gitHubUrls.find((url) => url.toLowerCase().includes('server'));
+
+  return { liveSiteUrl, clientRepoUrl, serverRepoUrl };
+}
+
+export default function ProjectShowcaseCard({
+  project,
+  reverse = false,
+  priority = false,
+}: ProjectShowcaseCardProps) {
+  const features = project.features;
+  const visibleFeatures = features.slice(0, 5);
+  const hiddenFeatures = features.slice(5);
+  const technologies = project.technologies;
+  const subtitle = project.subtitle || 'A feature-rich web platform.';
+  const description = project.description || project.title || subtitle;
+  const previewImage = project.image || project.demoImages?.[0];
+
+  const { liveSiteUrl, clientRepoUrl, serverRepoUrl } = getProjectLinks(project);
+
+  return (
+    <article
+      className={cn(
+        'group relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10 dark:border-slate-800/60 dark:bg-[#0B1329] dark:text-slate-100 dark:hover:border-cyan-500/30 dark:hover:shadow-cyan-500/5',
+        reverse && 'lg:[&>div>.project-visual]:order-2'
+      )}
+    >
+      <div className="relative grid grid-cols-1 lg:grid-cols-12">
+        {/* Left Full Width Visual Showcase Column */}
+        <div className="project-visual relative flex min-h-80 flex-col justify-between overflow-hidden border-b border-border bg-slate-950 lg:col-span-5 lg:border-b-0 lg:border-r dark:border-slate-800 dark:bg-[#070D1E]">
+          {/* Bleeding Background Image Layer */}
+          {previewImage && (
+            <div className="absolute inset-0 z-0 h-full w-full overflow-hidden">
+              <Image
+                src={previewImage}
+                alt={`${project.name} Visual Artwork`}
+                fill
+                priority={priority}
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover mix-blend-luminosity transition-all duration-700 ease-out group-hover:scale-105 group-hover:mix-blend-normal"
+              />
+              {/* Dark overlays to maintain text readability over any background image */}
+              <div className="absolute inset-0 bg-slate-950/75 transition-opacity duration-500 group-hover:opacity-70 dark:bg-[#070D1E]/80 dark:group-hover:opacity-75" />
+              <div className="absolute inset-0 bg-linear-to-t from-[#070D1E] via-transparent to-[#070D1E]/40" />
+            </div>
+          )}
+
+          {/* Glow effects (placed behind text, over image layer) */}
+          <div className="absolute right-0 top-0 z-0 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl transition-opacity duration-500 group-hover:opacity-80" />
+
+          {/* Header Action Badges - Isolated with internal padding */}
+          <div className="relative z-10 flex items-center justify-between p-6">
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-emerald-400">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.7)]" />
+              Production Ready
+            </div>
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/80 px-3 py-1 font-mono text-[11px] text-cyan-300 backdrop-blur-xs dark:border-slate-800 dark:bg-slate-900/90 dark:text-cyan-400">
+              <Layers3 className="h-3 w-3" />
+              Featured
+            </div>
+          </div>
+
+          {/* Centered Identity Layout Wrapper */}
+          <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-8 my-auto">
+            <h3 className="max-w-xs text-3xl font-black uppercase tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              {project.name}
+            </h3>
+            <p className="mt-3 max-w-xs text-balance text-xs font-normal leading-relaxed text-slate-200 drop-shadow-md dark:text-slate-300">
+              {subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Details/Documentation Column */}
+        <div className="relative flex flex-col justify-between bg-card p-6 sm:p-8 lg:col-span-7 dark:bg-[#0A1124]">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-3xl dark:bg-cyan-500/5" />
+
+          <div className="relative">
+            {/* Project Framework Header Label */}
+            <div className="mb-5 flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+              <div>
+                <span className="inline-flex rounded-md border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-accent dark:border-cyan-500/30 dark:bg-cyan-500/10 dark:text-cyan-400">
+                  {project.type || 'Full Stack Web Application'}
+                </span>
+                <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground dark:text-white">
+                  {project.name}
+                </h2>
+              </div>
+              {/* Action Navigation Layout */}
+              {(liveSiteUrl || clientRepoUrl || serverRepoUrl) && (
+                <div className="flex w-full flex-wrap items-center justify-between gap-2.5 xl:w-md">
+                  {liveSiteUrl && (
+                    <Button
+                      asChild
+                      className="group/btn h-9 min-w-30 flex-1 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 font-mono text-[11px] uppercase tracking-wider text-cyan-400 transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-500 hover:text-slate-950 hover:shadow-[0_0_16px_rgba(34,211,238,0.18)]"
+                    >
+                      <a
+                        href={liveSiteUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-1.5"
+                      >
+                        <Compass className="h-3.5 w-3.5 transition-transform duration-500 group-hover/btn:rotate-180" />
+                        <span>Live Preview</span>
+                      </a>
+                    </Button>
+                  )}
+                  {clientRepoUrl && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="h-9 min-w-24 flex-1 rounded-md border-border bg-background/70 px-2.5 text-xs font-semibold text-foreground hover:border-accent/50 hover:bg-accent/10 hover:text-accent dark:border-slate-700/80 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:border-cyan-500/50 dark:hover:bg-slate-900 dark:hover:text-cyan-100"
+                    >
+                      <a
+                        href={clientRepoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-1.5"
+                      >
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-accent dark:border-slate-700 dark:bg-slate-900 dark:text-cyan-300">
+                          <Github className="h-3 w-3" />
+                        </span>
+                        <span>Client</span>
+                      </a>
+                    </Button>
+                  )}
+                  {serverRepoUrl && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="h-9 min-w-24 flex-1 rounded-md border-border bg-background/70 px-2.5 text-xs font-semibold text-foreground hover:border-accent/50 hover:bg-accent/10 hover:text-accent dark:border-slate-700/80 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:border-cyan-500/50 dark:hover:bg-slate-900 dark:hover:text-cyan-100"
+                    >
+                      <a
+                        href={serverRepoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-1.5"
+                      >
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-accent dark:border-slate-700 dark:bg-slate-900 dark:text-cyan-300">
+                          <Terminal className="h-3 w-3" />
+                        </span>
+                        <span>Server</span>
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+            {/* Comprehensive Meta-Description */}
+            <p className="mb-6 text-sm leading-relaxed text-muted-foreground dark:text-slate-300">
+              {description}
+            </p>
+
+            {/* Dynamic Features Render Block */}
+            {features.length > 0 && (
+              <div className="mb-6 rounded-xl border border-border bg-muted/35 p-4 dark:border-slate-800/80 dark:bg-slate-950/30">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground dark:text-slate-400">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-accent dark:text-cyan-400" />
+                    Key Features
+                  </h4>
+                  {features.length > 5 && (
+                    <span className="rounded-full bg-accent/10 px-2.5 py-1 text-[10px] font-semibold text-accent dark:bg-cyan-500/10 dark:text-cyan-300">
+                      {features.length} total
+                    </span>
+                  )}
+                </div>
+                <ul className="grid gap-2.5 sm:grid-cols-2">
+                  {visibleFeatures.map((feature) => (
+                    <li
+                      key={feature}
+                      className="flex items-start gap-2.5 text-xs text-muted-foreground dark:text-slate-300"
+                    >
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-accent dark:text-cyan-400">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                      </span>
+                      <span className="leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                {hiddenFeatures.length > 0 && (
+                  <details className="group/features mt-2">
+                    <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-border bg-background/80 px-3 py-2 text-xs font-semibold text-accent transition-colors hover:border-accent/50 hover:bg-accent/10 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-cyan-300 dark:hover:border-cyan-500/50 dark:hover:bg-cyan-500/10 dark:hover:text-cyan-200 [&::-webkit-details-marker]:hidden">
+                      <span className="group-open/features:hidden">
+                        More features +{hiddenFeatures.length}
+                      </span>
+                      <span className="hidden group-open/features:inline">Show fewer features</span>
+                      <ChevronDown className="h-3.5 w-3.5 transition-transform group-open/features:rotate-180" />
+                    </summary>
+                    <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
+                      {hiddenFeatures.map((feature) => (
+                        <li
+                          key={feature}
+                          className="flex items-start gap-2.5 text-xs text-muted-foreground dark:text-slate-300"
+                        >
+                          <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-accent dark:text-cyan-400">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          </span>
+                          <span className="leading-relaxed">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </div>
+            )}
+
+            {/* System Technology Ecosystem Architecture Badges */}
+            {technologies.length > 0 && (
+              <div className="mb-8">
+                <h4 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground dark:text-slate-400">
+                  <Activity className="h-3.5 w-3.5 text-accent dark:text-cyan-400" />
+                  Powered By Tech Stack
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {technologies.map((tech) => {
+                    const Icon = getTechIcon(tech);
+                    return (
+                      <span
+                        key={tech}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background/70 px-2.5 py-1 font-mono text-[11px] text-foreground transition-colors hover:border-accent/40 hover:bg-accent/5 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:border-cyan-500/40 dark:hover:bg-cyan-500/5"
+                      >
+                        <Icon className="h-3.5 w-3.5 text-accent/80 dark:text-cyan-400/80" />
+                        {tech}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}

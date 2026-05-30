@@ -1,15 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { Github, ExternalLink } from 'lucide-react';
-import { Button } from '@/src/components/ui/button';
-import { Badge } from '@/src/components/ui/badge';
 import FadeUp from '@/src/components/ui/FadeUp';
 import Navbar from '@/src/components/shared/Navbar';
 import Footer from '@/src/components/shared/Footer';
 import ScrollToTop from '@/src/components/ui/ScrollToTop';
 import { EmptyState, ProjectListSkeleton } from '@/src/components/shared/PublicDataSkeletons';
+import ProjectShowcaseCard from '@/src/components/projects/ProjectShowcaseCard';
 
 interface IProject {
   _id: string;
@@ -96,100 +93,11 @@ export default function AllProjectsPage() {
               <div className="space-y-12">
                 {projects.map((project, i) => (
                   <FadeUp key={project._id} delay={i * 50}>
-                    <div
-                      className={`group grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${project.reverse ? 'lg:[&>*:first-child]:order-2' : ''}`}
-                    >
-                      {/* Image Column */}
-                      <div className="relative overflow-hidden rounded-xl aspect-video shadow-sm group/img">
-                        <Image
-                          src={project.image}
-                          alt={project.name}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                          className="object-cover transition-transform duration-500 group-hover/img:scale-105"
-                        />
-                      </div>
-
-                      {/* Content Column */}
-                      <div className="flex flex-col justify-center p-6 lg:p-8">
-                        {/* Title and Links */}
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">
-                              {project.name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">{project.type}</p>
-                          </div>
-                          <div className="flex gap-3 text-muted-foreground">
-                            {project.githubUrl && (
-                              <a
-                                href={project.githubUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="hover:text-primary transition-colors"
-                                title="View on GitHub"
-                              >
-                                <Github className="w-5 h-5" />
-                              </a>
-                            )}
-                            {project.liveUrl && (
-                              <a
-                                href={project.liveUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="hover:text-primary transition-colors"
-                                title="Visit Live Site"
-                              >
-                                <ExternalLink className="w-5 h-5" />
-                              </a>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                          {project.subtitle || project.title}
-                        </p>
-
-                        {/* Features */}
-                        <ul className="mb-6 space-y-2">
-                          {project.bullets.map((bullet) => (
-                            <li key={bullet} className="text-sm text-foreground flex gap-3">
-                              <span className="text-accent font-bold shrink-0">✓</span>
-                              <span>{bullet}</span>
-                            </li>
-                          ))}
-                        </ul>
-
-                        {/* Tech Badges */}
-                        <div className="flex flex-wrap gap-2 mb-8">
-                          {project.technologies.slice(0, 5).map((tech) => (
-                            <Badge key={tech} variant="secondary" className="font-mono text-xs">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        {/* CTA Button */}
-                        <div className="flex gap-3">
-                          {project.liveUrl && (
-                            <Button asChild className="flex-1">
-                              <a href={project.liveUrl} target="_blank" rel="noreferrer">
-                                View Live
-                              </a>
-                            </Button>
-                          )}
-                          {project.githubUrl && (
-                            <Button asChild variant="outline">
-                              <a href={project.githubUrl} target="_blank" rel="noreferrer">
-                                <Github className="w-4 h-4" />
-                                Code
-                              </a>
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <ProjectShowcaseCard
+                      project={project}
+                      reverse={project.reverse}
+                      priority={i === 0}
+                    />
                   </FadeUp>
                 ))}
               </div>
