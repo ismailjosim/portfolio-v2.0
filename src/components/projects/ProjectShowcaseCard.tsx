@@ -1,6 +1,11 @@
+'use client';
+
 import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
 import {
   Activity,
+  ArrowRight,
   BadgeCheck,
   ChevronDown,
   CheckCircle2,
@@ -35,6 +40,7 @@ export interface ProjectCardProject {
   serverGithubUrl?: string;
   caseStudyUrl?: string;
   featured?: boolean;
+  slug?: string;
 }
 
 interface ProjectShowcaseCardProps {
@@ -70,26 +76,26 @@ function getTechIcon(tech: string) {
 }
 
 function getProjectLinks(project: ProjectCardProject) {
-  const allUrls = [
-    project.liveUrl,
-    project.githubUrl,
-    project.caseStudyUrl,
-    project.serverGithubUrl,
-  ].filter(Boolean) as string[];
+  const repoUrls = [project.githubUrl, project.serverGithubUrl, project.caseStudyUrl].filter(
+    (url): url is string => Boolean(url && url.includes('github.com'))
+  );
 
-  const liveSiteUrl = allUrls.find((url) => !url.includes('github.com'));
-  const gitHubUrls = allUrls.filter((url) => url.includes('github.com'));
+  const liveSiteUrl = project.liveUrl;
 
   const clientRepoUrl =
-    gitHubUrls.find((url) => url.toLowerCase().includes('client')) ||
-    gitHubUrls.find((url) => !url.toLowerCase().includes('server'));
+    repoUrls.find((url) => url.toLowerCase().includes('client')) ||
+    repoUrls.find((url) => !url.toLowerCase().includes('server'));
 
   const serverRepoUrl =
-    project.serverGithubUrl ||
-    project.caseStudyUrl ||
-    gitHubUrls.find((url) => url.toLowerCase().includes('server'));
+    [
+      project.serverGithubUrl,
+      project.caseStudyUrl,
+      repoUrls.find((url) => url.toLowerCase().includes('server')),
+    ].find((url) => url && url.includes('github.com') && url !== clientRepoUrl) || undefined;
 
-  return { liveSiteUrl, clientRepoUrl, serverRepoUrl };
+  const repoCount = new Set([clientRepoUrl, serverRepoUrl].filter(Boolean)).size;
+
+  return { liveSiteUrl, clientRepoUrl, serverRepoUrl, hasMultipleRepos: repoCount > 1 };
 }
 
 export default function ProjectShowcaseCard({
@@ -97,6 +103,7 @@ export default function ProjectShowcaseCard({
   reverse = false,
   priority = false,
 }: ProjectShowcaseCardProps) {
+  const [featuresExpanded, setFeaturesExpanded] = useState(false);
   const features = project.features;
   const visibleFeatures = features.slice(0, 5);
   const hiddenFeatures = features.slice(5);
@@ -105,7 +112,7 @@ export default function ProjectShowcaseCard({
   const description = project.description || project.title || subtitle;
   const previewImage = project.image || project.demoImages?.[0];
 
-  const { liveSiteUrl, clientRepoUrl, serverRepoUrl } = getProjectLinks(project);
+  const { liveSiteUrl, clientRepoUrl, serverRepoUrl, hasMultipleRepos } = getProjectLinks(project);
 
   return (
     <article
@@ -176,7 +183,7 @@ export default function ProjectShowcaseCard({
                 </h2>
               </div>
               {/* Action Navigation Layout */}
-              {(liveSiteUrl || clientRepoUrl || serverRepoUrl) && (
+              {(liveSiteUrl || clientRepoUrl || serverRepoUrl || project.slug) && (
                 <div className="flex w-full flex-wrap items-center justify-between gap-2.5 xl:w-md">
                   {liveSiteUrl && (
                     <Button
@@ -209,7 +216,7 @@ export default function ProjectShowcaseCard({
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-accent dark:border-slate-700 dark:bg-slate-900 dark:text-cyan-300">
                           <Github className="h-3 w-3" />
                         </span>
-                        <span>Client</span>
+                        <span>{hasMultipleRepos ? 'Client Repo' : 'Repo Link'}</span>
                       </a>
                     </Button>
                   )}
@@ -228,8 +235,23 @@ export default function ProjectShowcaseCard({
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-accent dark:border-slate-700 dark:bg-slate-900 dark:text-cyan-300">
                           <Terminal className="h-3 w-3" />
                         </span>
-                        <span>Server</span>
+                        <span>{hasMultipleRepos ? 'Server Repo' : 'Repo Link'}</span>
                       </a>
+                    </Button>
+                  )}
+                  {project.slug && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="h-9 min-w-24 flex-1 rounded-md border-border bg-background/70 px-2.5 text-xs font-semibold text-foreground hover:border-accent/50 hover:bg-accent/10 hover:text-accent dark:border-slate-700/80 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:border-cyan-500/50 dark:hover:bg-slate-900 dark:hover:text-cyan-100"
+                    >
+                      <Link
+                        href={`/projects/${project.slug}`}
+                        className="flex items-center justify-center gap-1.5"
+                      >
+                        <span>Details</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
                     </Button>
                   )}
                 </div>
@@ -254,7 +276,7 @@ export default function ProjectShowcaseCard({
                     </span>
                   )}
                 </div>
-                <ul className="grid gap-2.5 sm:grid-cols-2">
+                <ul className="space-y-4">
                   {visibleFeatures.map((feature) => (
                     <li
                       key={feature}
@@ -268,28 +290,41 @@ export default function ProjectShowcaseCard({
                   ))}
                 </ul>
                 {hiddenFeatures.length > 0 && (
-                  <details className="group/features mt-2">
-                    <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-border bg-background/80 px-3 py-2 text-xs font-semibold text-accent transition-colors hover:border-accent/50 hover:bg-accent/10 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-cyan-300 dark:hover:border-cyan-500/50 dark:hover:bg-cyan-500/10 dark:hover:text-cyan-200 [&::-webkit-details-marker]:hidden">
-                      <span className="group-open/features:hidden">
-                        More features +{hiddenFeatures.length}
+                  <>
+                    {featuresExpanded && (
+                      <ul className="space-y-4 mt-4">
+                        {hiddenFeatures.map((feature) => (
+                          <li
+                            key={feature}
+                            className="flex items-start gap-2.5 text-xs text-muted-foreground dark:text-slate-300"
+                          >
+                            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-accent dark:text-cyan-400">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                            </span>
+                            <span className="leading-relaxed">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => setFeaturesExpanded((current) => !current)}
+                      className="mt-3 inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-border bg-background/80 px-3 py-2 text-xs font-semibold text-accent transition-colors hover:border-accent/50 hover:bg-accent/10 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-cyan-300 dark:hover:border-cyan-500/50 dark:hover:bg-cyan-500/10 dark:hover:text-cyan-200"
+                    >
+                      <span>
+                        {featuresExpanded
+                          ? 'Show fewer features'
+                          : `More features +${hiddenFeatures.length}`}
                       </span>
-                      <span className="hidden group-open/features:inline">Show fewer features</span>
-                      <ChevronDown className="h-3.5 w-3.5 transition-transform group-open/features:rotate-180" />
-                    </summary>
-                    <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
-                      {hiddenFeatures.map((feature) => (
-                        <li
-                          key={feature}
-                          className="flex items-start gap-2.5 text-xs text-muted-foreground dark:text-slate-300"
-                        >
-                          <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-accent dark:text-cyan-400">
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                          </span>
-                          <span className="leading-relaxed">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
+                      <ChevronDown
+                        className={cn(
+                          'h-3.5 w-3.5 transition-transform',
+                          featuresExpanded && 'rotate-180'
+                        )}
+                      />
+                    </button>
+                  </>
                 )}
               </div>
             )}

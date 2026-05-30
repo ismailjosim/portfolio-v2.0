@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Plus, Search, Check } from 'lucide-react';
+import { Plus, Search, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as LucideIcons from 'lucide-react';
 
@@ -319,6 +319,7 @@ const SkillFormDialog = ({ open, onClose, onSuccess, skill, categories }: ISkill
   }, [skill, form]);
 
   const handleClose = () => {
+    if (form.formState.isSubmitting) return;
     form.reset();
     onClose();
   };
@@ -527,12 +528,27 @@ const SkillFormDialog = ({ open, onClose, onSuccess, skill, categories }: ISkill
 
             {/* ── Footer ── */}
             <div className="flex justify-end gap-2 pt-4 border-t mt-2">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={form.formState.isSubmitting}
+              >
                 Cancel
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                <Plus className="h-4 w-4 mr-2" />
-                {form.formState.isSubmitting ? 'Saving…' : isEdit ? 'Update Skill' : 'Create Skill'}
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Plus className="h-4 w-4 mr-2" />
+                )}
+                {form.formState.isSubmitting
+                  ? isEdit
+                    ? 'Updating...'
+                    : 'Creating...'
+                  : isEdit
+                    ? 'Update Skill'
+                    : 'Create Skill'}
               </Button>
             </div>
           </form>

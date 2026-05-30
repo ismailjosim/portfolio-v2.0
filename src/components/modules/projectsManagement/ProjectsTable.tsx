@@ -53,14 +53,17 @@ const ProjectsTable = ({ projects }: ProjectsTableProps) => {
   const confirmDelete = async () => {
     if (!deletingProject) return;
     setIsDeleting(true);
-    const result = await deleteProject(deletingProject.slug as string);
-    setIsDeleting(false);
-    if (result.success) {
-      toast.success(result.message || 'Project deleted successfully');
-      setDeletingProject(null);
-      handleRefresh();
-    } else {
-      toast.error(result.message || 'Failed to delete Project');
+    try {
+      const result = await deleteProject(deletingProject.slug as string);
+      if (result.success) {
+        toast.success(result.message || 'Project deleted successfully');
+        setDeletingProject(null);
+        handleRefresh();
+      } else {
+        toast.error(result.message || 'Failed to delete Project');
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 

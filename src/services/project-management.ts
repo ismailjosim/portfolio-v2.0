@@ -27,6 +27,26 @@ export interface IProjectPayload {
   slug?: string;
 }
 
+function getProjectErrorMessage(result: { message?: string; error?: string; errors?: unknown }) {
+  if (result.message) return result.message;
+  if (result.error) return result.error;
+
+  if (result.errors && typeof result.errors === 'object') {
+    return Object.values(result.errors)
+      .map((error) => {
+        if (typeof error === 'string') return error;
+        if (error && typeof error === 'object' && 'message' in error) {
+          return String(error.message);
+        }
+        return null;
+      })
+      .filter(Boolean)
+      .join(', ');
+  }
+
+  return undefined;
+}
+
 /* =========================
    Create Project
 ========================= */
@@ -40,7 +60,7 @@ export async function createProject(payload: IProjectPayload) {
 
     if (!res.ok) {
       const result = await res.json();
-      return { success: false, ...result };
+      return { success: false, message: getProjectErrorMessage(result), ...result };
     }
 
     const project = await res.json();
@@ -62,7 +82,7 @@ export async function updateProject(slug: string, payload: IProjectPayload) {
 
     if (!res.ok) {
       const result = await res.json();
-      return { success: false, ...result };
+      return { success: false, message: getProjectErrorMessage(result), ...result };
     }
 
     const project = (await res.json()) as IProject;

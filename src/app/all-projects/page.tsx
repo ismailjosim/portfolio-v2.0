@@ -21,6 +21,7 @@ interface IProject {
   liveUrl?: string;
   featured?: boolean;
   createdAt?: string;
+  slug?: string;
 }
 
 interface ProjectDisplay extends IProject {

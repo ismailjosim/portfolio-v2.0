@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm, Controller, useWatch } from 'react-hook-form';
-import { Upload, Plus, X } from 'lucide-react';
+import { Upload, Plus, X, Loader2 } from 'lucide-react';
 import CreatableSelect from 'react-select/creatable';
 import { toast } from 'sonner';
 
@@ -137,6 +137,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
       caseStudyUrl: '',
     },
   });
+  const isSubmitting = form.formState.isSubmitting;
 
   useEffect(() => {
     if (project) {
@@ -210,6 +211,10 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
   const handleRemoveDemoImage = (index: number) => {
     const updatedPreviews = demoImagesPreview.filter((_, i) => i !== index);
     form.setValue('demoImagesPreview', updatedPreviews);
+    form.setValue(
+      'demoImages',
+      updatedPreviews.filter((preview) => !preview.startsWith('blob:'))
+    );
 
     // Remove from files array if it's a newly uploaded file
     if (index < demoFilesRef.current.length) {
@@ -218,6 +223,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
   };
 
   const handleClose = () => {
+    if (isSubmitting) return;
     coverFileRef.current = null;
     demoFilesRef.current = [];
     form.reset();
@@ -226,7 +232,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
 
   const onSubmit = async (data: ProjectFormValues) => {
     try {
-      let imageUrl = data.image;
+      let imageUrl = data.image || (isEdit ? project?.image : '');
 
       if (coverFileRef.current) {
         const formData = new FormData();
@@ -472,20 +478,6 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                     </FormItem>
                   )}
                 />
-                {/* Todo: IF repo is more then one */}
-                {/* <FormField
-                  control={form.control}
-                  name="githubUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>GitHub URL</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="https://github.com/your-rep-link" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                /> */}
-
                 <FormField
                   control={form.control}
                   name="liveUrl"
@@ -503,9 +495,9 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   name="caseStudyUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Case Study URL</FormLabel>
+                      <FormLabel>Server Repo Link</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="http://localhost:3000" />
+                        <Input {...field} placeholder="https://github.com/your-server-repo" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -521,6 +513,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   type="button"
                   variant="outline"
                   onClick={() => coverInputRef.current?.click()}
+                  disabled={isSubmitting}
                   className="w-full justify-start gap-2"
                 >
                   <Upload className="h-4 w-4" />
@@ -556,7 +549,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                   type="button"
                   variant="outline"
                   onClick={() => demoImagesInputRef.current?.click()}
-                  disabled={demoImagesPreview.length >= MAX_DEMO_IMAGES}
+                  disabled={isSubmitting || demoImagesPreview.length >= MAX_DEMO_IMAGES}
                   className="w-full justify-start gap-2"
                 >
                   <Upload className="h-4 w-4" />
@@ -587,6 +580,7 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
                         <button
                           type="button"
                           onClick={() => handleRemoveDemoImage(index)}
+                          disabled={isSubmitting}
                           className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <X className="h-3 w-3" />
@@ -598,13 +592,23 @@ const ProjectFormDialog = ({ open, onClose, onSuccess, project }: IProjectDialog
               </FormItem>
             </div>
             <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
                 Cancel
               </Button>
 
-              <Button type="submit">
-                <Plus className="h-4 w-4 mr-2" />
-                {isEdit ? 'Update Project' : 'Create Project'}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Plus className="h-4 w-4 mr-2" />
+                )}
+                {isSubmitting
+                  ? isEdit
+                    ? 'Updating...'
+                    : 'Creating...'
+                  : isEdit
+                    ? 'Update Project'
+                    : 'Create Project'}
               </Button>
             </div>
           </form>

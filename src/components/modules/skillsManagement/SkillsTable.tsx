@@ -54,14 +54,17 @@ const SkillsTable = ({ skills }: SkillsTableProps) => {
   const confirmDelete = async () => {
     if (!deletingSkill?._id) return;
     setIsDeleting(true);
-    const result = await deleteSkill(deletingSkill._id.toString());
-    setIsDeleting(false);
-    if (result.success) {
-      toast.success(result.message || 'Skill deleted successfully');
-      setDeletingSkill(null);
-      handleRefresh();
-    } else {
-      toast.error(result.message || 'Failed to delete skill');
+    try {
+      const result = await deleteSkill(deletingSkill._id.toString());
+      if (result.success) {
+        toast.success(result.message || 'Skill deleted successfully');
+        setDeletingSkill(null);
+        handleRefresh();
+      } else {
+        toast.error(result.message || 'Failed to delete skill');
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 

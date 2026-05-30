@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import MDEditor from '@uiw/react-md-editor';
-import { FileUp, Upload } from 'lucide-react';
+import { FileUp, Loader2, Upload } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 // shadcn ui
@@ -156,6 +156,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
   };
 
   const handleClose = () => {
+    if (form.formState.isSubmitting) return;
     coverFileRef.current = null;
     form.reset();
     onClose();
@@ -386,6 +387,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
                       variant="outline"
                       className="w-full justify-start gap-2 mt-3"
                       onClick={() => coverInputRef.current?.click()}
+                      disabled={form.formState.isSubmitting}
                     >
                       <Upload className="h-4 w-4" />
                       {coverPreview ? 'Change Cover Image' : 'Upload Cover Image'}
@@ -423,6 +425,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
                     size="sm"
                     className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                     onClick={() => mdFileInputRef.current?.click()}
+                    disabled={form.formState.isSubmitting}
                   >
                     <span>Upload .md</span>
                     <FileUp className="h-4 w-4" />
@@ -467,8 +470,11 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
                 Cancel
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 {form.formState.isSubmitting
-                  ? 'Saving...'
+                  ? isEdit
+                    ? 'Updating...'
+                    : 'Publishing...'
                   : isEdit
                     ? 'Update Post'
                     : 'Publish Post'}

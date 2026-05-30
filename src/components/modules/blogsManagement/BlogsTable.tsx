@@ -50,14 +50,17 @@ const BlogsTable = ({ blogs }: BlogTableProps) => {
   const confirmDelete = async () => {
     if (!deletingBlog) return;
     setIsDeleting(true);
-    const result = await deleteBlog(deletingBlog.slug as string);
-    setIsDeleting(false);
-    if (result.success) {
-      toast.success(result.message || 'Blog deleted successfully');
-      setDeletingBlog(null);
-      handleRefresh();
-    } else {
-      toast.error(result.message || 'Failed to delete blog');
+    try {
+      const result = await deleteBlog(deletingBlog.slug as string);
+      if (result.success) {
+        toast.success(result.message || 'Blog deleted successfully');
+        setDeletingBlog(null);
+        handleRefresh();
+      } else {
+        toast.error(result.message || 'Failed to delete blog');
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 
