@@ -16,40 +16,8 @@ interface StatsCardProps {
     isPositive: boolean;
     label?: string;
   };
-  accentColor?: 'cyan' | 'purple' | 'emerald' | 'amber';
   href?: string;
 }
-
-const colorVariants = {
-  cyan: {
-    bg: 'from-cyan-500/10 via-primary/5 to-transparent',
-    iconBg: 'bg-primary/10 text-primary border-primary/20',
-    border: 'hover:border-primary/40',
-    glow: 'group-hover:shadow-[0_0_25px_rgba(1,180,186,0.15)]',
-    badge: 'bg-primary/10 text-primary border-primary/20',
-  },
-  purple: {
-    bg: 'from-purple-500/10 via-indigo-500/5 to-transparent',
-    iconBg: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
-    border: 'hover:border-purple-500/40',
-    glow: 'group-hover:shadow-[0_0_25px_rgba(168,85,247,0.15)]',
-    badge: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  },
-  emerald: {
-    bg: 'from-emerald-500/10 via-teal-500/5 to-transparent',
-    iconBg: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-    border: 'hover:border-emerald-500/40',
-    glow: 'group-hover:shadow-[0_0_25px_rgba(16,185,129,0.15)]',
-    badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  },
-  amber: {
-    bg: 'from-amber-500/10 via-orange-500/5 to-transparent',
-    iconBg: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-    border: 'hover:border-amber-500/40',
-    glow: 'group-hover:shadow-[0_0_25px_rgba(245,158,11,0.15)]',
-    badge: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  },
-};
 
 export const StatsCard = ({
   icon: Icon,
@@ -59,26 +27,19 @@ export const StatsCard = ({
   subValue,
   badge,
   trend,
-  accentColor = 'cyan',
   href,
 }: StatsCardProps) => {
-  const colors = colorVariants[accentColor];
-
   const content = (
     <div
       className={cn(
         'group relative overflow-hidden rounded-2xl border border-border/80 bg-card/70 backdrop-blur-xl p-5 transition-all duration-300 hover:-translate-y-1',
-        colors.border,
-        colors.glow,
+        'hover:border-primary/40',
         'dark:bg-[#0A1124]/90 dark:border-slate-800/80'
       )}
     >
       {/* Background Accent Gradient */}
       <div
-        className={cn(
-          'pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-linear-to-br blur-2xl transition-opacity duration-500 opacity-50 group-hover:opacity-100',
-          colors.bg
-        )}
+        className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-linear-to-br from-primary/10 via-accent/5 to-transparent blur-2xl transition-opacity duration-500 opacity-50 group-hover:opacity-100"
       />
 
       <div className="relative z-10 flex items-start justify-between gap-3">
@@ -89,10 +50,7 @@ export const StatsCard = ({
             </span>
             {badge && (
               <span
-                className={cn(
-                  'rounded-full border px-2 py-0.5 text-[10px] font-semibold',
-                  colors.badge
-                )}
+                className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-primary/10 text-primary border-primary/20"
               >
                 {badge}
               </span>
@@ -109,10 +67,7 @@ export const StatsCard = ({
         </div>
 
         <div
-          className={cn(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-110',
-            colors.iconBg
-          )}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-110 bg-primary/10 text-primary border-primary/20"
         >
           <Icon className="h-5 w-5" />
         </div>

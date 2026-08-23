@@ -24,24 +24,24 @@ interface SkillsInsightsCardProps {
 
 const proficiencyColors: Record<string, { bar: string; text: string; bg: string }> = {
   expert: {
-    bar: 'bg-linear-to-r from-purple-500 to-indigo-500',
-    text: 'text-purple-400',
-    bg: 'bg-purple-500/10 border-purple-500/20',
+    bar: 'bg-linear-to-r from-primary to-accent',
+    text: 'text-primary',
+    bg: 'bg-primary/10 border-primary/20',
   },
   advanced: {
-    bar: 'bg-linear-to-r from-cyan-500 to-primary',
-    text: 'text-cyan-400',
-    bg: 'bg-cyan-500/10 border-cyan-500/20',
+    bar: 'bg-linear-to-r from-accent to-primary/70',
+    text: 'text-accent',
+    bg: 'bg-accent/10 border-accent/20',
   },
   intermediate: {
-    bar: 'bg-linear-to-r from-emerald-500 to-teal-500',
-    text: 'text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    bar: 'bg-linear-to-r from-primary/60 to-accent/60',
+    text: 'text-primary/80',
+    bg: 'bg-primary/8 border-primary/15',
   },
   beginner: {
-    bar: 'bg-linear-to-r from-slate-400 to-slate-500',
-    text: 'text-slate-400',
-    bg: 'bg-slate-500/10 border-slate-500/20',
+    bar: 'bg-linear-to-r from-muted-foreground/40 to-muted-foreground/50',
+    text: 'text-muted-foreground',
+    bg: 'bg-muted border-border',
   },
 };
 
@@ -54,12 +54,12 @@ export const SkillsInsightsCard = ({ metrics, skills }: SkillsInsightsCardProps)
   return (
     <Card className="relative overflow-hidden border-border/80 bg-card/70 backdrop-blur-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90 shadow-lg flex flex-col justify-between h-full">
       {/* Background Decorative Glow */}
-      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
 
       <div>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
               <Zap className="h-4.5 w-4.5" />
             </div>
             <div>
@@ -93,7 +93,7 @@ export const SkillsInsightsCard = ({ metrics, skills }: SkillsInsightsCardProps)
 
             <div className="rounded-xl border border-border/60 bg-muted/20 p-3 dark:border-slate-800/60 dark:bg-slate-950/30">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                <Grid3x3 className="h-3.5 w-3.5 text-purple-400" />
+                <Grid3x3 className="h-3.5 w-3.5 text-primary" />
                 <span className="truncate">Categories</span>
               </div>
               <p className="text-xl font-bold font-mono text-foreground">
@@ -103,7 +103,7 @@ export const SkillsInsightsCard = ({ metrics, skills }: SkillsInsightsCardProps)
 
             <div className="rounded-xl border border-border/60 bg-muted/20 p-3 dark:border-slate-800/60 dark:bg-slate-950/30">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                <Award className="h-3.5 w-3.5 text-emerald-400" />
+                <Award className="h-3.5 w-3.5 text-accent" />
                 <span className="truncate">High Mastery</span>
               </div>
               <p className="text-xl font-bold font-mono text-foreground">
@@ -146,7 +146,7 @@ export const SkillsInsightsCard = ({ metrics, skills }: SkillsInsightsCardProps)
 
                         <div className="h-1.5 w-full rounded-full bg-muted dark:bg-slate-800 overflow-hidden">
                           <div
-                            className="h-full bg-linear-to-r from-primary to-cyan-400 rounded-full transition-all duration-500"
+                            className="h-full bg-linear-to-r from-primary to-accent rounded-full transition-all duration-500"
                             style={{ width: `${(count / maxCategoryCount) * 100}%` }}
                           />
                         </div>
@@ -165,7 +165,7 @@ export const SkillsInsightsCard = ({ metrics, skills }: SkillsInsightsCardProps)
             <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 dark:border-slate-800/60 dark:bg-slate-950/30 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                  <Award className="h-3.5 w-3.5 text-purple-400" />
+                  <Award className="h-3.5 w-3.5 text-primary" />
                   Proficiency Breakdown
                 </h4>
                 <span className="text-[10px] text-muted-foreground font-mono">

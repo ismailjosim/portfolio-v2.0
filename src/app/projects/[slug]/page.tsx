@@ -111,7 +111,7 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
                 {project.type || 'Project'}
               </span>
               {project.featured && (
-                <span className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-400">
+                <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
                   <Layers3 className="h-3.5 w-3.5" />
                   Featured
                 </span>
@@ -127,7 +127,7 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
           </div>
 
           {previewImage && (
-            <div className="relative mb-10 h-[260px] overflow-hidden rounded-2xl border border-border bg-slate-950 md:h-[520px]">
+            <div className="relative mb-10 h-65 overflow-hidden rounded-2xl border border-border bg-slate-950 md:h-130">
               <Image
                 src={previewImage}
                 alt={`${project.name} project preview`}

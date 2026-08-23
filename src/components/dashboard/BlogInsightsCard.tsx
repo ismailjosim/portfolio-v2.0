@@ -46,7 +46,7 @@ export const BlogInsightsCard = ({ metrics }: BlogInsightsCardProps) => {
   return (
     <Card className="relative overflow-hidden border-border/80 bg-card/70 backdrop-blur-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90 shadow-lg flex flex-col justify-between h-full">
       {/* Background Decorative Glow */}
-      <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-10 bottom-0 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
 
       <div>
@@ -78,8 +78,8 @@ export const BlogInsightsCard = ({ metrics }: BlogInsightsCardProps) => {
               icon={FileText}
               label="Published"
               value={metrics.totalBlogs}
-              color="text-cyan-500"
-              bg="bg-cyan-500/10 border-cyan-500/20"
+              color="text-primary"
+              bg="bg-primary/10 border-primary/20"
             />
             <MetricItem
               icon={Eye}
@@ -125,7 +125,7 @@ export const BlogInsightsCard = ({ metrics }: BlogInsightsCardProps) => {
 
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted dark:bg-slate-800">
               <div
-                className="h-full rounded-full bg-linear-to-r from-primary via-cyan-400 to-emerald-400 transition-all duration-700"
+                className="h-full rounded-full bg-linear-to-r from-primary via-accent to-primary/60 transition-all duration-700"
                 style={{ width: `${Math.min(Math.max(Number(engagementRate) * 5, 8), 100)}%` }}
               />
             </div>

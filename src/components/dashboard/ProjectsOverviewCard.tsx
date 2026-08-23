@@ -29,7 +29,7 @@ export const ProjectsOverviewCard = ({ projects, totalProjects }: ProjectsOvervi
     <Card className="relative overflow-hidden border-border/80 bg-card/70 backdrop-blur-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90 shadow-lg flex flex-col h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
             <FolderKanban className="h-4 w-4" />
           </div>
           <div>
@@ -55,7 +55,7 @@ export const ProjectsOverviewCard = ({ projects, totalProjects }: ProjectsOvervi
             return (
               <div
                 key={project._id || projectName}
-                className="group relative rounded-xl border border-border/60 bg-muted/20 p-3 transition-all duration-200 hover:border-emerald-500/40 hover:bg-muted/50 dark:border-slate-800/60 dark:bg-slate-950/30 dark:hover:bg-slate-900/60"
+                className="group relative rounded-xl border border-border/60 bg-muted/20 p-3 transition-all duration-200 hover:border-primary/40 hover:bg-muted/50 dark:border-slate-800/60 dark:bg-slate-950/30 dark:hover:bg-slate-900/60"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">

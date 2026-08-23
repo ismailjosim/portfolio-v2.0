@@ -107,7 +107,7 @@ export const RecentBlogsCard = ({ blogs, totalBlogs }: RecentBlogsCardProps) => 
                     {/* Engagement Badges */}
                     <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1 font-mono text-[11px]">
-                        <Eye className="h-3 w-3 text-cyan-500" />
+                        <Eye className="h-3 w-3 text-primary" />
                         {formatNumber(blog.views ?? 0)}
                       </span>
                       <span className="flex items-center gap-1 font-mono text-[11px]">

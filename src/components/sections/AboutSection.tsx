@@ -78,14 +78,14 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section id="about" className="sm:min-h-screen flex items-center px-6 py-16">
-      <div className="container mx-auto">
+    <section id="about" className="sm:min-h-screen flex items-center px-2 md:px-6 py-16">
+      <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
         <FadeUp>
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
             Get to know me
           </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">About Me</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground">About Me</h2>
         </FadeUp>
 
         <div className="grid md:grid-cols-2 lg:gap-16 md:gap-10 gap-6 items-start mt-10">

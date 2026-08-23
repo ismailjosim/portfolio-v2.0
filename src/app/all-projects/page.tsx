@@ -66,14 +66,14 @@ export default function AllProjectsPage() {
         <Navbar />
       </header>
       <main className="min-h-screen transition-all duration-300 bg-background">
-        <section className="py-20 px-6">
-          <div className="container mx-auto">
+        <section className="py-20 px-2 md:px-6">
+          <div className="max-w-7xl mx-auto">
             {/* Header */}
             <FadeUp>
               <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
                 Portfolio
               </p>
-              <h1 className="text-5xl md:text-6xl font-extrabold text-foreground mb-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-4">
                 All Projects
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mb-12 leading-relaxed">

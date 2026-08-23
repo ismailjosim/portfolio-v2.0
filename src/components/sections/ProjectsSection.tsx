@@ -58,14 +58,14 @@ const ProjectsSection = () => {
   }, []);
 
   return (
-    <section id="projects" className="py-20 px-6">
-      <div className="container mx-auto">
+    <section id="projects" className="py-20 md:px-6 px-2">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <FadeUp>
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
             Things I&apos;ve built
           </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-4">
             Featured Projects
           </h2>
           <p className="text-muted-foreground max-w-2xl mb-12 leading-relaxed">

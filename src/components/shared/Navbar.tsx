@@ -53,7 +53,7 @@ export default function Navbar() {
     <header className="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
       <nav
         className={cn(
-          'pointer-events-auto sm:w-fit container mx-auto flex items-center sm:justify-center justify-between gap-5 pr-2 rounded-2xl border transition-all duration-300 p-1',
+          'pointer-events-auto lg:w-fit w-[90%] md:container mx-auto flex items-center lg:justify-center justify-between gap-5 pr-2 rounded-2xl border transition-all duration-300 p-1',
           isScrolled
             ? 'bg-background/80 backdrop-blur-md border-border shadow-sm'
             : 'bg-background/50 backdrop-blur-sm border-transparent'

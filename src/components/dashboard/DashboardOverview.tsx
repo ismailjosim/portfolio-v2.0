@@ -55,7 +55,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
       <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-linear-to-r from-card/90 via-primary/5 to-card/90 backdrop-blur-2xl p-6 shadow-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90">
         {/* Glow Effects */}
         <div className="pointer-events-none absolute -right-12 -top-12 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
-        <div className="pointer-events-none absolute -left-12 -bottom-12 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -left-12 -bottom-12 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
 
         <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-1.5">
@@ -126,7 +126,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={data.totalBlogs}
           description="Active & published posts"
           badge="Blog Hub"
-          accentColor="cyan"
+
           href="/dashboard/blog"
         />
 
@@ -136,7 +136,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={formatNumber(data.blogMetrics.totalViews)}
           description={`${totalInteractions} total interactions (likes + comments)`}
           badge="Engagement"
-          accentColor="purple"
+
         />
 
         <StatsCard
@@ -145,7 +145,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={data.totalProjects}
           description={`${data.projects.filter((p) => p.featured).length} spotlighted on homepage`}
           badge="Engineering"
-          accentColor="emerald"
+
           href="/dashboard/projects"
         />
 
@@ -155,7 +155,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={data.totalSkills}
           description={`Across ${Object.keys(data.skillsMetrics.skillsByCategory).length} categories`}
           badge="Arsenal"
-          accentColor="amber"
+
           href="/dashboard/skills"
         />
       </div>

@@ -1,6 +1,7 @@
 import { IBlog } from '@/src/types/blog.interface';
 import FadeUp from '../ui/FadeUp';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Eye, FileText, Heart, MessageCircle } from 'lucide-react';
 
 interface BlogCardPros {
@@ -73,28 +74,30 @@ const BlogCard = ({ blog, index }: BlogCardPros) => {
             </span>
             <span className="text-muted-foreground text-xs">{getReadTime(blog.content)}</span>
           </div>
-          <h3 className="font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors line-clamp-2">
-            {blog.title}
-          </h3>
+          <Link href={`/blogs/${blog.slug}`}>
+            <h3 className="font-bold text-foreground text-lg mb-2 hover:text-accent transition-colors line-clamp-2">
+              {blog.title}
+            </h3>
+          </Link>
           <p className="text-muted-foreground text-sm mb-4 flex-1 line-clamp-3">
             {blog.summary ||
               (blog.content ? blog.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' : '')}
           </p>
 
           {/* Stats - Views, Likes, Comments */}
-          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4 py-2 border-t border-border/40 pt-3">
-            <div className="flex items-center gap-1">
-              <Eye className="w-4 h-4" />
-              <span>{blog.views} views</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Heart className="w-4 h-4" />
-              <span>{blog.likesCount} likes</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MessageCircle className="w-4 h-4" />
-              <span>{blog.commentsCount} comments</span>
-            </div>
+          <div className="flex items-center gap-4 mb-4 py-2 border-t border-border/40 pt-3">
+            <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+              <Eye className="h-3.5 w-3.5 text-primary" />
+              {blog.views || 0}
+            </span>
+            <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+              <Heart className="h-3.5 w-3.5 text-rose-500" />
+              {blog.likesCount || 0}
+            </span>
+            <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+              <MessageCircle className="h-3.5 w-3.5 text-amber-500" />
+              {blog.commentsCount || 0}
+            </span>
           </div>
 
           <a

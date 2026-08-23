@@ -25,7 +25,7 @@ const BADGES = [
     subtitle: 'Live Sessions',
     iconBg: 'bg-amber-100',
     iconColor: 'text-amber-600',
-    position: 'sm:-top-6 -top-10 sm:-right-8 -right-4',
+    position: 'sm:-top-6 -top-10 sm:-right-8 -right-4 lg:-top-4 lg:-right-10',
   },
   {
     icon: GithubIcon,
@@ -33,7 +33,7 @@ const BADGES = [
     subtitle: 'Github Repos',
     iconBg: 'bg-green-100',
     iconColor: 'text-green-500',
-    position: 'lg:bottom-10 bottom-2 lg:left-20 -left-6 [animation-delay:1.5s]',
+    position: 'lg:bottom-12 bottom-2 lg:-left-12 -left-6 [animation-delay:1.5s]',
   },
   {
     icon: Code2,
@@ -41,7 +41,7 @@ const BADGES = [
     subtitle: 'Problems Solved',
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-500',
-    position: 'top-1/3 -left-12 lg:left-5 md:-left-36 [animation-delay:0.7s]',
+    position: 'top-1/3 -left-12 lg:-left-16 [animation-delay:0.7s]',
   },
   {
     icon: FileCheck,
@@ -49,7 +49,7 @@ const BADGES = [
     subtitle: 'Projects Reviewed',
     iconBg: 'bg-purple-100',
     iconColor: 'text-purple-500',
-    position: 'bottom-0 -right-10 sm:-right-16 [animation-delay:1s]',
+    position: 'bottom-0 -right-10 lg:-bottom-4 lg:-right-10 [animation-delay:1s]',
   },
   {
     icon: Users,
@@ -57,7 +57,7 @@ const BADGES = [
     subtitle: 'Web Instructor',
     iconBg: 'bg-rose-100',
     iconColor: 'text-rose-500',
-    position: 'top-0 -left-4 lg:left-32 md:left-0 [animation-delay:1.2s]',
+    position: 'top-0 -left-4 lg:-top-6 lg:left-12 [animation-delay:1.2s]',
   },
 ];
 
@@ -163,40 +163,42 @@ export default function HeroSection() {
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="relative flex justify-center lg:justify-end">
-          {/* Profile Image */}
-          <div
-            className="hero-morph w-80 h-80 md:w-110 md:h-110 lg:w-150 lg:h-150 bg-center bg-cover"
-            style={{ backgroundImage: "url('/person.jpeg')" }}
-            role="img"
-            aria-label="Md. Jasim profile image"
-          />
+        <div className="flex justify-center lg:justify-end w-full">
+          <div className="relative">
+            {/* Profile Image */}
+            <div
+              className="hero-morph w-80 h-80 md:w-110 md:h-110 lg:w-150 lg:h-150 bg-center bg-cover"
+              style={{ backgroundImage: "url('/person.jpeg')" }}
+              role="img"
+              aria-label="Md. Jasim profile image"
+            />
 
-          {/* Glow */}
-          <div className="absolute  w-150 h-150 bg-primary/10 rounded-full blur-3xl -z-10" />
+            {/* Glow */}
+            <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl -z-10" />
 
-          {/* Floating Badges */}
-          <div className="sm:block hidden">
-            {BADGES.map((badge, i) => {
-              const Icon = badge.icon;
+            {/* Floating Badges */}
+            <div className="sm:block hidden">
+              {BADGES.map((badge, i) => {
+                const Icon = badge.icon;
 
-              return (
-                <div
-                  key={i}
-                  className={`absolute ${badge.position} bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y`}
-                >
+                return (
                   <div
-                    className={`w-10 h-10 ${badge.iconBg} rounded-2xl flex items-center justify-center`}
+                    key={i}
+                    className={`absolute ${badge.position} bg-card shadow-xl rounded-2xl p-4 flex items-center gap-3 float-y`}
                   >
-                    <Icon size={18} className={badge.iconColor} />
+                    <div
+                      className={`w-10 h-10 ${badge.iconBg} rounded-2xl flex items-center justify-center shrink-0`}
+                    >
+                      <Icon size={18} className={badge.iconColor} />
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm text-foreground whitespace-nowrap">{badge.title}</div>
+                      <div className="text-xs text-muted-foreground whitespace-nowrap">{badge.subtitle}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-bold text-sm text-foreground">{badge.title}</div>
-                    <div className="text-xs text-muted-foreground">{badge.subtitle}</div>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
