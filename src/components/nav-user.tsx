@@ -19,6 +19,7 @@ import {
   useSidebar,
 } from '@/src/components/ui/sidebar';
 import { logoutAction } from '../services/login-action';
+import Link from 'next/link';
 
 export function NavUser({
   user,
@@ -81,9 +82,11 @@ export function NavUser({
                 <Bell />
                 Notification
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings />
-                Settings
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings">
+                  <Settings />
+                  Settings
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -1,15 +1,13 @@
 'use client';
-
-import React from 'react';
 import { useTheme } from 'next-themes';
+import { useCustomTheme, PALETTES, FONTS } from '@/src/providers/custom-theme-provider';
 import {
-  useCustomTheme,
-  PALETTES,
-  FONTS,
-  PaletteId,
-  FontId,
-} from '@/src/providers/custom-theme-provider';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
 import { Label } from '@/src/components/ui/label';
@@ -22,7 +20,6 @@ import {
   Check,
   RotateCcw,
   Sparkles,
-  Layers,
   ArrowUpRight,
   Sliders,
   CheckCircle2,
@@ -45,7 +42,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8 pb-12">
       {/* ── Page Header Banner ── */}
-      <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-r from-card/90 via-primary/5 to-card/90 backdrop-blur-2xl p-6 sm:p-8 shadow-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90">
+      <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-linear-to-r from-card/90 via-primary/5 to-card/90 backdrop-blur-2xl p-6 sm:p-8 shadow-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90">
         {/* Glow background */}
         <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-primary/15 blur-3xl" />
         <div className="pointer-events-none absolute -left-10 -bottom-10 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
@@ -65,8 +62,8 @@ export default function SettingsPage() {
               Theme & Typography Settings
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
-              Customize your portfolio’s visual brand, color palette, and body typography in real time.
-              All changes apply instantly and persist across sessions.
+              Customize your portfolio’s visual brand, color palette, and body typography in real
+              time. All changes apply instantly and persist across sessions.
             </p>
           </div>
 
@@ -183,7 +180,9 @@ export default function SettingsPage() {
 
                       <div className="flex-1 min-w-0 space-y-0.5">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-xs text-foreground truncate">{p.name}</h4>
+                          <h4 className="font-semibold text-xs text-foreground truncate">
+                            {p.name}
+                          </h4>
                           {p.id === 'cyan' && (
                             <span className="rounded-full bg-primary/10 border border-primary/20 px-1.5 py-0.2 text-[9px] font-semibold text-primary">
                               Default
@@ -367,8 +366,8 @@ export default function SettingsPage() {
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 text-xs text-muted-foreground flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <span>
-                  All selected styling automatically applies to your homepage, hero section,
-                  project cards, blog reader, and dashboard tables.
+                  All selected styling automatically applies to your homepage, hero section, project
+                  cards, blog reader, and dashboard tables.
                 </span>
               </div>
             </CardContent>
