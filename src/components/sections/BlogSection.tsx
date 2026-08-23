@@ -15,14 +15,13 @@ export default function BlogSection() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`);
-        const data = await response.json();
-
-        const publishedBlogs = (data.blogs || []).filter(
-          (blog: IBlog) => blog.status === 'published'
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/all-blog/public?page=1&limit=6&sortBy=createdAt&orderBy=desc`
         );
+        const data = await response.json();
+        console.log(data.blogs);
 
-        setBlogs(publishedBlogs);
+        setBlogs(data.blogs);
       } catch (error) {
         console.error('Failed to fetch blogs:', error);
       } finally {
@@ -32,8 +31,6 @@ export default function BlogSection() {
 
     fetchBlogs();
   }, []);
-
-  const displayBlogs = blogs.slice(0, 6);
 
   return (
     <section className="py-20" id="blog">
@@ -51,7 +48,7 @@ export default function BlogSection() {
 
         {loading ? (
           <BlogGridSkeleton count={6} />
-        ) : displayBlogs.length === 0 ? (
+        ) : blogs.length === 0 ? (
           <EmptyState
             icon="articles"
             title="No articles published yet"
@@ -59,7 +56,7 @@ export default function BlogSection() {
           />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayBlogs.map((blog, i) => (
+            {blogs.map((blog, i) => (
               <BlogCard key={blog.slug} blog={blog} index={i} />
             ))}
           </div>

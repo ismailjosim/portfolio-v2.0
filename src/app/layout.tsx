@@ -3,6 +3,7 @@ import { Toaster } from 'sonner';
 import './globals.css';
 import { TooltipProvider } from '../components/ui/tooltip';
 import { ThemeProvider } from '../providers/theme-provider';
+import { CustomThemeProvider } from '../providers/custom-theme-provider';
 
 export const metadata: Metadata = {
   title: 'JASIM - Full Stack Developer & Instructor',
@@ -26,11 +27,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            {children}
+          <CustomThemeProvider>
+            <TooltipProvider>
+              {children}
 
-            <Toaster position="top-right" richColors />
-          </TooltipProvider>
+              <Toaster position="top-right" richColors />
+            </TooltipProvider>
+          </CustomThemeProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -34,6 +34,7 @@ import { blogCategories, blogTags as TAG_OPTIONS_ARRAY } from '../../../constant
 // ─── Constants ─────────────────────────────────────────────
 
 const CATEGORIES = Array.from(blogCategories);
+const CATEGORY_OPTIONS = CATEGORIES.map((c) => ({ value: c, label: c }));
 
 const TAG_OPTIONS = Array.from(TAG_OPTIONS_ARRAY).map((tag) => ({
   value: tag,
@@ -58,6 +59,7 @@ interface BlogFormValues {
   coverImagePreview?: string;
   status: BlogStatus;
   summary?: string;
+  scheduledPublishDate?: string;
 }
 
 interface IBlogDialogProps {
@@ -88,6 +90,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
       content: '',
       status: 'draft',
       summary: '',
+      scheduledPublishDate: '',
     },
   });
 
@@ -105,6 +108,9 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         content: blog.content,
         status: (blog.status as BlogStatus) || 'draft',
         summary: blog.summary ?? '',
+        scheduledPublishDate: blog.scheduledPublishDate 
+          ? new Date(blog.scheduledPublishDate).toISOString().slice(0, 16) 
+          : '',
       });
     } else {
       form.reset({
@@ -116,6 +122,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         content: '',
         status: 'draft',
         summary: '',
+        scheduledPublishDate: '',
       });
     }
   }, [blog, form]);
@@ -191,6 +198,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         coverImage: coverImageUrl || undefined,
         status: data.status,
         summary: data.summary || undefined,
+        scheduledPublishDate: data.status === 'scheduled' && data.scheduledPublishDate ? new Date(data.scheduledPublishDate) : undefined,
       };
 
       let result;
@@ -222,7 +230,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-none! w-11/12 md:w-4/5 max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle>{isEdit ? 'Edit Blog Post' : 'Create New Blog Post'}</DialogTitle>
           <DialogDescription>
@@ -273,31 +281,55 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
               {/* Category + Tags */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                 {/* Category */}
-                <FormField
-                  control={form.control}
-                  name="category"
-                  rules={{ required: 'Category is required' }}
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Category</FormLabel>
-                      <SelectElement onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="bg-secondary">
-                          {CATEGORIES.map((c) => (
-                            <SelectItem key={c} value={c}>
-                              {c}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </SelectElement>
-                      <FormMessage />
-                    </FormItem>
+                {/* Category */}
+                <FormItem className="w-full">
+                  <FormLabel>Category</FormLabel>
+                  <Controller
+                    control={form.control}
+                    name="category"
+                    rules={{ required: 'Category is required' }}
+                    render={({ field }) => (
+                      <CreatableSelect
+                        isClearable
+                        unstyled
+                        options={CATEGORY_OPTIONS}
+                        value={field.value ? { value: field.value, label: field.value } : null}
+                        onChange={(selected) => field.onChange(selected ? selected.value : '')}
+                        classNames={{
+                          control: ({ isFocused }) =>
+                            `rounded-lg border px-2 py-1 bg-secondary transition-colors ${
+                              isFocused ? 'border-blue-500' : 'border-input hover:border-blue-500'
+                            }`,
+                          menu: () =>
+                            'mt-1 rounded-lg border border-secondary bg-secondary shadow-lg z-50',
+                          menuList: () => 'py-1',
+                          option: ({ isFocused, isSelected }) =>
+                            `px-3 py-2 cursor-pointer text-secondary-foreground transition-colors ${
+                              isSelected
+                                ? 'bg-blue-600 text-white'
+                                : isFocused
+                                  ? 'bg-accent text-accent-foreground'
+                                  : 'bg-transparent'
+                            }`,
+                          placeholder: () => 'text-muted-foreground',
+                          input: () => 'text-secondary-foreground',
+                          singleValue: () => 'text-secondary-foreground text-sm',
+                          indicatorsContainer: () => 'text-muted-foreground',
+                          clearIndicator: ({ isFocused }) =>
+                            `p-1 rounded transition-colors ${isFocused ? 'text-foreground' : ''}`,
+                          dropdownIndicator: ({ isFocused }) =>
+                            `p-1 transition-colors ${isFocused ? 'text-foreground' : ''}`,
+                        }}
+                        placeholder="Select or create category"
+                      />
+                    )}
+                  />
+                  {form.formState.errors.category && (
+                    <p className="text-[0.8rem] font-medium text-destructive">
+                      {form.formState.errors.category.message}
+                    </p>
                   )}
-                />
+                </FormItem>
                 {/* status */}
                 <FormField
                   control={form.control}
@@ -376,6 +408,24 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
                   />
                 </FormItem>
               </div>
+
+              {/* Scheduled Date */}
+              {form.watch('status') === 'scheduled' && (
+                <FormField
+                  control={form.control}
+                  name="scheduledPublishDate"
+                  rules={{ required: 'Scheduled date and time is required' }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Scheduled Publish Date & Time</FormLabel>
+                      <FormControl>
+                        <Input type="datetime-local" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               {/* Cover Image */}
               <FormItem className="w-full grid grid-cols-2 justify-between items-center">

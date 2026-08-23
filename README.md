@@ -36,7 +36,7 @@
 
 This is the **v2.0** of Md. Jasim's personal developer portfolio — a full-stack developer and instructor. The portfolio is designed with a sleek **dark teal/cyan aesthetic** to reflect a professional yet creative identity. It highlights technical expertise, work experience, featured projects, articles, GitHub contributions, and more.
 
-> *"I'm a passionate Full Stack Developer focused on building efficient, scalable and engaging digital experiences."*
+> _"I'm a passionate Full Stack Developer focused on building efficient, scalable and engaging digital experiences."_
 
 ---
 
@@ -57,19 +57,19 @@ This is the **v2.0** of Md. Jasim's personal developer portfolio — a full-stac
 
 ## 📄 Sections
 
-| # | Section | Description |
-|---|---------|-------------|
-| 1 | **Hero / Banner** | Name, title, bio, and quick stats (students, projects, experience) |
-| 2 | **About Me** | Personal introduction, background, and teaching philosophy |
-| 3 | **Technical Skills** | Categorized skill grid: Languages, Frameworks, Databases, Tools, etc. |
-| 4 | **Work Experience** | Timeline of roles as instructor, developer, and team lead |
-| 5 | **Achievement Stats** | Highlighted metrics: 3+ years, 2000+ students, 150+ projects, 11200+ commits |
-| 6 | **Working Areas** | Frontend, Backend, Machine Learning, Full Stack, Networking, Database Design |
-| 7 | **Featured Projects** | Showcase cards for Traveler, Edu Platform, REST API, Task Manager, etc. |
-| 8 | **Education & Qualifications** | Academic background and professional certifications |
-| 9 | **Latest Articles & Insights** | Blog posts with category filters (All, React, Node, Vue, etc.) |
-| 10 | **GitHub Contributions** | Contribution heatmap widget |
-| 11 | **Contact Me** | Contact form + social media links |
+| #   | Section                        | Description                                                                  |
+| --- | ------------------------------ | ---------------------------------------------------------------------------- |
+| 1   | **Hero / Banner**              | Name, title, bio, and quick stats (students, projects, experience)           |
+| 2   | **About Me**                   | Personal introduction, background, and teaching philosophy                   |
+| 3   | **Technical Skills**           | Categorized skill grid: Languages, Frameworks, Databases, Tools, etc.        |
+| 4   | **Work Experience**            | Timeline of roles as instructor, developer, and team lead                    |
+| 5   | **Achievement Stats**          | Highlighted metrics: 3+ years, 2000+ students, 150+ projects, 11200+ commits |
+| 6   | **Working Areas**              | Frontend, Backend, Machine Learning, Full Stack, Networking, Database Design |
+| 7   | **Featured Projects**          | Showcase cards for Traveler, Edu Platform, REST API, Task Manager, etc.      |
+| 8   | **Education & Qualifications** | Academic background and professional certifications                          |
+| 9   | **Latest Articles & Insights** | Blog posts with category filters (All, React, Node, Vue, etc.)               |
+| 10  | **GitHub Contributions**       | Contribution heatmap widget                                                  |
+| 11  | **Contact Me**                 | Contact form + social media links                                            |
 
 ---
 
@@ -188,14 +188,14 @@ A productivity tool for teams to manage and track tasks efficiently.
 
 ## 📊 Achievements at a Glance
 
-| Metric | Value |
-|--------|-------|
-| 👨‍🏫 Years of Experience | 3+ |
-| 🎓 Students Taught | 2000+ |
-| 💻 Projects Completed | 150+ |
-| 🔧 Tools & Technologies | 10+ |
-| 💾 GitHub Commits | 11,200+ |
-| ⭐ GitHub Stars | 1500+ |
+| Metric                  | Value   |
+| ----------------------- | ------- |
+| 👨‍🏫 Years of Experience  | 3+      |
+| 🎓 Students Taught      | 2000+   |
+| 💻 Projects Completed   | 150+    |
+| 🔧 Tools & Technologies | 10+     |
+| 💾 GitHub Commits       | 11,200+ |
+| ⭐ GitHub Stars         | 1500+   |
 
 ---
 

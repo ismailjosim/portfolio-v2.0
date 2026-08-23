@@ -3,6 +3,7 @@
 import { useCallback } from 'react';
 import { Mail, Layers, Trophy, GithubIcon, Code2, FileCheck, Users } from 'lucide-react';
 import { ReactTyped } from 'react-typed';
+import SocialIcons from '../shared/SocialIcons';
 
 const TYPED_TEXTS = [
   'Full Stack Developer',
@@ -119,7 +120,7 @@ export default function HeroSection() {
           </p>
 
           {/* ACTION BUTTONS */}
-          <div className="flex flex-wrap gap-4 mb-12">
+          <div className="flex flex-wrap gap-4 mb-6">
             <a
               href="mailto:ismailjosim@yahoo.com"
               className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-2xl font-semibold transition-transform hover:scale-105"
@@ -135,6 +136,16 @@ export default function HeroSection() {
               <Layers size={16} />
               View Projects
             </button>
+          </div>
+
+          {/* SOCIAL ICONS */}
+          <div className="flex items-center gap-5 mb-12">
+            <SocialIcons.Github />
+            <SocialIcons.Linkedin />
+            <SocialIcons.Facebook />
+            <SocialIcons.Twitter />
+            <SocialIcons.Youtube />
+            <SocialIcons.Email />
           </div>
 
           {/* STATS */}

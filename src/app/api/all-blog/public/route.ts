@@ -1,30 +1,14 @@
 import { NextResponse } from 'next/server';
-import slugify from 'slugify';
 
-import Blog from '../../../models/Blog';
-import { parseMongooseError } from '../../../lib/parseMongooseError';
-import { connectDB } from '../../../lib/mongodb';
+import Blog from '../../../../models/Blog';
+import { connectDB } from '../../../../lib/mongodb';
 
-// GET /api/blogs
-// Supports: ?page=1&limit=10&category=nextjs&tag=react&search=hello
+// GET /api/all-blog/public
+// Public endpoint — returns only published blogs (no auth required)
+// Supports: ?page=1&limit=10&category=nextjs&tag=react&search=hello&sortBy=createdAt&orderBy=desc
 export async function GET(req: Request) {
   try {
     await connectDB();
-
-    // Auto-publish scheduled blogs that have reached their scheduled time
-    try {
-      await Blog.updateMany(
-        {
-          status: 'scheduled',
-          scheduledPublishDate: { $lte: new Date() },
-        },
-        {
-          $set: { status: 'published' },
-        }
-      );
-    } catch (publishErr) {
-      console.error('[GET /api/blogs] Failed to auto-publish scheduled blogs:', publishErr);
-    }
 
     const { searchParams } = new URL(req.url);
 
@@ -46,16 +30,16 @@ export async function GET(req: Request) {
         commentsCount: sortOrder,
         createdAt: -1,
       },
-      views: { views: sortOrder, likesCount: sortOrder, commentsCount: sortOrder, createdAt: -1 },
+      views: { views: sortOrder, createdAt: -1 },
       likesCount: { likesCount: sortOrder, views: sortOrder, createdAt: -1 },
       commentsCount: { commentsCount: sortOrder, views: sortOrder, createdAt: -1 },
       createdAt: { createdAt: sortOrder },
-      status: { status: sortOrder, createdAt: -1 },
     };
 
     const sort = sortOptions[sortBy] ?? sortOptions.createdAt;
 
-    const filter: Record<string, unknown> = {};
+    // Always filter to published only — this is the public endpoint
+    const filter: Record<string, unknown> = { status: 'published' };
 
     if (category) filter.category = category;
     if (tag) filter.tags = tag;
@@ -63,13 +47,14 @@ export async function GET(req: Request) {
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: 'i' } },
+        { summary: { $regex: search, $options: 'i' } },
         { content: { $regex: search, $options: 'i' } },
       ];
     }
 
     const [blogs, total] = await Promise.all([
       Blog.find(filter)
-        .select('-__v')
+        .select('-__v -content') // Exclude full content from list view for performance
         .sort(sort)
         .skip((page - 1) * limit)
         .limit(limit)
@@ -90,49 +75,8 @@ export async function GET(req: Request) {
       },
     });
   } catch (err) {
-    console.error('[GET /api/blogs]', err);
+    console.error('[GET /api/all-blog/public]', err);
 
-    return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 });
-  }
-}
-
-// POST /api/blogs
-export async function POST(req: Request) {
-  try {
-    await connectDB();
-
-    const body = await req.json();
-
-    // Generate slug from title if not provided
-    let slug =
-      body.slug ||
-      slugify(body.title || '', {
-        lower: true,
-        strict: true,
-        trim: true,
-      });
-
-    // Ensure unique slug
-    const existing = await Blog.findOne({ slug });
-
-    if (existing) {
-      slug = `${slug}-${Date.now()}`;
-    }
-
-    body.slug = slug;
-
-    const blog = await Blog.create(body);
-
-    return NextResponse.json(blog, { status: 201 });
-  } catch (err: unknown) {
-    const errors = parseMongooseError(err);
-
-    if (errors) {
-      return NextResponse.json({ errors }, { status: 422 });
-    }
-
-    console.error('[POST /api/blogs]', err);
-
-    return NextResponse.json({ error: 'Failed to create blog' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch published blogs' }, { status: 500 });
   }
 }

@@ -1,10 +1,12 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Zap, Grid3x3, TrendingUp } from 'lucide-react';
+import { Zap, Grid3x3, Award, ArrowRight, Layers, Code2 } from 'lucide-react';
+import Link from 'next/link';
 
 interface Skill {
   _id?: string;
-  name: string;
+  name?: string;
   category?: string;
   proficiency?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
 }
@@ -20,136 +22,195 @@ interface SkillsInsightsCardProps {
   skills: Skill[];
 }
 
-const proficiencyColors: Record<string, string> = {
-  beginner: 'from-blue-500 to-blue-600',
-  intermediate: 'from-green-500 to-green-600',
-  advanced: 'from-orange-500 to-orange-600',
-  expert: 'from-purple-500 to-purple-600',
+const proficiencyColors: Record<string, { bar: string; text: string; bg: string }> = {
+  expert: {
+    bar: 'bg-linear-to-r from-purple-500 to-indigo-500',
+    text: 'text-purple-400',
+    bg: 'bg-purple-500/10 border-purple-500/20',
+  },
+  advanced: {
+    bar: 'bg-linear-to-r from-cyan-500 to-primary',
+    text: 'text-cyan-400',
+    bg: 'bg-cyan-500/10 border-cyan-500/20',
+  },
+  intermediate: {
+    bar: 'bg-linear-to-r from-emerald-500 to-teal-500',
+    text: 'text-emerald-400',
+    bg: 'bg-emerald-500/10 border-emerald-500/20',
+  },
+  beginner: {
+    bar: 'bg-linear-to-r from-slate-400 to-slate-500',
+    text: 'text-slate-400',
+    bg: 'bg-slate-500/10 border-slate-500/20',
+  },
 };
 
 export const SkillsInsightsCard = ({ metrics, skills }: SkillsInsightsCardProps) => {
-  const categories = Object.entries(metrics.skillsByCategory);
-  const maxCategoryCount = Math.max(...Object.values(metrics.skillsByCategory), 1);
+  const categories = Object.entries(metrics.skillsByCategory || {});
+  const maxCategoryCount = Math.max(...Object.values(metrics.skillsByCategory || {}), 1);
   const proficiencies = metrics.proficiencyBreakdown || {};
+  const totalSkillsCount = metrics.totalSkills || skills.length || 0;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Skills Insights</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="breakdown">By Category</TabsTrigger>
-          </TabsList>
+    <Card className="relative overflow-hidden border-border/80 bg-card/70 backdrop-blur-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90 shadow-lg flex flex-col justify-between h-full">
+      {/* Background Decorative Glow */}
+      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
 
-          <TabsContent value="overview" className="space-y-4 mt-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              <MetricBox icon={Zap} label="Total Skills" value={metrics.totalSkills} />
-              <MetricBox
-                icon={Grid3x3}
-                label="Categories"
-                value={Object.keys(metrics.skillsByCategory).length}
-              />
-              <MetricBox icon={TrendingUp} label="Expert Level" value={proficiencies.expert || 0} />
+      <div>
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <Zap className="h-4.5 w-4.5" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold">
+                Technical Skills & Competency Matrix
+              </CardTitle>
+              <p className="text-xs text-muted-foreground">
+                Category stack distribution & proficiency breakdown
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/dashboard/skills"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+          >
+            Manage Skills <ArrowRight className="h-3 w-3" />
+          </Link>
+        </CardHeader>
+
+        <CardContent className="space-y-5 pt-1">
+          {/* Top 3 Quick Badges */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-3 dark:border-slate-800/60 dark:bg-slate-950/30">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                <Code2 className="h-3.5 w-3.5 text-primary" />
+                <span className="truncate">Total Skills</span>
+              </div>
+              <p className="text-xl font-bold font-mono text-foreground">{totalSkillsCount}</p>
             </div>
 
-            {Object.keys(proficiencies).length > 0 && (
-              <div className="pt-4 border-t space-y-3">
-                <p className="text-sm font-medium">Proficiency Distribution</p>
-                {Object.entries(proficiencies)
-                  .sort(([, a], [, b]) => b - a)
-                  .map(([level, count]) => (
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-3 dark:border-slate-800/60 dark:bg-slate-950/30">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                <Grid3x3 className="h-3.5 w-3.5 text-purple-400" />
+                <span className="truncate">Categories</span>
+              </div>
+              <p className="text-xl font-bold font-mono text-foreground">
+                {categories.length || 6}
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-3 dark:border-slate-800/60 dark:bg-slate-950/30">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                <Award className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="truncate">High Mastery</span>
+              </div>
+              <p className="text-xl font-bold font-mono text-foreground">
+                {(proficiencies.expert || 0) + (proficiencies.advanced || 0)}
+              </p>
+            </div>
+          </div>
+
+          {/* 2-Column Split: Category Stack on Left, Proficiency Spectrum on Right */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Left: Category Distribution */}
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 dark:border-slate-800/60 dark:bg-slate-950/30 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5 text-primary" />
+                  Stack Distribution
+                </h4>
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  {categories.length} active groups
+                </span>
+              </div>
+
+              <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                {categories.length > 0 ? (
+                  categories.map(([category, count]) => {
+                    const percentage =
+                      totalSkillsCount > 0 ? Math.round((count / totalSkillsCount) * 100) : 0;
+
+                    return (
+                      <div key={category} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-medium text-foreground capitalize truncate">
+                            {category}
+                          </span>
+                          <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                            <span className="text-muted-foreground">{count}</span>
+                            <span className="text-primary font-bold">({percentage}%)</span>
+                          </div>
+                        </div>
+
+                        <div className="h-1.5 w-full rounded-full bg-muted dark:bg-slate-800 overflow-hidden">
+                          <div
+                            className="h-full bg-linear-to-r from-primary to-cyan-400 rounded-full transition-all duration-500"
+                            style={{ width: `${(count / maxCategoryCount) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="py-4 text-center text-xs text-muted-foreground">
+                    No categories found. Add skills to see the distribution.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right: Proficiency Spectrum */}
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 dark:border-slate-800/60 dark:bg-slate-950/30 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                  <Award className="h-3.5 w-3.5 text-purple-400" />
+                  Proficiency Breakdown
+                </h4>
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  Competency spread
+                </span>
+              </div>
+
+              <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                {['expert', 'advanced', 'intermediate', 'beginner'].map((level) => {
+                  const count = proficiencies[level] || 0;
+                  const style = proficiencyColors[level] || proficiencyColors.intermediate;
+                  const pct =
+                    totalSkillsCount > 0 ? Math.round((count / totalSkillsCount) * 100) : 0;
+
+                  return (
                     <div key={level} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="capitalize font-medium">{level}</span>
-                        <span className="text-muted-foreground">{count} skills</span>
+                        <span className={`font-semibold capitalize ${style.text}`}>{level}</span>
+                        <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                          <span className="text-muted-foreground">{count} skills</span>
+                          <span className="font-bold text-foreground">({pct}%)</span>
+                        </div>
                       </div>
-                      <div className="w-full bg-muted rounded-full h-2">
+                      <div className="h-1.5 w-full rounded-full bg-muted dark:bg-slate-800 overflow-hidden">
                         <div
-                          className={`bg-linear-to-r ${
-                            proficiencyColors[level] || 'from-gray-500 to-gray-600'
-                          } h-2 rounded-full transition-all`}
-                          style={{
-                            width: `${(count / metrics.totalSkills) * 100}%`,
-                          }}
+                          className={`h-full ${style.bar} rounded-full transition-all duration-500`}
+                          style={{ width: `${pct || 4}%` }}
                         />
                       </div>
                     </div>
-                  ))}
+                  );
+                })}
               </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="breakdown" className="mt-4 space-y-3">
-            {categories.length > 0 ? (
-              categories.map(([category, count]) => (
-                <div key={category} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{category}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {count} {count === 1 ? 'skill' : 'skills'}
-                    </span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-3">
-                    <div
-                      className="bg-linear-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all"
-                      style={{
-                        width: `${(count / maxCategoryCount) * 100}%`,
-                      }}
-                    />
-                  </div>
-
-                  {/* Show skills in this category */}
-                  <div className="flex flex-wrap gap-1 mt-2 ml-2">
-                    {skills
-                      .filter((s) => (s.category || 'Uncategorized') === category)
-                      .slice(0, 4)
-                      .map((skill) => (
-                        <span key={skill._id} className="text-xs bg-muted px-2 py-1 rounded-sm">
-                          {skill.name}
-                        </span>
-                      ))}
-                    {skills.filter((s) => (s.category || 'Uncategorized') === category).length >
-                      4 && (
-                      <span className="text-xs bg-muted px-2 py-1 rounded-sm text-muted-foreground">
-                        +
-                        {skills.filter((s) => (s.category || 'Uncategorized') === category).length -
-                          4}
-                        more
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No skills in any category</p>
-                <p className="text-xs mt-1">Add skills to see them grouped by category</p>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
-  );
-};
-
-interface MetricBoxProps {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string | number;
-}
-
-const MetricBox = ({ icon: Icon, label, value }: MetricBoxProps) => {
-  return (
-    <div className="space-y-1">
-      <div className="flex items-center gap-1">
-        <Icon className="w-3.5 h-3.5 text-muted-foreground" />
-        <p className="text-xs text-muted-foreground font-medium">{label}</p>
+            </div>
+          </div>
+        </CardContent>
       </div>
-      <p className="text-xl font-bold">{value}</p>
-    </div>
+
+      {/* Card Footer Micro-insights */}
+      <div className="px-6 py-3 border-t border-border/50 bg-muted/10 dark:border-slate-800/50 flex items-center justify-between text-[11px] text-muted-foreground">
+        <span>Curated technical expertise across full-stack engineering</span>
+        <Link href="/dashboard/skills" className="font-medium text-primary hover:underline">
+          Manage full skill tree →
+        </Link>
+      </div>
+    </Card>
   );
 };

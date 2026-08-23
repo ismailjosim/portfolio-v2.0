@@ -1,5 +1,4 @@
-// sidebar.config.ts
-import { BookOpen, FolderKanban, Award, LayoutDashboard } from 'lucide-react';
+import { BookOpen, FolderKanban, Award, LayoutDashboard, Settings } from 'lucide-react';
 
 export const sidebarNav = [
   {
@@ -21,6 +20,11 @@ export const sidebarNav = [
     title: 'Skills',
     url: '/skills',
     icon: Award,
+  },
+  {
+    title: 'Settings',
+    url: '/settings',
+    icon: Settings,
   },
 ];
 

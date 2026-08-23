@@ -18,6 +18,7 @@ export interface IBlog {
   createdAt?: string | Date;
   updatedAt?: string | Date;
   publishedAt?: Date;
+  scheduledPublishDate?: Date | string;
   status: BlogStatus;
 
   views: number;

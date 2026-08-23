@@ -7,8 +7,19 @@ import { SkillsInsightsCard } from './SkillsInsightsCard';
 import { ProjectsOverviewCard } from './ProjectsOverviewCard';
 import { RecentBlogsCard } from './RecentBlogsCard';
 
-import { BookOpen, FolderOpen, Zap, Eye } from 'lucide-react';
-import DashboardPageHeader from '../shared/DashboardPageHeader';
+import {
+  BookOpen,
+  FolderOpen,
+  Zap,
+  Eye,
+  Plus,
+  ExternalLink,
+  Sparkles,
+  Layers,
+  FileCode2,
+} from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 
 interface DashboardData {
   totalBlogs: number;
@@ -36,60 +47,135 @@ interface DashboardOverviewProps {
 }
 
 export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
-  return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title="Dashboard"
-        description="Welcome back! Here is your portfolio overview."
-      />
+  const totalInteractions = data.blogMetrics.totalLikes + data.blogMetrics.totalComments;
 
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+  return (
+    <div className="space-y-6 pb-8">
+      {/* ── Welcome Banner & Quick Actions ── */}
+      <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-linear-to-r from-card/90 via-primary/5 to-card/90 backdrop-blur-2xl p-6 shadow-xl dark:border-slate-800/80 dark:bg-[#0A1124]/90">
+        {/* Glow Effects */}
+        <div className="pointer-events-none absolute -right-12 -top-12 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
+        <div className="pointer-events-none absolute -left-12 -bottom-12 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
+
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-500 dark:text-emerald-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Portfolio Live
+              </span>
+              <span className="text-xs text-muted-foreground">•</span>
+              <span className="text-xs text-muted-foreground">Admin Command Center</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              Welcome back, <span className="text-primary">Md. Jasim</span> 👋
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
+              Here is your portfolio performance snapshot. You have{' '}
+              <strong className="text-foreground">{data.totalBlogs} articles</strong>,{' '}
+              <strong className="text-foreground">{data.totalProjects} projects</strong>, and{' '}
+              <strong className="text-foreground">{data.totalSkills} technical skills</strong>{' '}
+              active.
+            </p>
+          </div>
+
+          {/* Quick Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button asChild size="sm" className="gap-1.5 font-medium shadow-md shadow-primary/20">
+              <Link href="/dashboard/blog">
+                <Plus className="h-3.5 w-3.5" />
+                <span>New Blog</span>
+              </Link>
+            </Button>
+
+            <Button asChild size="sm" variant="secondary" className="gap-1.5 font-medium">
+              <Link href="/dashboard/projects">
+                <Layers className="h-3.5 w-3.5" />
+                <span>New Project</span>
+              </Link>
+            </Button>
+
+            <Button asChild size="sm" variant="outline" className="gap-1.5 font-medium">
+              <Link href="/dashboard/skills">
+                <FileCode2 className="h-3.5 w-3.5" />
+                <span>Add Skill</span>
+              </Link>
+            </Button>
+
+            <Button
+              asChild
+              size="sm"
+              variant="ghost"
+              className="gap-1.5 font-medium text-muted-foreground hover:text-foreground"
+            >
+              <Link href="/" target="_blank" rel="noreferrer">
+                <span>View Public Site</span>
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Key KPI Bento Stats ── */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon={BookOpen}
-          label="Total Blogs"
+          label="Total Articles"
           value={data.totalBlogs}
-          description="Published posts"
-          trend={{ value: 12, isPositive: true }}
+          description="Active & published posts"
+          badge="Blog Hub"
+          accentColor="cyan"
+          href="/dashboard/blog"
         />
+
         <StatsCard
           icon={Eye}
-          label="Total Views"
+          label="Total Readership"
           value={formatNumber(data.blogMetrics.totalViews)}
-          description="All time views"
-          trend={{ value: 8, isPositive: true }}
+          description={`${totalInteractions} total interactions (likes + comments)`}
+          badge="Engagement"
+          accentColor="purple"
         />
+
         <StatsCard
           icon={FolderOpen}
-          label="Projects"
+          label="Showcase Projects"
           value={data.totalProjects}
-          description="Featured & Active"
-          trend={{ value: 3, isPositive: true }}
+          description={`${data.projects.filter((p) => p.featured).length} spotlighted on homepage`}
+          badge="Engineering"
+          accentColor="emerald"
+          href="/dashboard/projects"
         />
+
         <StatsCard
           icon={Zap}
-          label="Skills"
+          label="Technical Skills"
           value={data.totalSkills}
-          description="Across categories"
+          description={`Across ${Object.keys(data.skillsMetrics.skillsByCategory).length} categories`}
+          badge="Arsenal"
+          accentColor="amber"
+          href="/dashboard/skills"
         />
       </div>
 
-      {/* Main Cards */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      {/* ── Content & Articles Showcase Row ── */}
+      <div className="grid gap-6 lg:grid-cols-3 items-stretch">
+        <div className="lg:col-span-2 flex flex-col">
           <BlogInsightsCard metrics={data.blogMetrics} />
         </div>
-        <div>
+        <div className="flex flex-col">
           <RecentBlogsCard blogs={data.recentBlogs} totalBlogs={data.totalBlogs} />
         </div>
       </div>
 
-      {/* Projects and Skills */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      {/* ── Engineering & Skills Matrix Row ── */}
+      <div className="grid gap-6 lg:grid-cols-3 items-stretch">
+        <div className="lg:col-span-2 flex flex-col">
           <SkillsInsightsCard metrics={data.skillsMetrics} skills={data.skills} />
         </div>
-        <div>
+        <div className="flex flex-col">
           <ProjectsOverviewCard projects={data.projects} totalProjects={data.totalProjects} />
         </div>
       </div>
@@ -98,11 +184,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
 };
 
 function formatNumber(num: number): string {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'M';
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K';
-  }
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
   return num.toString();
 }

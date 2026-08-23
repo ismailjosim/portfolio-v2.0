@@ -10,6 +10,7 @@ export interface IBlogPayload {
   tags: string[];
   summary?: string;
   slug?: string;
+  scheduledPublishDate?: string | Date;
 }
 
 type GetBlogsParams = {
@@ -20,6 +21,7 @@ type GetBlogsParams = {
   search?: string;
   sortBy?: string;
   orderBy?: string;
+  status?: string;
 };
 
 export async function createBlog(payload: IBlogPayload) {
@@ -91,30 +93,56 @@ export async function getAllBlogs(params?: GetBlogsParams) {
     const query = new URLSearchParams();
 
     if (params?.page) query.set('page', String(params.page));
-
     if (params?.limit) query.set('limit', String(params.limit));
-
     if (params?.category) query.set('category', params.category);
-
     if (params?.tag) query.set('tag', params.tag);
-
     if (params?.search) query.set('search', params.search);
-
     if (params?.sortBy) query.set('sortBy', params.sortBy);
-
     if (params?.orderBy) query.set('orderBy', params.orderBy);
+    if (params?.status) query.set('status', params.status);
 
     const endpoint = `/blogs${query.toString() ? `?${query.toString()}` : ''}`;
 
-    const res = await serverFetch.get(endpoint, {
-      cache: 'no-store',
-    });
+    const res = await serverFetch.get(endpoint, { cache: 'no-store' });
 
     if (!res.ok) {
-      return {
-        success: false,
-        message: 'Failed to fetch blogs',
-      };
+      return { success: false, message: 'Failed to fetch blogs' };
+    }
+
+    const result = await res.json();
+
+    return {
+      success: true,
+      pagination: result.pagination,
+      data: result.blogs,
+    };
+  } catch (error) {
+    console.error('getAllBlogs', error);
+    return { success: false, message: 'Failed to fetch blogs' };
+  }
+}
+
+// get all data for /blogs page what all the status published
+export async function getPublishedBlogs(params?: Omit<GetBlogsParams, 'status'>) {
+  try {
+    const query = new URLSearchParams();
+
+    if (params?.page) query.set('page', String(params.page));
+    if (params?.limit) query.set('limit', String(params.limit));
+    if (params?.category) query.set('category', params.category);
+    if (params?.tag) query.set('tag', params.tag);
+    if (params?.search) query.set('search', params.search);
+    if (params?.sortBy) query.set('sortBy', params.sortBy ?? 'createdAt');
+    if (params?.orderBy) query.set('orderBy', params.orderBy ?? 'desc');
+
+    query.set('status', 'published');
+
+    const endpoint = `/all-blog/public?${query.toString()}`;
+
+    const res = await serverFetch.get(endpoint, { cache: 'no-store' });
+
+    if (!res.ok) {
+      return { success: false, message: 'Failed to fetch blogs' };
     }
 
     const result = await res.json();
@@ -125,12 +153,8 @@ export async function getAllBlogs(params?: GetBlogsParams) {
       pagination: result.pagination,
     };
   } catch (error) {
-    console.error('getAllBlogs', error);
-
-    return {
-      success: false,
-      message: 'Failed to fetch blogs',
-    };
+    console.error('getPublishedBlogs', error);
+    return { success: false, message: 'Failed to fetch blogs' };
   }
 }
 

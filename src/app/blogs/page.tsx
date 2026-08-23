@@ -27,15 +27,18 @@ async function fetchBlogs(searchParams: {
     const query = new URLSearchParams();
 
     if (searchParams.page) query.set('page', searchParams.page);
-    if (searchParams.limit) query.set('limit', searchParams.limit);
+    query.set('limit', searchParams.limit || '9');
     if (searchParams.search) query.set('search', searchParams.search);
     if (searchParams.category) query.set('category', searchParams.category);
     if (searchParams.tag) query.set('tag', searchParams.tag);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs?${query.toString()}`, {
-      method: 'GET',
-      cache: 'no-store',
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/all-blog/public?${query.toString()}`,
+      {
+        method: 'GET',
+        cache: 'no-store',
+      }
+    );
 
     if (!res.ok) {
       return { blogs: [], pagination: null };

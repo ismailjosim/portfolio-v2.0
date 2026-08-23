@@ -10,6 +10,21 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   try {
     await connectDB();
 
+    // Auto-publish scheduled blogs that have reached their scheduled time
+    try {
+      await Blog.updateMany(
+        {
+          status: 'scheduled',
+          scheduledPublishDate: { $lte: new Date() },
+        },
+        {
+          $set: { status: 'published' },
+        }
+      );
+    } catch (publishErr) {
+      console.error('[GET /api/blogs/:slug] Failed to auto-publish scheduled blogs:', publishErr);
+    }
+
     const { slug } = await params;
 
     if (!slug) {

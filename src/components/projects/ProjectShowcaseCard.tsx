@@ -2,13 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import {
   Activity,
   ArrowRight,
   BadgeCheck,
-  ChevronDown,
-  CheckCircle2,
   Code2,
   Database,
   Flame,
@@ -103,13 +100,17 @@ export default function ProjectShowcaseCard({
   reverse = false,
   priority = false,
 }: ProjectShowcaseCardProps) {
-  const [featuresExpanded, setFeaturesExpanded] = useState(false);
-  const features = project.features;
-  const visibleFeatures = features.slice(0, 5);
-  const hiddenFeatures = features.slice(5);
+  // const [featuresExpanded, setFeaturesExpanded] = useState(false);
+  // const features = project.features;
+  // const visibleFeatures = features.slice(0, 5);
+  // const hiddenFeatures = features.slice(5);
   const technologies = project.technologies;
   const subtitle = project.subtitle || 'A feature-rich web platform.';
-  const description = project.description || project.title || subtitle;
+  const fullDescription = project.description || project.title || subtitle;
+  const isLongDescription = fullDescription.length > 200;
+  const truncatedDescription = isLongDescription
+    ? fullDescription.substring(0, 200)
+    : fullDescription;
   const previewImage = project.image || project.demoImages?.[0];
 
   const { liveSiteUrl, clientRepoUrl, serverRepoUrl, hasMultipleRepos } = getProjectLinks(project);
@@ -259,75 +260,19 @@ export default function ProjectShowcaseCard({
             </div>
             {/* Comprehensive Meta-Description */}
             <p className="mb-6 text-sm leading-relaxed text-muted-foreground dark:text-slate-300">
-              {description}
+              {truncatedDescription}
+              {isLongDescription && project.slug && (
+                <>
+                  <span className="text-muted-foreground/60">...</span>
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="ml-1 font-medium text-accent hover:underline dark:text-cyan-400"
+                  >
+                    full info
+                  </Link>
+                </>
+              )}
             </p>
-
-            {/* Dynamic Features Render Block */}
-            {features.length > 0 && (
-              <div className="mb-6 rounded-xl border border-border bg-muted/35 p-4 dark:border-slate-800/80 dark:bg-slate-950/30">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground dark:text-slate-400">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-accent dark:text-cyan-400" />
-                    Key Features
-                  </h4>
-                  {features.length > 5 && (
-                    <span className="rounded-full bg-accent/10 px-2.5 py-1 text-[10px] font-semibold text-accent dark:bg-cyan-500/10 dark:text-cyan-300">
-                      {features.length} total
-                    </span>
-                  )}
-                </div>
-                <ul className="space-y-4">
-                  {visibleFeatures.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-start gap-2.5 text-xs text-muted-foreground dark:text-slate-300"
-                    >
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-accent dark:text-cyan-400">
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                {hiddenFeatures.length > 0 && (
-                  <>
-                    {featuresExpanded && (
-                      <ul className="space-y-4 mt-4">
-                        {hiddenFeatures.map((feature) => (
-                          <li
-                            key={feature}
-                            className="flex items-start gap-2.5 text-xs text-muted-foreground dark:text-slate-300"
-                          >
-                            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-accent dark:text-cyan-400">
-                              <CheckCircle2 className="h-3.5 w-3.5" />
-                            </span>
-                            <span className="leading-relaxed">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => setFeaturesExpanded((current) => !current)}
-                      className="mt-3 inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-border bg-background/80 px-3 py-2 text-xs font-semibold text-accent transition-colors hover:border-accent/50 hover:bg-accent/10 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-cyan-300 dark:hover:border-cyan-500/50 dark:hover:bg-cyan-500/10 dark:hover:text-cyan-200"
-                    >
-                      <span>
-                        {featuresExpanded
-                          ? 'Show fewer features'
-                          : `More features +${hiddenFeatures.length}`}
-                      </span>
-                      <ChevronDown
-                        className={cn(
-                          'h-3.5 w-3.5 transition-transform',
-                          featuresExpanded && 'rotate-180'
-                        )}
-                      />
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
 
             {/* System Technology Ecosystem Architecture Badges */}
             {technologies.length > 0 && (

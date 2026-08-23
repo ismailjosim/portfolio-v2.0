@@ -1,4 +1,16 @@
-import { BarChart2, BookOpen, Calendar, Heart, Link, MessageCircle, Tag } from 'lucide-react';
+'use client';
+import { useState } from 'react';
+import {
+  BarChart2,
+  BookOpen,
+  Calendar,
+  Heart,
+  Link,
+  MessageCircle,
+  Tag,
+  Copy,
+  Check,
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { IBlog } from '../../../types/blog.interface';
@@ -6,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../ui/dialo
 import { Badge } from '../../ui/badge';
 import InfoRow from '../../shared/InfoRow';
 import { Separator } from '../../ui/separator';
+import { Button } from '../../ui/button';
 import { formatDateTime } from '../../../lib/formatters.ts';
 
 // Dynamically import MDEditor preview to avoid SSR issues
@@ -21,11 +34,26 @@ interface IBlogViewDialogProps {
 }
 
 const BlogViewDetailDialog = ({ open, onClose, blog }: IBlogViewDialogProps) => {
+  const [copied, setCopied] = useState(false);
+
   if (!blog) return null;
+
+  const blogUrl =
+    typeof window !== 'undefined' ? `${window.location.origin}/blogs/${blog.slug}` : '';
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(blogUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-none! w-2/3 max-h-[90vh] flex flex-col px-px py-5 overflow-hidden">
+      <DialogContent className="max-w-none! w-11/12 md:w-4/5 max-h-[90vh] flex flex-col px-px py-5 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
           <DialogTitle>Blog Details</DialogTitle>
         </DialogHeader>
@@ -44,7 +72,22 @@ const BlogViewDetailDialog = ({ open, onClose, blog }: IBlogViewDialogProps) => 
               />
             )}
             <div className="flex-1 min-w-0">
-              <h2 className="text-xl font-bold mb-2 wrap-break-word">{blog.title}</h2>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-2">
+                <h2 className="text-xl font-bold wrap-break-word">{blog.title}</h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopyUrl}
+                  className="shrink-0 flex items-center gap-1.5 whitespace-nowrap"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-emerald-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                  {copied ? 'Copied URL' : 'Copy Blog URL'}
+                </Button>
+              </div>
               <p className="text-muted-foreground mb-3 flex items-center gap-2 text-sm">
                 <BookOpen className="h-4 w-4 shrink-0" />
                 <span>{blog.category}</span>
@@ -92,8 +135,22 @@ const BlogViewDetailDialog = ({ open, onClose, blog }: IBlogViewDialogProps) => 
                 <h3 className="font-semibold text-lg">Post Information</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-muted/50 p-4 rounded-lg">
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-3 col-span-1 md:col-span-2">
                   <Link className="h-4 w-4 mt-1 text-muted-foreground shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium mb-1">Blog URL</p>
+                    <a
+                      href={blogUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-500 hover:underline break-all"
+                    >
+                      {blogUrl}
+                    </a>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Tag className="h-4 w-4 mt-1 text-muted-foreground shrink-0" />
                   <InfoRow label="Slug" value={blog.slug} />
                 </div>
                 <div className="flex items-start gap-3">

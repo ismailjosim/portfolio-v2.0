@@ -12,6 +12,7 @@ export interface IBlog extends Document {
   views: number;
   likesCount: number;
   commentsCount: number;
+  scheduledPublishDate?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -67,6 +68,7 @@ const BlogSchema = new Schema<IBlog>(
       enum: ['draft', 'review', 'scheduled', 'published', 'archived'],
       default: 'draft',
     },
+    scheduledPublishDate: { type: Date },
     views: { type: Number, default: 0, min: [0, 'Views cannot be negative'] },
     likesCount: {
       type: Number,

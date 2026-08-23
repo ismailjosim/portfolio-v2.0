@@ -30,9 +30,12 @@ const BlogCard = ({ blog, index }: BlogCardPros) => {
     return category.toLowerCase().replace(/\s+/g, '');
   };
 
-  const getReadTime = (content: string) => {
+  const getReadTime = (content?: string) => {
+    // content is excluded from list responses (public API) — fall back to summary
+    const text = content ?? blog.summary ?? '';
+    if (!text) return null;
     const wordsPerMinute = 200;
-    const words = content.split(/\s+/).length;
+    const words = text.split(/\s+/).length;
     const minutes = Math.ceil(words / wordsPerMinute);
     return `${minutes} min read`;
   };
@@ -74,8 +77,8 @@ const BlogCard = ({ blog, index }: BlogCardPros) => {
             {blog.title}
           </h3>
           <p className="text-muted-foreground text-sm mb-4 flex-1 line-clamp-3">
-            {blog.summary || blog.content.replace(/<[^>]*>/g, '').substring(0, 100)}
-            {!blog.summary && '...'}
+            {blog.summary ||
+              (blog.content ? blog.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' : '')}
           </p>
 
           {/* Stats - Views, Likes, Comments */}

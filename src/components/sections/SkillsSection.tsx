@@ -21,6 +21,48 @@ interface SkillGroupData extends SkillGroup {
   skills: (Omit<Skill, 'icon'> & { icon: any })[];
 }
 
+interface CategoryConfig {
+  key: string;
+  label: string;
+  iconName: string;
+  order: number;
+}
+
+const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
+  languages: { key: 'languages', label: 'Languages', iconName: 'Code2', order: 1 },
+  frontend: { key: 'frontend', label: 'Frontend', iconName: 'Globe', order: 2 },
+  backend: { key: 'backend', label: 'Backend', iconName: 'Server', order: 3 },
+  'styling-ui': { key: 'styling-ui', label: 'Styling UI', iconName: 'Palette', order: 4 },
+  'styling ui': { key: 'styling-ui', label: 'Styling UI', iconName: 'Palette', order: 4 },
+  'styling & ui': { key: 'styling-ui', label: 'Styling UI', iconName: 'Palette', order: 4 },
+  styling: { key: 'styling-ui', label: 'Styling UI', iconName: 'Palette', order: 4 },
+  database: { key: 'database', label: 'Database', iconName: 'Database', order: 5 },
+  'tools-devops': { key: 'tools-devops', label: 'Tools', iconName: 'Wrench', order: 6 },
+  'tools & devops': { key: 'tools-devops', label: 'Tools', iconName: 'Wrench', order: 6 },
+  tools: { key: 'tools-devops', label: 'Tools', iconName: 'Wrench', order: 6 },
+};
+
+function normalizeCategory(rawCat: string): { key: string; label: string; iconName: string; order: number } {
+  const normalizedKey = (rawCat || '').trim().toLowerCase();
+  if (CATEGORY_CONFIG[normalizedKey]) {
+    return CATEGORY_CONFIG[normalizedKey];
+  }
+
+  const formattedLabel = (rawCat || '')
+    .replace(/[-_]/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+
+  return {
+    key: normalizedKey,
+    label: formattedLabel || 'Other',
+    iconName: 'Wrench',
+    order: 99,
+  };
+}
+
 // --------------------------
 // Component
 // --------------------------
@@ -35,43 +77,39 @@ export default function SkillsSection() {
         const data = await response.json();
 
         if (data.skills) {
-          // Group skills by category
-          const groupedByCategory = data.skills.reduce(
-            (acc: Record<string, Skill[]>, skill: Skill) => {
-              if (!acc[skill.category]) {
-                acc[skill.category] = [];
-              }
-              acc[skill.category].push(skill);
-              return acc;
-            },
-            {}
-          );
+          // Group skills by normalized category
+          const grouped: Record<
+            string,
+            { label: string; iconName: string; order: number; skills: Skill[] }
+          > = {};
 
-          // Transform to SkillGroup format
-          const groups: SkillGroupData[] = Object.entries(groupedByCategory).map(
-            ([category, skills]) => ({
-              label: category,
-              icon: getIcon(
-                category === 'Languages'
-                  ? 'Code2'
-                  : category === 'Frontend'
-                    ? 'Globe'
-                    : category === 'Styling & UI'
-                      ? 'Palette'
-                      : category === 'Backend'
-                        ? 'Server'
-                        : category === 'Database'
-                          ? 'Database'
-                          : 'Wrench'
-              ),
-              skills: (skills as Skill[]).map((skill) => ({
+          data.skills.forEach((skill: Skill) => {
+            const catInfo = normalizeCategory(skill.category);
+            const groupKey = catInfo.key;
+            if (!grouped[groupKey]) {
+              grouped[groupKey] = {
+                label: catInfo.label,
+                iconName: catInfo.iconName,
+                order: catInfo.order,
+                skills: [],
+              };
+            }
+            grouped[groupKey].skills.push(skill);
+          });
+
+          // Sort groups by custom order: Languages -> Frontend -> Backend -> Styling UI -> Database -> Tools
+          const sortedGroups: SkillGroupData[] = Object.values(grouped)
+            .sort((a, b) => a.order - b.order)
+            .map((group) => ({
+              label: group.label,
+              icon: getIcon(group.iconName),
+              skills: group.skills.map((skill) => ({
                 ...skill,
                 icon: getIcon(skill.icon),
               })),
-            })
-          );
+            }));
 
-          setSkillGroups(groups);
+          setSkillGroups(sortedGroups);
         }
       } catch (error) {
         console.error('Failed to fetch skills:', error);
