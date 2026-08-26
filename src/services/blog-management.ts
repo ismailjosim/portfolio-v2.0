@@ -132,8 +132,11 @@ export async function getPublishedBlogs(params?: Omit<GetBlogsParams, 'status'>)
     if (params?.category) query.set('category', params.category);
     if (params?.tag) query.set('tag', params.tag);
     if (params?.search) query.set('search', params.search);
-    if (params?.sortBy) query.set('sortBy', params.sortBy ?? 'createdAt');
-    if (params?.orderBy) query.set('orderBy', params.orderBy ?? 'desc');
+
+    // Order by publish date, not creation date: a post drafted last month butx
+    // published today must appear first for readers.
+    query.set('sortBy', params?.sortBy ?? 'publishedAt');
+    query.set('orderBy', params?.orderBy ?? 'desc');
 
     query.set('status', 'published');
 

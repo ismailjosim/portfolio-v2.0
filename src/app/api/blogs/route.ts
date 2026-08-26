@@ -4,6 +4,7 @@ import slugify from 'slugify';
 import Blog from '../../../models/Blog';
 import { parseMongooseError } from '../../../lib/parseMongooseError';
 import { connectDB } from '../../../lib/mongodb';
+import { publishDueScheduledBlogs } from '../../../lib/publish-scheduled-blogs';
 
 // GET /api/blogs
 // Supports: ?page=1&limit=10&category=nextjs&tag=react&search=hello
@@ -13,15 +14,7 @@ export async function GET(req: Request) {
 
     // Auto-publish scheduled blogs that have reached their scheduled time
     try {
-      await Blog.updateMany(
-        {
-          status: 'scheduled',
-          scheduledPublishDate: { $lte: new Date() },
-        },
-        {
-          $set: { status: 'published' },
-        }
-      );
+      await publishDueScheduledBlogs();
     } catch (publishErr) {
       console.error('[GET /api/blogs] Failed to auto-publish scheduled blogs:', publishErr);
     }
@@ -50,9 +43,12 @@ export async function GET(req: Request) {
       likesCount: { likesCount: sortOrder, views: sortOrder, createdAt: -1 },
       commentsCount: { commentsCount: sortOrder, views: sortOrder, createdAt: -1 },
       createdAt: { createdAt: sortOrder },
+      publishedAt: { publishedAt: sortOrder, createdAt: -1 },
       status: { status: sortOrder, createdAt: -1 },
     };
 
+    // Default stays `createdAt` here: the dashboard table is a work queue, so the
+    // admin wants newest-authored first. Only the public list orders by publishedAt.
     const sort = sortOptions[sortBy] ?? sortOptions.createdAt;
 
     const filter: Record<string, unknown> = {};
@@ -120,6 +116,11 @@ export async function POST(req: Request) {
     }
 
     body.slug = slug;
+
+    // A blog created directly as `published` goes live now, so stamp its publish date.
+    if (body.status === 'published' && !body.publishedAt) {
+      body.publishedAt = new Date();
+    }
 
     const blog = await Blog.create(body);
 

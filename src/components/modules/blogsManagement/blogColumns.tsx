@@ -87,6 +87,17 @@ export const blogColumns: Column<IBlog>[] = [
   },
 
   {
+    header: 'Published',
+    accessor: (blog) =>
+      blog.publishedAt ? (
+        <DateCell date={blog.publishedAt} />
+      ) : (
+        <span className="text-xs text-muted-foreground">—</span>
+      ),
+    sortKey: 'publishedAt',
+  },
+
+  {
     header: 'Status',
     accessor: (blog) => {
       const statusStyles: Record<string, string> = {

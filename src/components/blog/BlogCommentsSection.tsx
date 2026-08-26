@@ -1,40 +1,44 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MessageCircle, Send, Heart } from 'lucide-react';
 import { toast } from 'sonner';
-import { formatDateTime } from '@/src/lib/formatters.ts';
+import { buildCommentTree, countCommentNodes, type FlatComment } from '@/src/lib/comment-tree';
 import { CommentsSkeleton, EmptyState } from '../shared/PublicDataSkeletons';
+import CommentItem from './CommentItem';
 
-interface Comment {
-  _id: string;
-  name: string;
-  content: string;
-  createdAt: string;
+interface BlogCommentsSectionProps {
+  slug: string;
+  initialCommentsCount: number;
+  initialLikesCount: number;
 }
 
 export default function BlogCommentsSection({
   initialCommentsCount,
   initialLikesCount,
   slug,
-}: any) {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [count, setCount] = useState(initialCommentsCount);
-  const [likesCount] = useState(initialLikesCount);
+}: BlogCommentsSectionProps) {
+  const [comments, setComments] = useState<FlatComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // The API returns a flat list; the nesting is derived here so replies can be inserted
+  // locally without refetching the whole thread.
+  const tree = useMemo(() => buildCommentTree(comments), [comments]);
+
   const fetchComments = useCallback(async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`
+        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`,
+        { cache: 'no-store' }
       );
 
       const data = await res.json();
-      setComments(data.comments || []);
+      const loaded: FlatComment[] = data.comments || [];
+
+      setComments(loaded);
     } catch (err) {
       console.error(err);
     } finally {
@@ -49,41 +53,111 @@ export default function BlogCommentsSection({
     load();
   }, [fetchComments]);
 
-  const handleSubmitComment = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const postComment = useCallback(
+    async (author: string, body: string, parentId?: string) => {
+      if (!author.trim() || !body.trim()) {
+        toast.error(parentId ? 'Add your name and a reply' : 'Fill all fields');
+        return false;
+      }
 
-    if (!name.trim() || !content.trim()) {
-      toast.error('Fill all fields');
-      return;
-    }
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: author, content: body, parentId }),
+          }
+        );
+
+        const posted = await res.json();
+
+        if (!res.ok) {
+          throw new Error(posted.error || 'Failed to post comment');
+        }
+
+        setComments((current) => [posted, ...current]);
+
+        toast.success(parentId ? 'Reply posted' : 'Comment posted');
+        return true;
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Failed');
+        return false;
+      }
+    },
+    [slug]
+  );
+
+  const handleSubmitComment = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     setIsSubmitting(true);
-
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(slug)}/comments`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, content }),
-        }
-      );
+      const posted = await postComment(name, content);
 
-      const newComment = await res.json();
-
-      setComments([newComment, ...comments]);
-      setCount((c: any) => c + 1);
-
-      setName('');
-      setContent('');
-
-      toast.success('Comment posted');
-    } catch {
-      toast.error('Failed');
+      if (posted) {
+        setName('');
+        setContent('');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleReply = useCallback(
+    (parentId: string, author: string, body: string) => postComment(author, body, parentId),
+    [postComment]
+  );
+
+  const handleToggleLike = useCallback(
+    async (commentId: string) => {
+      // Flip locally first so the heart responds immediately, then reconcile with the
+      // authoritative count from the server (or roll back on failure).
+      const rollback = (current: FlatComment[]) =>
+        current.map((comment) =>
+          comment._id === commentId
+            ? {
+                ...comment,
+                likedByMe: !comment.likedByMe,
+                likesCount: Math.max(0, (comment.likesCount ?? 0) + (comment.likedByMe ? -1 : 1)),
+              }
+            : comment
+        );
+
+      setComments(rollback);
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/blogs/${encodeURIComponent(
+            slug
+          )}/comments/${commentId}/likes`,
+          { method: 'PATCH' }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to update like');
+        }
+
+        setComments((current) =>
+          current.map((comment) =>
+            comment._id === commentId
+              ? { ...comment, likedByMe: data.isLiked, likesCount: data.likesCount }
+              : comment
+          )
+        );
+      } catch (error) {
+        setComments(rollback);
+        toast.error(error instanceof Error ? error.message : 'Failed to update like');
+      }
+    },
+    [slug]
+  );
+
+  // Show the server-rendered count until the thread arrives, so the header does not
+  // flash "0 comments" on first paint.
+  const visibleCount = loading ? initialCommentsCount : countCommentNodes(tree);
 
   return (
     <section className="max-w-3xl mx-auto mt-12">
@@ -97,29 +171,31 @@ export default function BlogCommentsSection({
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1">
             <Heart className="w-4 h-4 text-red-500" />
-            {likesCount}
+            {initialLikesCount}
           </span>
-          <span>{count} comments</span>
+          <span>
+            {visibleCount} {visibleCount === 1 ? 'comment' : 'comments'}
+          </span>
         </div>
       </div>
 
       {/* Input box (Facebook style) */}
       <form onSubmit={handleSubmitComment} className="flex gap-3 mb-8">
-        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-semibold">
+        <div className="w-10 h-10 shrink-0 rounded-full bg-muted flex items-center justify-center font-semibold">
           {name?.[0]?.toUpperCase() || 'U'}
         </div>
 
         <div className="flex-1">
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
             placeholder="Your name"
             className="w-full mb-2 px-3 py-2 rounded-md border bg-background"
           />
 
           <textarea
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(event) => setContent(event.target.value)}
             placeholder="Write a comment..."
             rows={2}
             className="w-full px-3 py-2 rounded-md border bg-background resize-none"
@@ -139,43 +215,24 @@ export default function BlogCommentsSection({
       </form>
 
       {/* Comments list */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {loading ? (
           <CommentsSkeleton />
-        ) : comments.length === 0 ? (
+        ) : tree.length === 0 ? (
           <EmptyState
             icon="comments"
             title="No comments yet"
             description="Be the first to share a thought on this article."
           />
         ) : (
-          comments.map((c) => (
-            <div key={c._id} className="flex gap-3">
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-semibold">
-                {c.name[0]?.toUpperCase()}
-              </div>
-
-              {/* Bubble */}
-              <div className="flex-1">
-                <div className="bg-muted/50 rounded-xl px-4 py-2">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold text-sm">{c.name}</p>
-                    <span className="text-xs text-muted-foreground">
-                      {formatDateTime(c.createdAt)}
-                    </span>
-                  </div>
-
-                  <p className="text-sm mt-1 whitespace-pre-wrap">{c.content}</p>
-                </div>
-
-                {/* Actions (optional Facebook style) */}
-                <div className="flex gap-4 text-xs text-muted-foreground mt-1 px-2">
-                  <button className="hover:underline">Like</button>
-                  <button className="hover:underline">Reply</button>
-                </div>
-              </div>
-            </div>
+          tree.map((comment) => (
+            <CommentItem
+              key={comment._id}
+              comment={comment}
+              depth={0}
+              onToggleLike={handleToggleLike}
+              onReply={handleReply}
+            />
           ))
         )}
       </div>

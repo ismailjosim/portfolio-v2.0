@@ -181,7 +181,6 @@ export default async function BlogDetailsPage({ params }: BlogDetailsPageProps) 
 
           {/* Comments */}
           <BlogCommentsSection
-            blogId={blog._id!}
             initialCommentsCount={blog.commentsCount}
             initialLikesCount={blog.likesCount}
             slug={slug}

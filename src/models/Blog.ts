@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import { Schema, Document, Model } from 'mongoose';
+import { registerModel } from '../lib/register-model';
 
 export interface IBlog extends Document {
   title: string;
@@ -13,6 +14,7 @@ export interface IBlog extends Document {
   likesCount: number;
   commentsCount: number;
   scheduledPublishDate?: Date;
+  publishedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -69,6 +71,10 @@ const BlogSchema = new Schema<IBlog>(
       default: 'draft',
     },
     scheduledPublishDate: { type: Date },
+    // Stamped only when the post transitions into `published`. Unlike `updatedAt`,
+    // this is not disturbed by the view/like/comment counters, so it is the only
+    // safe field to order the public blog list by.
+    publishedAt: { type: Date },
     views: { type: Number, default: 0, min: [0, 'Views cannot be negative'] },
     likesCount: {
       type: Number,
@@ -86,7 +92,9 @@ const BlogSchema = new Schema<IBlog>(
 
 BlogSchema.index({ category: 1 });
 BlogSchema.index({ tags: 1 });
+// Backs the public list query: filter on status, order by publishedAt.
+BlogSchema.index({ status: 1, publishedAt: -1 });
 
-const Blog: Model<IBlog> = mongoose.models.Blog || mongoose.model<IBlog>('Blog', BlogSchema);
+const Blog: Model<IBlog> = registerModel<IBlog>('Blog', BlogSchema);
 
 export default Blog;

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import Blog from '../../../../models/Blog';
 import { connectDB } from '../../../../lib/mongodb';
+import { publishDueScheduledBlogs } from '../../../../lib/publish-scheduled-blogs';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,15 +11,7 @@ export async function GET() {
   try {
     await connectDB();
 
-    const result = await Blog.updateMany(
-      {
-        status: 'scheduled',
-        scheduledPublishDate: { $lte: new Date() },
-      },
-      {
-        $set: { status: 'published' },
-      }
-    );
+    const result = await publishDueScheduledBlogs();
 
     return NextResponse.json({
       message: 'Successfully checked and published scheduled blogs',

@@ -18,6 +18,12 @@ interface DeleteConfirmDialogProps {
   description?: string;
   itemName?: string;
   isDeleting?: boolean;
+  /** Text on the confirm button. Defaults to `Delete`. */
+  confirmLabel?: string;
+  /** Text while the action is in flight. Defaults to `Deleting...`. */
+  pendingLabel?: string;
+  /** Red confirm button. Defaults to `true`; pass `false` for a reversible action. */
+  destructive?: boolean;
 }
 
 const DeleteConfirmationDialog = ({
@@ -28,6 +34,9 @@ const DeleteConfirmationDialog = ({
   description,
   itemName,
   isDeleting,
+  confirmLabel = 'Delete',
+  pendingLabel = 'Deleting...',
+  destructive = true,
 }: DeleteConfirmDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -50,10 +59,12 @@ const DeleteConfirmationDialog = ({
               void onConfirm();
             }}
             disabled={isDeleting}
-            className="bg-destructive text-white hover:bg-destructive/90"
+            className={
+              destructive ? 'bg-destructive text-white hover:bg-destructive/90' : undefined
+            }
           >
             {isDeleting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting ? pendingLabel : confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
 import {
   readGlobalThemeSettings,
@@ -7,13 +6,11 @@ import {
   THEME_SETTINGS_TAG,
 } from '@/src/lib/theme-settings';
 import { isFontId, isPaletteId, isThemeMode } from '@/src/lib/theme-options';
+import { isDashboardAuthenticated } from '@/src/lib/dashboard-auth';
 
 // The client provider polls this on mount to detect a stale cached document,
 // so it must never be served from a cache.
 export const dynamic = 'force-dynamic';
-
-const SESSION_COOKIE = 'dashboard_session';
-const SESSION_VALUE = 'authenticated';
 
 /** GET /api/theme — public read of the global theme settings. */
 export async function GET() {
@@ -28,8 +25,7 @@ export async function GET() {
 /** POST /api/theme — admin-only write of the global theme settings. */
 export async function POST(req: Request) {
   try {
-    const cookieStore = await cookies();
-    if (cookieStore.get(SESSION_COOKIE)?.value !== SESSION_VALUE) {
+    if (!(await isDashboardAuthenticated())) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized. Sign in to change the global theme.' },
         { status: 401 }

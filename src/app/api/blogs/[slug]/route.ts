@@ -5,6 +5,7 @@ import BlogComment from '../../../../models/BlogComment';
 import { parseMongooseError } from '../../../../lib/parseMongooseError';
 import { connectDB } from '../../../../lib/mongodb';
 import { deleteCloudinaryImage } from '../../../../lib/cloudinary';
+import { publishDueScheduledBlogs } from '../../../../lib/publish-scheduled-blogs';
 
 export async function GET(req: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -12,15 +13,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
 
     // Auto-publish scheduled blogs that have reached their scheduled time
     try {
-      await Blog.updateMany(
-        {
-          status: 'scheduled',
-          scheduledPublishDate: { $lte: new Date() },
-        },
-        {
-          $set: { status: 'published' },
-        }
-      );
+      await publishDueScheduledBlogs();
     } catch (publishErr) {
       console.error('[GET /api/blogs/:slug] Failed to auto-publish scheduled blogs:', publishErr);
     }
@@ -41,9 +34,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
-    // Fetch comments for this blog
+    // Fetch comments for this blog (spam-flagged ones stay hidden)
     const comments = await BlogComment.find({
       blogId: blog._id,
+      status: 'visible',
     })
       .select('-__v')
       .sort({ createdAt: -1 })
@@ -88,9 +82,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
       }
     }
 
+    // Stamp the publish date only on the transition into `published`, so an ordinary
+    // edit of an already-published post does not re-float it on the public list.
+    const isGoingLive = body.status === 'published' && existingBlog.status !== 'published';
+
     const updated = await Blog.findOneAndUpdate(
       { slug: { $regex: `^${slug.trim()}$`, $options: 'i' } },
-      { ...body, updatedAt: new Date() },
+      { ...body, updatedAt: new Date(), ...(isGoingLive && { publishedAt: new Date() }) },
       { new: true, runValidators: true }
     );
 

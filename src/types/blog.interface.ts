@@ -17,7 +17,7 @@ export interface IBlog {
   slug?: string;
   createdAt?: string | Date;
   updatedAt?: string | Date;
-  publishedAt?: Date;
+  publishedAt?: string | Date;
   scheduledPublishDate?: Date | string;
   status: BlogStatus;
 

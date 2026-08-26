@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write '**/*.{ts,tsx,json}'"
+    "format": "prettier --write '**/*.{ts,tsx,json}'",
+    "migrate": "node --env-file=.env.local scripts/migrate-add-fields.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

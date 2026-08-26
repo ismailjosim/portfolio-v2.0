@@ -33,6 +33,16 @@ interface ManagementTableProps<T> {
   onView?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  /**
+   * Extra items rendered at the bottom of the row's action menu — for row actions that
+   * are neither view/edit/delete (e.g. "Mark as spam"). Return `<DropdownMenuItem>`s.
+   */
+  extraActions?: (row: T) => React.ReactNode;
+  /**
+   * Extra classes for a whole row, so a row's state can be shown across every column
+   * (e.g. dimming and striking through a comment that has been marked as spam).
+   */
+  rowClassName?: (row: T) => string | undefined;
   getRowKey: (row: T) => string;
   emptyMessage?: string;
   isRefreshing?: boolean;
@@ -44,11 +54,13 @@ function ManagementTable<T>({
   onView,
   onEdit,
   onDelete,
+  extraActions,
+  rowClassName,
   getRowKey,
   emptyMessage = 'No records found.',
   isRefreshing = false,
 }: ManagementTableProps<T>) {
-  const hasActions = onView || onEdit || onDelete;
+  const hasActions = onView || onEdit || onDelete || extraActions;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
@@ -143,7 +155,7 @@ function ManagementTable<T>({
               </TableRow>
             ) : (
               data?.map((item) => (
-                <TableRow key={getRowKey(item)}>
+                <TableRow key={getRowKey(item)} className={rowClassName?.(item)}>
                   {columns.map((col, idx) => (
                     <TableCell key={idx} className={col.className}>
                       {typeof col.accessor === 'function'
@@ -181,6 +193,7 @@ function ManagementTable<T>({
                               Delete
                             </DropdownMenuItem>
                           )}
+                          {extraActions?.(item)}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

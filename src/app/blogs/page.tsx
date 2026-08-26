@@ -10,51 +10,12 @@ import Navbar from '@/src/components/shared/Navbar';
 import ScrollToTop from '@/src/components/ui/ScrollToTop';
 import TablePagination from '@/src/components/shared/TablePagination';
 import { BlogFilterSkeleton } from '@/src/components/shared/PublicDataSkeletons';
+import { getPublishedBlogs } from '@/src/services/blog-management';
 
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Read my latest articles and insights',
 };
-
-async function fetchBlogs(searchParams: {
-  page?: string;
-  limit?: string;
-  search?: string;
-  category?: string;
-  tag?: string;
-}) {
-  try {
-    const query = new URLSearchParams();
-
-    if (searchParams.page) query.set('page', searchParams.page);
-    query.set('limit', searchParams.limit || '9');
-    if (searchParams.search) query.set('search', searchParams.search);
-    if (searchParams.category) query.set('category', searchParams.category);
-    if (searchParams.tag) query.set('tag', searchParams.tag);
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/all-blog/public?${query.toString()}`,
-      {
-        method: 'GET',
-        cache: 'no-store',
-      }
-    );
-
-    if (!res.ok) {
-      return { blogs: [], pagination: null };
-    }
-
-    const data = await res.json();
-
-    return {
-      blogs: (data.blogs || []).filter((blog: IBlog) => blog.status === 'published'),
-      pagination: data.pagination,
-    };
-  } catch (error) {
-    console.error('Failed to fetch blogs:', error);
-    return { blogs: [], pagination: null };
-  }
-}
 
 export default async function BlogsPage(props: {
   searchParams: Promise<{
@@ -67,13 +28,18 @@ export default async function BlogsPage(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const { blogs, pagination } = await fetchBlogs({
-    page: searchParams.page,
-    limit: searchParams.limit,
+  // getPublishedBlogs hits /all-blog/public, which already filters to `published`
+  // and orders by publishedAt.
+  const result = await getPublishedBlogs({
+    page: searchParams.page ? Number(searchParams.page) : undefined,
+    limit: Number(searchParams.limit ?? 9),
     search: searchParams.search,
     category: searchParams.category,
     tag: searchParams.tag,
   });
+
+  const blogs: IBlog[] = result?.data ?? [];
+  const pagination = result?.pagination ?? null;
 
   return (
     <>

@@ -1,4 +1,11 @@
-import { BookOpen, FolderKanban, Award, LayoutDashboard, Settings } from 'lucide-react';
+import {
+  BookOpen,
+  FolderKanban,
+  Award,
+  LayoutDashboard,
+  MessageSquare,
+  Settings,
+} from 'lucide-react';
 
 export const sidebarNav = [
   {
@@ -10,6 +17,11 @@ export const sidebarNav = [
     title: 'Blogs',
     url: '/blog',
     icon: BookOpen,
+  },
+  {
+    title: 'Comments',
+    url: '/comments',
+    icon: MessageSquare,
   },
   {
     title: 'Projects',
