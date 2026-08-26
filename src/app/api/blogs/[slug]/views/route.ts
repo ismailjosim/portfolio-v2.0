@@ -2,15 +2,7 @@ import { NextResponse } from 'next/server';
 import Blog from '../../../../../models/Blog';
 import BlogView from '../../../../../models/BlogView';
 import { connectDB } from '../../../../../lib/mongodb';
-import { createHash } from 'crypto';
-import { headers } from 'next/headers';
-
-async function getVisitorFingerprint() {
-  const h = await headers();
-  const ip = h.get('x-forwarded-for') ?? h.get('x-real-ip') ?? 'unknown';
-  const ua = h.get('user-agent') ?? 'unknown';
-  return createHash('sha256').update(`${ip}::${ua}`).digest('hex');
-}
+import { getVisitorFingerprint } from '@/src/lib/fingerprint';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -24,6 +16,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
     }
 
     const fingerprint = await getVisitorFingerprint();
+    console.log({ fingerprint });
 
     // Check if visitor already viewed this blog today
     const today = new Date();
@@ -34,6 +27,12 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
       visitorFingerprint: fingerprint,
       viewedAt: { $gte: today },
     });
+
+    // if already liked show meaningful error message
+    if (existingView) {
+      console.log('You already liked this blog');
+      return NextResponse.json({ error: 'You already liked this blog' }, { status: 400 });
+    }
 
     if (!existingView) {
       // Create new view record

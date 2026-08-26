@@ -19,7 +19,6 @@ export default function BlogSection() {
           `${process.env.NEXT_PUBLIC_API_URL}/all-blog/public?page=1&limit=6&sortBy=createdAt&orderBy=desc`
         );
         const data = await response.json();
-        console.log(data.blogs);
 
         setBlogs(data.blogs);
       } catch (error) {
