@@ -42,7 +42,12 @@ const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
   tools: { key: 'tools-devops', label: 'Tools', iconName: 'Wrench', order: 6 },
 };
 
-function normalizeCategory(rawCat: string): { key: string; label: string; iconName: string; order: number } {
+function normalizeCategory(rawCat: string): {
+  key: string;
+  label: string;
+  iconName: string;
+  order: number;
+} {
   const normalizedKey = (rawCat || '').trim().toLowerCase();
   if (CATEGORY_CONFIG[normalizedKey]) {
     return CATEGORY_CONFIG[normalizedKey];

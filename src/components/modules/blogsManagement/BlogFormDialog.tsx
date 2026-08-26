@@ -108,8 +108,8 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         content: blog.content,
         status: (blog.status as BlogStatus) || 'draft',
         summary: blog.summary ?? '',
-        scheduledPublishDate: blog.scheduledPublishDate 
-          ? new Date(blog.scheduledPublishDate).toISOString().slice(0, 16) 
+        scheduledPublishDate: blog.scheduledPublishDate
+          ? new Date(blog.scheduledPublishDate).toISOString().slice(0, 16)
           : '',
       });
     } else {
@@ -130,6 +130,11 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
   const coverPreview = useWatch({
     control: form.control,
     name: 'coverImagePreview',
+  });
+
+  const status = useWatch({
+    control: form.control,
+    name: 'status',
   });
 
   // ─── Handlers ──────────────────────────────────────────
@@ -198,7 +203,10 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         coverImage: coverImageUrl || undefined,
         status: data.status,
         summary: data.summary || undefined,
-        scheduledPublishDate: data.status === 'scheduled' && data.scheduledPublishDate ? new Date(data.scheduledPublishDate) : undefined,
+        scheduledPublishDate:
+          data.status === 'scheduled' && data.scheduledPublishDate
+            ? new Date(data.scheduledPublishDate)
+            : undefined,
       };
 
       let result;
@@ -241,8 +249,12 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
         </DialogHeader>
 
         <Form {...form}>
-          {/* eslint-disable-next-line react-hooks/refs */}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
+          {/* handleSubmit is wired up inside the event handler, not during render, so the
+              ref reads in onSubmit stay outside the render phase. */}
+          <form
+            onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
+            className="flex flex-col flex-1 min-h-0"
+          >
             <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
               {/* Title */}
               <FormField
@@ -410,7 +422,7 @@ const BlogFormDialog = ({ open, onClose, onSuccess, blog }: IBlogDialogProps) =>
               </div>
 
               {/* Scheduled Date */}
-              {form.watch('status') === 'scheduled' && (
+              {status === 'scheduled' && (
                 <FormField
                   control={form.control}
                   name="scheduledPublishDate"

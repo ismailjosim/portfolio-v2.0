@@ -85,7 +85,9 @@ export default function AboutSection() {
           <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
             Get to know me
           </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground">About Me</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground">
+            About Me
+          </h2>
         </FadeUp>
 
         <div className="grid md:grid-cols-2 lg:gap-16 md:gap-10 gap-6 items-start mt-10">

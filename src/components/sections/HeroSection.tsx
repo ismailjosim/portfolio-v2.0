@@ -192,8 +192,12 @@ export default function HeroSection() {
                       <Icon size={18} className={badge.iconColor} />
                     </div>
                     <div>
-                      <div className="font-bold text-sm text-foreground whitespace-nowrap">{badge.title}</div>
-                      <div className="text-xs text-muted-foreground whitespace-nowrap">{badge.subtitle}</div>
+                      <div className="font-bold text-sm text-foreground whitespace-nowrap">
+                        {badge.title}
+                      </div>
+                      <div className="text-xs text-muted-foreground whitespace-nowrap">
+                        {badge.subtitle}
+                      </div>
                     </div>
                   </div>
                 );

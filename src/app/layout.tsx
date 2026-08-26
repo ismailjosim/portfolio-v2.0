@@ -4,6 +4,7 @@ import './globals.css';
 import { TooltipProvider } from '../components/ui/tooltip';
 import { ThemeProvider } from '../providers/theme-provider';
 import { CustomThemeProvider } from '../providers/custom-theme-provider';
+import { getGlobalThemeSettings } from '../lib/theme-settings';
 
 export const metadata: Metadata = {
   title: 'JASIM - Full Stack Developer & Instructor',
@@ -18,16 +19,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Global theme, resolved on the server so the first paint is already correct.
+  const themeSettings = await getGlobalThemeSettings();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-palette={themeSettings.palette}
+      data-font={themeSettings.font}
+      suppressHydrationWarning
+    >
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CustomThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme={themeSettings.themeMode} enableSystem>
+          <CustomThemeProvider
+            initialPalette={themeSettings.palette}
+            initialFont={themeSettings.font}
+            initialThemeMode={themeSettings.themeMode}
+            initialUpdatedAt={themeSettings.updatedAt}
+          >
             <TooltipProvider>
               {children}
 

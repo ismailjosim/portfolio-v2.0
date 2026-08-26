@@ -141,4 +141,3 @@ export const ProjectsOverviewCard = ({ projects, totalProjects }: ProjectsOvervi
     </Card>
   );
 };
-

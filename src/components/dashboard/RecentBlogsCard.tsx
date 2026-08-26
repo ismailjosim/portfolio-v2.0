@@ -1,8 +1,15 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { ArrowRight, Eye, ThumbsUp, MessageSquare, Plus, ExternalLink, Calendar } from 'lucide-react';
+import {
+  ArrowRight,
+  Eye,
+  ThumbsUp,
+  MessageSquare,
+  Plus,
+  ExternalLink,
+  Calendar,
+} from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 
@@ -161,4 +168,3 @@ function formatNumber(num: number): string {
   if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
   return num.toString();
 }
-

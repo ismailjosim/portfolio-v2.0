@@ -4,14 +4,11 @@ import { connectDB } from '../../../../lib/mongodb';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: Request) {
+// Optional: to authorize this cron, take the request back as a parameter and check a
+// secret header, e.g. `GET(req: Request)` +
+// `if (req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) ...`
+export async function GET() {
   try {
-    // Optional: Add a simple authorization check here using a secret key
-    // const authHeader = req.headers.get('authorization');
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    //   return new NextResponse('Unauthorized', { status: 401 });
-    // }
-
     await connectDB();
 
     const result = await Blog.updateMany(

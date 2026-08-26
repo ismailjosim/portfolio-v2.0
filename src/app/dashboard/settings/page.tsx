@@ -1,6 +1,8 @@
 'use client';
+import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { useCustomTheme, PALETTES, FONTS } from '@/src/providers/custom-theme-provider';
+import { normalizeThemeSettings, toThemeMode } from '@/src/lib/theme-options';
 import {
   Card,
   CardContent,
@@ -23,12 +25,34 @@ import {
   ArrowUpRight,
   Sliders,
   CheckCircle2,
+  Globe,
+  Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
-  const { palette, setPalette, font, setFont, resetTheme } = useCustomTheme();
+  const {
+    palette,
+    setPalette,
+    font,
+    setFont,
+    resetTheme,
+    globalSettings,
+    isSyncedWithGlobal,
+    syncGlobalSettings,
+  } = useCustomTheme();
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  // `theme` is undefined until next-themes mounts — fall back to the global mode.
+  const activeMode = toThemeMode(theme, globalSettings.themeMode);
+  const isModeSyncedWithGlobal = activeMode === globalSettings.themeMode;
+  const isFullySynced = isSyncedWithGlobal && isModeSyncedWithGlobal;
+
+  const currentPaletteObj = PALETTES.find((p) => p.id === palette) || PALETTES[0];
+  const currentFontObj = FONTS.find((f) => f.id === font) || FONTS[0];
+  const globalPaletteObj = PALETTES.find((p) => p.id === globalSettings.palette) || PALETTES[0];
+  const globalFontObj = FONTS.find((f) => f.id === globalSettings.font) || FONTS[0];
 
   const handleReset = () => {
     resetTheme();
@@ -36,8 +60,34 @@ export default function SettingsPage() {
     toast.success('Theme & typography reset to defaults');
   };
 
-  const currentPaletteObj = PALETTES.find((p) => p.id === palette) || PALETTES[0];
-  const currentFontObj = FONTS.find((f) => f.id === font) || FONTS[0];
+  /** Publishes the current selection to MongoDB so every visitor sees it. */
+  const handleApplyGlobally = async () => {
+    setIsPublishing(true);
+
+    try {
+      const res = await fetch('/api/theme', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ palette, font, themeMode: activeMode }),
+      });
+
+      const json = await res.json().catch(() => null);
+
+      if (!res.ok || !json?.success) {
+        throw new Error(json?.error || 'Failed to save the global theme.');
+      }
+
+      syncGlobalSettings(normalizeThemeSettings(json.data));
+
+      toast.success('Global theme published', {
+        description: `Every visitor now loads ${currentPaletteObj.name} · ${currentFontObj.name} · ${activeMode} mode.`,
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to save the global theme.');
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   return (
     <div className="space-y-8 pb-12">
@@ -63,19 +113,59 @@ export default function SettingsPage() {
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-xl">
               Customize your portfolio’s visual brand, color palette, and body typography in real
-              time. All changes apply instantly and persist across sessions.
+              time. Changes preview instantly here — click{' '}
+              <span className="font-semibold text-foreground">Apply Globally</span> to publish them
+              to every visitor.
             </p>
+
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
+                  isFullySynced
+                    ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500'
+                    : 'border-amber-500/30 bg-amber-500/10 text-amber-500'
+                }`}
+              >
+                {isFullySynced ? (
+                  <CheckCircle2 className="h-3 w-3" />
+                ) : (
+                  <Sparkles className="h-3 w-3" />
+                )}
+                {isFullySynced ? 'Live globally' : 'Unpublished preview'}
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                Global: {globalPaletteObj.name} · {globalFontObj.name} · {globalSettings.themeMode}{' '}
+                mode
+              </span>
+            </div>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleReset}
-            className="gap-2 shrink-0 border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-            <span>Reset Defaults</span>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <Button
+              size="sm"
+              onClick={handleApplyGlobally}
+              disabled={isPublishing || isFullySynced}
+              className="gap-2 shadow-sm shadow-primary/20"
+            >
+              {isPublishing ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Globe className="h-3.5 w-3.5" />
+              )}
+              <span>{isPublishing ? 'Publishing…' : 'Apply Globally'}</span>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              disabled={isPublishing}
+              className="gap-2 border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span>Reset Defaults</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -105,7 +195,7 @@ export default function SettingsPage() {
                   { id: 'dark', label: 'Dark', icon: Moon },
                   { id: 'system', label: 'System', icon: Laptop },
                 ].map(({ id, label, icon: Icon }) => {
-                  const isSelected = theme === id;
+                  const isSelected = activeMode === id;
                   return (
                     <button
                       key={id}
@@ -366,10 +456,40 @@ export default function SettingsPage() {
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 text-xs text-muted-foreground flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <span>
-                  All selected styling automatically applies to your homepage, hero section, project
-                  cards, blog reader, and dashboard tables.
+                  {isFullySynced ? (
+                    <>
+                      This palette, font, and theme mode are stored in the database and served to
+                      every visitor on their first paint — homepage, hero section, project cards,
+                      blog reader, and dashboard tables.
+                    </>
+                  ) : (
+                    <>
+                      You are previewing changes locally. Click{' '}
+                      <span className="font-semibold text-foreground">Apply Globally</span> to store
+                      them in the database and serve them to every visitor.
+                    </>
+                  )}
                 </span>
               </div>
+
+              <Button
+                onClick={handleApplyGlobally}
+                disabled={isPublishing || isFullySynced}
+                className="w-full gap-2"
+              >
+                {isPublishing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Globe className="h-4 w-4" />
+                )}
+                <span>
+                  {isPublishing
+                    ? 'Publishing…'
+                    : isFullySynced
+                      ? 'Already Live Globally'
+                      : 'Apply Globally'}
+                </span>
+              </Button>
             </CardContent>
           </Card>
         </div>

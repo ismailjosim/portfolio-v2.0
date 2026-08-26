@@ -14,7 +14,6 @@ import {
   Eye,
   Plus,
   ExternalLink,
-  Sparkles,
   Layers,
   FileCode2,
 } from 'lucide-react';
@@ -126,7 +125,6 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={data.totalBlogs}
           description="Active & published posts"
           badge="Blog Hub"
-
           href="/dashboard/blog"
         />
 
@@ -136,7 +134,6 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={formatNumber(data.blogMetrics.totalViews)}
           description={`${totalInteractions} total interactions (likes + comments)`}
           badge="Engagement"
-
         />
 
         <StatsCard
@@ -145,7 +142,6 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={data.totalProjects}
           description={`${data.projects.filter((p) => p.featured).length} spotlighted on homepage`}
           badge="Engineering"
-
           href="/dashboard/projects"
         />
 
@@ -155,7 +151,6 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
           value={data.totalSkills}
           description={`Across ${Object.keys(data.skillsMetrics.skillsByCategory).length} categories`}
           badge="Arsenal"
-
           href="/dashboard/skills"
         />
       </div>

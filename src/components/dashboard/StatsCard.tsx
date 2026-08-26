@@ -38,9 +38,7 @@ export const StatsCard = ({
       )}
     >
       {/* Background Accent Gradient */}
-      <div
-        className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-linear-to-br from-primary/10 via-accent/5 to-transparent blur-2xl transition-opacity duration-500 opacity-50 group-hover:opacity-100"
-      />
+      <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-linear-to-br from-primary/10 via-accent/5 to-transparent blur-2xl transition-opacity duration-500 opacity-50 group-hover:opacity-100" />
 
       <div className="relative z-10 flex items-start justify-between gap-3">
         <div className="space-y-1">
@@ -49,9 +47,7 @@ export const StatsCard = ({
               {label}
             </span>
             {badge && (
-              <span
-                className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-primary/10 text-primary border-primary/20"
-              >
+              <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-primary/10 text-primary border-primary/20">
                 {badge}
               </span>
             )}
@@ -66,9 +62,7 @@ export const StatsCard = ({
           </div>
         </div>
 
-        <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-110 bg-primary/10 text-primary border-primary/20"
-        >
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-110 bg-primary/10 text-primary border-primary/20">
           <Icon className="h-5 w-5" />
         </div>
       </div>
